@@ -1,0 +1,106 @@
+StartProg. Start ::= "package" Id [Decl];
+
+DeclFun.   	Decl ::= "func" Id "(" [Param] ")" Type Block;
+DeclProc.       Decl ::= "func" Id "(" [Param] ")" Block;
+DeclVar. 	Decl ::= "var"  [Id] Type;
+DeclVarInit. 	Decl ::= "var"  [Id] "=" [ExpR];
+DeclVarShort.   ShortVarDecl ::= [Id] ":=" [ExpR];
+
+
+ParamL.   	Param ::=  [Id] Type;				-- di default è passaggio per valore
+ParamLPassType. Param ::=  Pass [Id] Type;
+PassValue.	Pass  ::=  "val";
+PassRef.	Pass  ::=  "ref";
+PassValueRes.   Pass  ::=  "valres";
+
+
+TypeInt.     Type ::= "int";
+TypeBool.    Type ::= "bool";
+TypeFloat.   Type ::= "float";
+TypeChar.    Type ::= "char";
+TypeString.  Type ::= "string";
+TypeArray.   Type ::=  "[" Integer "]" Type; 
+TypePointer. Type ::= "*" Type; 
+
+
+BodyBlock. Block ::= "{" [Statement] "}";
+
+StateBlock.       	Statement ::= Block;
+StateSmpl.	  	Statement ::= StatementSmpl;
+StateReturn.      	Statement ::= "return" ExpR;
+StateIf.	  	Statement ::= "if" ExpR Block;
+StateIfElse.	  	Statement ::= "if" ExpR Block "else" Block;
+StateIfStm.	  	Statement ::= "if" StatementSmpl ";" ExpR Block;
+StateIfElseStm.	  	Statement ::= "if" StatementSmpl ";" ExpR Block "else" Block;
+StateFor.	  	Statement ::= "for" [StatementSmpl] ";" ExpR ";" [StatementSmpl] Block;
+StateWhile.       	Statement ::= "for" ExpR Block;
+StateDecl.        	Statement ::= Decl;
+StateBreak.        	Statement ::= "break"; 
+StateContinue.     	Statement ::= "continue";
+StateTryCatch.	  	Statement ::= "try" Block "catch" Block;
+StateWrite. 		Statement ::= "write" "(" ExpR ")";
+StateRead.  		Statement ::= "read" "(" ExpR ")"; 
+
+StateShortVarDecl. 	StatementSmpl ::= ShortVarDecl;
+StateExp.	   	StatementSmpl ::= ExpR;
+StateAsgn.	   	StatementSmpl ::= ExpL "=" ExpR;
+
+						
+ExpId.    ExpL ::= Id ;
+ExpArr.   ExpL ::= ExpL "[" ExpR "]" ;
+ExpDeref. ExpL ::= "*" ExpR ;
+
+ExpAdd. ExpR ::= ExpR "+" ExpR ;
+ExpSub. ExpR ::= ExpR "-" ExpR ;
+ExpMul. ExpR ::= ExpR "*" ExpR ;
+ExpDiv. ExpR ::= ExpR "/" ExpR ;
+ExpMod. ExpR ::= ExpR "%" ExpR ;						
+ExpEqu. ExpR ::= ExpR "==" ExpR ;
+ExpNeq. ExpR ::= ExpR "!=" ExpR ;
+ExpLes. ExpR ::= ExpR "<" ExpR ;
+ExpLeq. ExpR ::= ExpR "<=" ExpR ;
+ExpGre. ExpR ::= ExpR ">" ExpR ;
+ExpGrq. ExpR ::= ExpR ">=" ExpR ;
+ExpAnd. ExpR ::= ExpR "&&" ExpR ;
+ExpOr.  ExpR ::= ExpR "||" ExpR ;
+ExpNot. ExpR ::= "!" ExpR ;
+ExpNeg. ExpR ::= "-" ExpR ;
+ExpValue. ExpR ::= Value ;
+ExpLef.   ExpR ::= ExpL ;
+ExpFuncEmpty.  ExpR ::= Id "(" ")" ;
+ExpFunc.  ExpR ::= Id "(" [ExpR] ")" ;
+ExpRef.   ExpR ::= "&" ExpL ;
+ExpPar.   ExpR ::= "(" ExpR ")";
+
+
+Int .       	Value ::= Integer ;
+Float .     	Value ::= Double ;
+Char .      	Value  ::= Char ;
+String .    	Value ::= String ;
+Bool .      	Value  ::= Boolean ;
+BoolTrue .  	Boolean ::= "true" ;
+BoolFalse . 	Boolean ::= "false" ;
+
+
+(:[]).	[Id] ::= Id;
+(:).	[Id] ::= Id "," [Id];
+
+(:[]).	[ExpR] ::= ExpR;
+(:).	[ExpR] ::= ExpR "," [ExpR];
+
+ [].	[StatementSmpl] ::= ;
+(:[]).	[StatementSmpl] ::= StatementSmpl;
+
+
+--
+
+token Id (letter | '_')(letter | digit | '_')*;
+
+comment "//";
+comment "/*" "*/";
+
+separator Decl "";
+separator Param ",";
+separator Statement "";
+
+entrypoints Start;
