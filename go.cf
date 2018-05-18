@@ -1,19 +1,26 @@
-StartProg. Start ::= "package" Id [Decl];
+-- 
+comment "//" ;
+comment "/*" "*/" ;
+--
 
-DeclFun.   	Decl ::= "func" Id "(" [Param] ")" Type Block;
-DeclProc.       Decl ::= "func" Id "(" [Param] ")" Block;
-DeclVar. 	Decl ::= "var"  [Id] Type;
-DeclVarInit. 	Decl ::= "var"  [Id] "=" [ExpR];
-DeclVarShort.   ShortVarDecl ::= [Id] ":=" [ExpR];
+entrypoints Program;  -- il programma inizia sempre con "package"
 
+Initprogram. Program ::= "package" Id [Decl];
 
-ParamL.   	Param ::=  [Id] Type;				-- di default è passaggio per valore
-ParamLPassType. Param ::=  Pass [Id] Type;
-PassValue.	Pass  ::=  "val";
-PassRef.	Pass  ::=  "ref";
-PassValueRes.   Pass  ::=  "valres";
+DeclFun.   	    Decl         ::= "func" Id "(" [Param] ")" Type Block ;
+DeclProc.       Decl         ::= "func" Id "(" [Param] ")" Block ;
+DeclVar. 	    Decl         ::= "var"  [Id] Type ;
+DeclVarInit. 	Decl         ::= "var"  [Id] "=" [RExp] ;   
+DeclVarShort.   ShortVarDecl ::= [Id] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente
 
+-- definizione parametri
+ParamL.   	    Param ::=  [Id] Type ;     -- di default e' passaggio per valore
+ParamLPassType. Param ::=  Pass [Id] Type ;
+PassValue.	    Pass  ::=  "val" ;
+PassRef.	    Pass  ::=  "ref" ;
+PassValueRes.   Pass  ::=  "valres" ;   -- lo teniamo??
 
+-- definizione dei tipi
 TypeInt.     Type ::= "int";
 TypeBool.    Type ::= "bool";
 TypeFloat.   Type ::= "float";
@@ -22,57 +29,61 @@ TypeString.  Type ::= "string";
 TypeArray.   Type ::=  "[" Integer "]" Type; 
 TypePointer. Type ::= "*" Type; 
 
+--  
+StateShortVarDecl. 	StatementSmpl ::= ShortVarDecl;
+StateExp.	      	StatementSmpl ::= RExp;
+StateAsgn.	   	    StatementSmpl ::= LExp "=" RExp;
 
 BodyBlock. Block ::= "{" [Statement] "}";
 
-StateBlock.       	Statement ::= Block;
-StateSmpl.	  	Statement ::= StatementSmpl;
-StateReturn.      	Statement ::= "return" ExpR;
-StateIf.	  	Statement ::= "if" ExpR Block;
-StateIfElse.	  	Statement ::= "if" ExpR Block "else" Block;
-StateIfStm.	  	Statement ::= "if" StatementSmpl ";" ExpR Block;
-StateIfElseStm.	  	Statement ::= "if" StatementSmpl ";" ExpR Block "else" Block;
-StateFor.	  	Statement ::= "for" [StatementSmpl] ";" ExpR ";" [StatementSmpl] Block;
-StateWhile.       	Statement ::= "for" ExpR Block;
+StateBlock.       	Statement ::= Block ;
+StateSmpl.	  	    Statement ::= StatementSmpl ;
+StateReturn.      	Statement ::= "return" RExp ;
+
+StateIf.	  	    Statement ::= "if" RExp Block ;                                  -- singola condizione
+StateIfElse.	  	Statement ::= "if" RExp Block "else" Block ;                     -- "" ""
+StateIfStm.	  	    Statement ::= "if" StatementSmpl ";" RExp Block ;                -- + condizioni
+StateIfElseStm.	  	Statement ::= "if" StatementSmpl ";" RExp Block "else" Block ;   -- "" ""
+
+StateFor.	  	    Statement ::= "for" [StatementSmpl] ";" RExp ";" [StatementSmpl] Block ;
+StateWhile.       	Statement ::= "for" RExp Block;                                  -- possiamo definirlo con il for
+
 StateDecl.        	Statement ::= Decl;
 StateBreak.        	Statement ::= "break"; 
 StateContinue.     	Statement ::= "continue";
 StateTryCatch.	  	Statement ::= "try" Block "catch" Block;
-StateWrite. 		Statement ::= "write" "(" ExpR ")";
-StateRead.  		Statement ::= "read" "(" ExpR ")"; 
+StateWrite. 		Statement ::= "write" "(" RExp ")";
+StateRead.  		Statement ::= "read" "(" RExp ")"; 
 
-StateShortVarDecl. 	StatementSmpl ::= ShortVarDecl;
-StateExp.	   	StatementSmpl ::= ExpR;
-StateAsgn.	   	StatementSmpl ::= ExpL "=" ExpR;
+-- left expressions
+ExpId.         LExp ::= Id ;
+ExpArr.        LExp ::= LExp "[" RExp "]" ;
+ExpDeref.      LExp ::= "*" RExp ;
 
-						
-ExpId.    ExpL ::= Id ;
-ExpArr.   ExpL ::= ExpL "[" ExpR "]" ;
-ExpDeref. ExpL ::= "*" ExpR ;
+-- right expressions
+ExpAdd.        RExp ::= RExp "+" RExp ;
+ExpSub.        RExp ::= RExp "-" RExp ;
+ExpMul.        RExp ::= RExp "*" RExp ;
+ExpDiv.        RExp ::= RExp "/" RExp ;
+ExpMod.        RExp ::= RExp "%" RExp ;						
+ExpEqu.        RExp ::= RExp "==" RExp ;
+ExpNeq.        RExp ::= RExp "!=" RExp ;
+LExpes.        RExp ::= RExp "<" RExp ;
+LExpeq.        RExp ::= RExp "<=" RExp ;
+ExpGre.        RExp ::= RExp ">" RExp ;
+ExpGrq.        RExp ::= RExp ">=" RExp ;
+ExpAnd.        RExp ::= RExp "&&" RExp ;
+ExpOr.         RExp ::= RExp "||" RExp ;
+ExpNot.        RExp ::= "!" RExp ;
+ExpNeg.        RExp ::= "-" RExp ;
+ExpValue.      RExp ::= Value ;
+LExpef.        RExp ::= LExp ;
+ExpFuncEmpty.  RExp ::= Id "(" ")" ;
+ExpFunc.       RExp ::= Id "(" [RExp] ")" ;
+RExpef.        RExp ::= "&" LExp ;
+ExpPar.        RExp ::= "(" RExp ")";
 
-ExpAdd. ExpR ::= ExpR "+" ExpR ;
-ExpSub. ExpR ::= ExpR "-" ExpR ;
-ExpMul. ExpR ::= ExpR "*" ExpR ;
-ExpDiv. ExpR ::= ExpR "/" ExpR ;
-ExpMod. ExpR ::= ExpR "%" ExpR ;						
-ExpEqu. ExpR ::= ExpR "==" ExpR ;
-ExpNeq. ExpR ::= ExpR "!=" ExpR ;
-ExpLes. ExpR ::= ExpR "<" ExpR ;
-ExpLeq. ExpR ::= ExpR "<=" ExpR ;
-ExpGre. ExpR ::= ExpR ">" ExpR ;
-ExpGrq. ExpR ::= ExpR ">=" ExpR ;
-ExpAnd. ExpR ::= ExpR "&&" ExpR ;
-ExpOr.  ExpR ::= ExpR "||" ExpR ;
-ExpNot. ExpR ::= "!" ExpR ;
-ExpNeg. ExpR ::= "-" ExpR ;
-ExpValue. ExpR ::= Value ;
-ExpLef.   ExpR ::= ExpL ;
-ExpFuncEmpty.  ExpR ::= Id "(" ")" ;
-ExpFunc.  ExpR ::= Id "(" [ExpR] ")" ;
-ExpRef.   ExpR ::= "&" ExpL ;
-ExpPar.   ExpR ::= "(" ExpR ")";
-
-
+-- definizione dei tipi
 Int .       	Value ::= Integer ;
 Float .     	Value ::= Double ;
 Char .      	Value  ::= Char ;
@@ -85,22 +96,20 @@ BoolFalse . 	Boolean ::= "false" ;
 (:[]).	[Id] ::= Id;
 (:).	[Id] ::= Id "," [Id];
 
-(:[]).	[ExpR] ::= ExpR;
-(:).	[ExpR] ::= ExpR "," [ExpR];
+(:[]).	[RExp] ::= RExp;
+(:).	[RExp] ::= RExp "," [RExp];
 
- [].	[StatementSmpl] ::= ;
+[].	    [StatementSmpl] ::= ;
 (:[]).	[StatementSmpl] ::= StatementSmpl;
 
 
 --
 
-token Id (letter | '_')(letter | digit | '_')*;
+token Id (letter | '_')(letter | digit | '_')* ;
 
-comment "//";
-comment "/*" "*/";
 
-separator Decl "";
-separator Param ",";
-separator Statement "";
+separator Decl "" ;
+separator Param "," ;
+separator Statement "" ;
 
-entrypoints Start;
+
