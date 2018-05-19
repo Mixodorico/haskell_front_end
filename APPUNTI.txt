@@ -1,2 +1,3 @@
 - valres
-- 
+- manca il tipo nella definizione : var uno, due = 5 , 6
+- += -=

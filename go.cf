@@ -3,38 +3,106 @@ comment "//" ;
 comment "/*" "*/" ;
 --
 
-entrypoints Program;  -- il programma inizia sempre con "package"
+entrypoints Program ;  -- il programma inizia sempre con "package"
 
-Initprogram. Program ::= "package" Id [Decl];
+-- rules definisce una disgiunzione di statement
+rules Boolean ::= "true" | "false" ;
 
-DeclFun.   	    Decl         ::= "func" Id "(" [Param] ")" Type Block ;
-DeclProc.       Decl         ::= "func" Id "(" [Param] ")" Block ;
-DeclVar. 	    Decl         ::= "var"  [Id] Type ;
-DeclVarInit. 	Decl         ::= "var"  [Id] "=" [RExp] ;   
-DeclVarShort.   ShortVarDecl ::= [Id] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente
+------------ RIGHT REXP ------------
+
+coercions   RExp 14 ;
+
+Or.         RExp  ::= RExp "||" RExp1 ;
+And.        RExp1 ::= RExp1 "&&" RExp2 ;
+Not.        RExp2 ::= "!" RExp3 ;
+						
+Eq.         RExp5 ::= RExp6 "==" RExp6 ;
+Neq.        RExp5 ::= RExp6 "!=" RExp6 ;
+Lt.         RExp5 ::= RExp6 "<"  RExp6 ;
+LtE.        RExp5 ::= RExp6 "<=" RExp6 ;
+Gt.         RExp5 ::= RExp6 ">"  RExp6 ;
+GtE.        RExp5 ::= RExp6 ">=" RExp6 ;
+
+Add.        RExp7 ::= RExp7 "+" RExp8 ;
+Sub.        RExp7 ::= RExp7 "-" RExp8 ;
+
+Mul.        RExp8 ::= RExp8 "*" RExp9 ;
+Div.        RExp8 ::= RExp8 "/" RExp9 ;
+Mod.        RExp8 ::= RExp8 "%" RExp9 ;
+
+Neg.        RExp10 ::= "-" RExp11 ;
+Ref.        RExp10 ::= "&" LExp ;
+
+-- l'esponente viene definito tramite funzione in Go
+
+--ExpValue.      RExp ::= Value ;
+
+FCall.        RExp11 ::= FunCall ;
+
+------------- TYPES ----------------
+
+Int.       	RExp12 ::= Integer ;
+Float.     	RExp12 ::= Double ;
+Char.      	RExp12 ::= Char ;
+String.    	RExp12 ::= String ;
+Bool.      	RExp12 ::= Boolean ;
+
+------------- LEFT EXPR -------------
+
+coercions   LExp 2 ;
+
+LExprex.       RExp13 ::= LExp ;
+
+Par.           RExp14 ::= "(" RExp ")";
+
+ExpFuncEmpty.  FunCall ::= CIdent "(" ")" ;
+ExpFunc.       FunCall ::= CIdent "(" [RExp] ")" ;
+
+Deref.         LExp ::= "*" RExp ;
+PostInc.       LExp1 ::= LExp2 "++" ;
+PostDecr.      LExp1 ::= LExp2 "--" ;
+
+ExpId.         LExp ::= CIdent ;
+ExpArr.        LExp ::= LExp "[" RExp "]" ;
+
+
+Prog. Program ::= "package" CIdent [Decl];
+
+-------------DICHIARAZIONI -------------
+
+separator Decl "" ;
+DeclVar. 	      Decl         ::= "var"  [CIdent] Type ;
+DeclVarInit. 	  Decl         ::= "var"  [CIdent] "=" [RExp] ;   
+DeclVarInitType.  Decl         ::= "var"  [CIdent] Type "=" [RExp] ;   -- aggiunta
+DeclVarShort.     ShortVarDecl ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente
+
+DeclFun.          Decl         ::= "func" CIdent "(" [Param] ")" Type Block ;
+DeclProc.         Decl         ::= "func" CIdent "(" [Param] ")" Block ;
+
 
 -- definizione parametri
-ParamL.   	    Param ::=  [Id] Type ;     -- di default e' passaggio per valore
-ParamLPassType. Param ::=  Pass [Id] Type ;
-PassValue.	    Pass  ::=  "val" ;
-PassRef.	    Pass  ::=  "ref" ;
-PassValueRes.   Pass  ::=  "valres" ;   -- lo teniamo??
+ParamL.   	    Param        ::=  [CIdent] Type ;     -- di default e' passaggio per valore
+ParamLPassType. Param        ::=  Pass [CIdent] Type ;
+
+PassValue.	    Pass         ::=  "val" ;
+PassRef.	    Pass         ::=  "ref" ;
+PassValueRes.   Pass         ::=  "valres" ;   -- lo teniamo??
 
 -- definizione dei tipi
-TypeInt.     Type ::= "int";
-TypeBool.    Type ::= "bool";
-TypeFloat.   Type ::= "float";
-TypeChar.    Type ::= "char";
-TypeString.  Type ::= "string";
-TypeArray.   Type ::=  "[" Integer "]" Type; 
-TypePointer. Type ::= "*" Type; 
+TypeInt.     Type            ::= "int";
+TypeBool.    Type            ::= "bool";
+TypeFloat.   Type            ::= "float";
+TypeChar.    Type            ::= "char";
+TypeString.  Type            ::= "string";
+TypeArray.   Type            ::=  "[" Integer "]" Type; 
+TypePointer. Type            ::= "*" Type; 
 
 --  
 StateShortVarDecl. 	StatementSmpl ::= ShortVarDecl;
 StateExp.	      	StatementSmpl ::= RExp;
 StateAsgn.	   	    StatementSmpl ::= LExp "=" RExp;
 
-BodyBlock. Block ::= "{" [Statement] "}";
+BodyBlock.              Block ::= "{" [Statement] "}";
 
 StateBlock.       	Statement ::= Block ;
 StateSmpl.	  	    Statement ::= StatementSmpl ;
@@ -55,46 +123,12 @@ StateTryCatch.	  	Statement ::= "try" Block "catch" Block;
 StateWrite. 		Statement ::= "write" "(" RExp ")";
 StateRead.  		Statement ::= "read" "(" RExp ")"; 
 
--- left expressions
-ExpId.         LExp ::= Id ;
-ExpArr.        LExp ::= LExp "[" RExp "]" ;
-ExpDeref.      LExp ::= "*" RExp ;
-
--- right expressions
-ExpAdd.        RExp ::= RExp "+" RExp ;
-ExpSub.        RExp ::= RExp "-" RExp ;
-ExpMul.        RExp ::= RExp "*" RExp ;
-ExpDiv.        RExp ::= RExp "/" RExp ;
-ExpMod.        RExp ::= RExp "%" RExp ;						
-ExpEqu.        RExp ::= RExp "==" RExp ;
-ExpNeq.        RExp ::= RExp "!=" RExp ;
-LExpes.        RExp ::= RExp "<" RExp ;
-LExpeq.        RExp ::= RExp "<=" RExp ;
-ExpGre.        RExp ::= RExp ">" RExp ;
-ExpGrq.        RExp ::= RExp ">=" RExp ;
-ExpAnd.        RExp ::= RExp "&&" RExp ;
-ExpOr.         RExp ::= RExp "||" RExp ;
-ExpNot.        RExp ::= "!" RExp ;
-ExpNeg.        RExp ::= "-" RExp ;
-ExpValue.      RExp ::= Value ;
-LExpef.        RExp ::= LExp ;
-ExpFuncEmpty.  RExp ::= Id "(" ")" ;
-ExpFunc.       RExp ::= Id "(" [RExp] ")" ;
-RExpef.        RExp ::= "&" LExp ;
-ExpPar.        RExp ::= "(" RExp ")";
-
--- definizione dei tipi
-Int .       	Value ::= Integer ;
-Float .     	Value ::= Double ;
-Char .      	Value  ::= Char ;
-String .    	Value ::= String ;
-Bool .      	Value  ::= Boolean ;
-BoolTrue .  	Boolean ::= "true" ;
-BoolFalse . 	Boolean ::= "false" ;
 
 
-(:[]).	[Id] ::= Id;
-(:).	[Id] ::= Id "," [Id];
+
+
+(:[]).	[CIdent] ::= CIdent;
+(:).	[CIdent] ::= CIdent "," [CIdent];
 
 (:[]).	[RExp] ::= RExp;
 (:).	[RExp] ::= RExp "," [RExp];
@@ -105,11 +139,10 @@ BoolFalse . 	Boolean ::= "false" ;
 
 --
 
-token Id (letter | '_')(letter | digit | '_')* ;
+
+token CIdent (letter | '_')(letter | digit | '_')* ;
 
 
-separator Decl "" ;
 separator Param "," ;
 separator Statement "" ;
-
 
