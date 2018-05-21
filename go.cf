@@ -8,9 +8,11 @@ entrypoints Program ;  -- il programma inizia sempre con "package"
 -- rules definisce una disgiunzione di statement
 rules Boolean ::= "true" | "false" ;
 
+token CIdent (letter | '_')(letter | digit | '_')* ;
+
 ------------ RIGHT REXP ------------
 
-coercions   RExp 14 ;
+coercions   RExp 13 ;
 
 Or.         RExp  ::= RExp "||" RExp1 ;
 And.        RExp1 ::= RExp1 "&&" RExp2 ;
@@ -49,7 +51,7 @@ Bool.      	RExp12 ::= Boolean ;
 
 ------------- LEFT EXPR -------------
 
-coercions   LExp 2 ;
+coercions      LExp 2 ;
 
 LExprex.       RExp13 ::= LExp ;
 
@@ -62,8 +64,11 @@ Deref.         LExp ::= "*" RExp ;
 PostInc.       LExp1 ::= LExp2 "++" ;
 PostDecr.      LExp1 ::= LExp2 "--" ;
 
-ExpId.         LExp ::= CIdent ;
-ExpArr.        LExp ::= LExp "[" RExp "]" ;
+BLExprex.      LExp2 ::= BLexp ;
+
+ExpArr.        BLexp ::= BLexp "[" RExp "]" ;
+ExpId.         BLexp ::= CIdent ;
+
 
 
 Prog. Program ::= "package" CIdent [Decl];
@@ -71,38 +76,46 @@ Prog. Program ::= "package" CIdent [Decl];
 -------------DICHIARAZIONI -------------
 
 separator Decl "" ;
-DeclVar. 	      Decl         ::= "var"  [CIdent] Type ;
-DeclVarInit. 	  Decl         ::= "var"  [CIdent] "=" [RExp] ;   
-DeclVarInitType.  Decl         ::= "var"  [CIdent] Type "=" [RExp] ;   -- aggiunta
-DeclVarShort.     ShortVarDecl ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente
 
-DeclFun.          Decl         ::= "func" CIdent "(" [Param] ")" Type Block ;
+rules BasicType ::= "void" | "bool" | "char" | "float" | "int" | "string" | "[" Integer "]" BasicType | "*" BasicType ;
+
+DeclVar. 	      Decl         ::= "var"  [CIdent] BasicType ;
+DeclVarInit. 	  Decl         ::= "var"  [CIdent] "=" [RExp] ;   
+DeclVarInitType.  Decl         ::= "var"  [CIdent] BasicType "=" [RExp] ;   -- aggiunta
+
+DeclVarShort.     ShortVarDecl ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente        
+
+DeclFun.          Decl         ::= "func" CIdent "(" [Param] ")" BasicType Block ;
 DeclProc.         Decl         ::= "func" CIdent "(" [Param] ")" Block ;
 
+Assign.     Assignment_op ::= "=" ;
+AssgnMul.   Assignment_op ::= "*=" ;
+AssgnAdd.   Assignment_op ::= "+=" ;
+AssgnDiv.   Assignment_op ::= "/=" ;
+AssgnSub.   Assignment_op ::= "-=" ;
 
--- definizione parametri
-ParamL.   	    Param        ::=  [CIdent] Type ;     -- di default e' passaggio per valore
-ParamLPassType. Param        ::=  Pass [CIdent] Type ;
+------------- DEFINIZIONE PARAMETRI ----------------
+
+ParamL.   	    Param        ::=  [CIdent] BasicType ;     -- di default e' passaggio per valore
+
+{-
+ParamLPassType. Param        ::=  Pass [CIdent] BasicType ;
 
 PassValue.	    Pass         ::=  "val" ;
 PassRef.	    Pass         ::=  "ref" ;
 PassValueRes.   Pass         ::=  "valres" ;   -- lo teniamo??
+-}
 
--- definizione dei tipi
-TypeInt.     Type            ::= "int";
-TypeBool.    Type            ::= "bool";
-TypeFloat.   Type            ::= "float";
-TypeChar.    Type            ::= "char";
-TypeString.  Type            ::= "string";
-TypeArray.   Type            ::=  "[" Integer "]" Type; 
-TypePointer. Type            ::= "*" Type; 
-
---  
+--------------- DEFINIZIONE TIPI --------------------
 StateShortVarDecl. 	StatementSmpl ::= ShortVarDecl;
 StateExp.	      	StatementSmpl ::= RExp;
-StateAsgn.	   	    StatementSmpl ::= LExp "=" RExp;
+StateAsgn.	   	    StatementSmpl ::= LExp Assignment_op RExp;
 
-BodyBlock.              Block ::= "{" [Statement] "}";
+-- post inc e post dec valutati a livello di LExpr
+--StateAsgnInc.  	    StatementSmpl ::= LExp "++";
+--StateAsgnDec.  	    StatementSmpl ::= LExp "--";
+
+BodyBlock.          Block ::= "{" [Statement] "}";
 
 StateBlock.       	Statement ::= Block ;
 StateSmpl.	  	    Statement ::= StatementSmpl ;
@@ -125,24 +138,17 @@ StateRead.  		Statement ::= "read" "(" RExp ")";
 
 
 
+--(:[]).	[CIdent] ::= CIdent;
+--(:).	[CIdent] ::= CIdent "," [CIdent];
 
-
-(:[]).	[CIdent] ::= CIdent;
-(:).	[CIdent] ::= CIdent "," [CIdent];
-
-(:[]).	[RExp] ::= RExp;
-(:).	[RExp] ::= RExp "," [RExp];
+--(:[]).	[RExp] ::= RExp;
+--(:).	[RExp] ::= RExp "," [RExp];
 
 [].	    [StatementSmpl] ::= ;
 (:[]).	[StatementSmpl] ::= StatementSmpl;
 
-
---
-
-
-token CIdent (letter | '_')(letter | digit | '_')* ;
-
-
+separator nonempty CIdent "," ;
+separator nonempty RExp "," ;
 separator Param "," ;
 separator Statement "" ;
 
