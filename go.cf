@@ -12,7 +12,7 @@ token CIdent (letter | '_')(letter | digit | '_')* ;
 
 ------------ RIGHT REXP ------------
 
-coercions   RExp 13 ;
+coercions   RExp 14 ;
 
 Or.         RExp  ::= RExp "||" RExp1 ;
 And.        RExp1 ::= RExp1 "&&" RExp2 ;
@@ -51,11 +51,11 @@ Bool.      	RExp12 ::= Boolean ;
 
 ------------- LEFT EXPR -------------
 
-coercions      LExp 2 ;
+coercions      LExp 3 ;
 
 LExprex.       RExp13 ::= LExp ;
 
-Par.           RExp14 ::= "(" RExp ")";
+--Par.           RExp14 ::= "(" RExp ")";
 
 ExpFuncEmpty.  FunCall ::= CIdent "(" ")" ;
 ExpFunc.       FunCall ::= CIdent "(" [RExp] ")" ;
