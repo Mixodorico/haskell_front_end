@@ -1,9 +1,9 @@
 package main
 
 
-func ciao ( a int , d int) {
+func ciao ( a int , d int) int{
 u :=4
-func tryww (){
+func tryww () void {
 
 var arr[10] bool
 

@@ -4,7 +4,7 @@ func ret () int{return 5}
 
 var a,b,c= "ciao", 5+(2+8)*9 , ret()
 
-func ciao ( a int , d int) {
+func ciao ( a int , d int) int {
 	u :=4
 	u = a/d
 	ciao (u,d)

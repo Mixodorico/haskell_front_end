@@ -1,7 +1,7 @@
 package main
 
 
-func prova (){
+func prova () float{
 			
 	e:=3
 	for i:=0 ; i<9; i=i+1 {

@@ -1,4 +1,7 @@
 package programma
+/*
+Raccogliamo un po' di definizioni ed assegnamenti
+*/
 
 
 func sum (x, y int) int {
@@ -24,12 +27,14 @@ func sum (x, y int) int {
     x *= 56
     x /= 655
     x++
-    
+    x = -5
+    writeFloat ("dsdsds")
+    readFloat()
     return x
 }
 
-func zeroptr(iptr *int) {
-    *iptr = 0
+func zeroptr(iptr *int) void {
+    iptr = 0
     var cacca **int 
     *iptr = ********cacca
 }

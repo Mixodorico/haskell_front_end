@@ -86,7 +86,7 @@ DeclVarInitType.  Decl         ::= "var"  [CIdent] BasicType "=" [RExp] ;   -- a
 DeclVarShort.     ShortVarDecl ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente        
 
 DeclFun.          Decl         ::= "func" CIdent "(" [Param] ")" BasicType Block ;
-DeclProc.         Decl         ::= "func" CIdent "(" [Param] ")" Block ;
+--DeclProc.         Decl         ::= "func" CIdent "(" [Param] ")" Block ;
 
 Assign.     Assignment_op ::= "=" ;
 AssgnMul.   Assignment_op ::= "*=" ;
@@ -132,9 +132,13 @@ StateWhile.       	Statement ::= "for" RExp Block;                              
 StateDecl.        	Statement ::= Decl;
 StateBreak.        	Statement ::= "break"; 
 StateContinue.     	Statement ::= "continue";
-StateTryCatch.	  	Statement ::= "try" Block "catch" Block;
-StateWrite. 		Statement ::= "write" "(" RExp ")";
-StateRead.  		Statement ::= "read" "(" RExp ")"; 
+--StateTryCatch.	  	Statement ::= "try" Block "catch" Block;
+
+rules WriteType    ::= "writeInt" | "writeFloat" | "writeChar" | "writeString" ;
+rules ReadType    ::= "readInt" | "readFloat" | "readChar" | "readString" ;
+
+StateWrite. 		Statement ::= WriteType "(" RExp ")";
+StateRead.  		Statement ::= ReadType "(" ")" ; --"(" RExp ")"; 
 
 
 
