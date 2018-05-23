@@ -34,6 +34,7 @@ Mod.        RExp8 ::= RExp8 "%" RExp9 ;
 
 Neg.        RExp10 ::= "-" RExp11 ;
 Ref.        RExp10 ::= "&" LExp ;
+Deref.      RExp10 ::= "*" RExp ;
 
 -- l'esponente viene definito tramite funzione in Go
 
@@ -51,31 +52,31 @@ Bool.      	RExp12 ::= Boolean ;
 
 ------------- LEFT EXPR -------------
 
-coercions      LExp 3 ;
+coercions      LExp 2 ;
 
 LExprex.       RExp13 ::= LExp ;
-
 --Par.           RExp14 ::= "(" RExp ")";
 
-ExpFuncEmpty.  FunCall ::= CIdent "(" ")" ;
-ExpFunc.       FunCall ::= CIdent "(" [RExp] ")" ;
+--ExpProcEmpty.  ProcCall ::= CIdent "(" ")" ;
+--ExpProc.       ProcCall ::= CIdent "(" [RExp] ")" ;
 
-Deref.         LExp ::= "*" RExp ;
-PostInc.       LExp1 ::= LExp2 "++" ;
-PostDecr.      LExp1 ::= LExp2 "--" ;
+--PCall.         LExp ::= ProcCall 
+--Deref.         LExp ::= "*" RExp ;
+--PostInc.       LExp1 ::= LExp2 "++" ;
+--PostDecr.      LExp1 ::= LExp2 "--" ;
 
-BLExprex.      LExp2 ::= BLexp ;
+BLExprex.      LExp1 ::= BLexp ;
+LexpId.        LExp1 ::= CIdent ;
 
 ExpArr.        BLexp ::= BLexp "[" RExp "]" ;
-ExpId.         BLexp ::= CIdent ;
+ExpId.         BLexp ::= CIdent "[" RExp "]" ;
 
 
-
-Prog. Program ::= "package" CIdent [Decl];
+Prog. Program ::= "package" CIdent [Statement];
 
 -------------DICHIARAZIONI -------------
 
-separator Decl "" ;
+--separator Decl "" ;
 
 rules BasicType ::= "void" | "bool" | "char" | "float" | "int" | "string" | "[" Integer "]" BasicType | "*" BasicType ;
 
@@ -83,10 +84,13 @@ DeclVar. 	      Decl         ::= "var"  [CIdent] BasicType ;
 DeclVarInit. 	  Decl         ::= "var"  [CIdent] "=" [RExp] ;   
 DeclVarInitType.  Decl         ::= "var"  [CIdent] BasicType "=" [RExp] ;   -- aggiunta
 
-DeclVarShort.     ShortVarDecl ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente        
+DeclVarShort.     Decl         ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente        
 
-DeclFun.          Decl         ::= "func" CIdent "(" [Param] ")" BasicType Block ;
---DeclProc.         Decl         ::= "func" CIdent "(" [Param] ")" Block ;
+--StateExp.	      Decl         ::= LExp;
+StateAsgn.	      Decl         ::= LExp Assignment_op RExp;
+
+DeclF.            DeclFun      ::= "func" CIdent "(" [Param] ")" BasicType Block ;
+--DeclP.            DeclFun      ::= "func" CIdent "(" [Param] ")" "void" Block ;
 
 Assign.     Assignment_op ::= "=" ;
 AssgnMul.   Assignment_op ::= "*=" ;
@@ -107,9 +111,8 @@ PassValueRes.   Pass         ::=  "valres" ;   -- lo teniamo??
 -}
 
 --------------- DEFINIZIONE TIPI --------------------
-StateShortVarDecl. 	StatementSmpl ::= ShortVarDecl;
-StateExp.	      	StatementSmpl ::= RExp;
-StateAsgn.	   	    StatementSmpl ::= LExp Assignment_op RExp;
+--StateShortVarDecl. 	StatementSmpl ::= Decl;
+
 
 -- post inc e post dec valutati a livello di LExpr
 --StateAsgnInc.  	    StatementSmpl ::= LExp "++";
@@ -117,19 +120,25 @@ StateAsgn.	   	    StatementSmpl ::= LExp Assignment_op RExp;
 
 BodyBlock.          Block ::= "{" [Statement] "}";
 
+ExpFuncEmpty.       FunCall ::= CIdent "(" ")" ;
+ExpFunc.            FunCall ::= CIdent "(" [RExp] ")" ;
+
 StateBlock.       	Statement ::= Block ;
-StateSmpl.	  	    Statement ::= StatementSmpl ;
+StateDecl.        	Statement ::= Decl;
+StateDeclFun.	    Statement ::= DeclFun ;
+StateFunCall.       Statement ::= FunCall ;
+
+
 StateReturn.      	Statement ::= "return" RExp ;
 
-StateIf.	  	    Statement ::= "if" RExp Block ;                                  -- singola condizione
-StateIfElse.	  	Statement ::= "if" RExp Block "else" Block ;                     -- "" ""
-StateIfStm.	  	    Statement ::= "if" StatementSmpl ";" RExp Block ;                -- + condizioni
-StateIfElseStm.	  	Statement ::= "if" StatementSmpl ";" RExp Block "else" Block ;   -- "" ""
+StateIf.	  	    Statement ::= "if" RExp Block ;                         -- singola condizione
+StateIfElse.	  	Statement ::= "if" RExp Block "else" Block ;            -- "" ""
+StateIfStm.	  	    Statement ::= "if" Decl ";" RExp Block ;                -- + condizioni
+StateIfElseStm.	  	Statement ::= "if" Decl ";" RExp Block "else" Block ;   -- "" ""
 
-StateFor.	  	    Statement ::= "for" [StatementSmpl] ";" RExp ";" [StatementSmpl] Block ;
-StateWhile.       	Statement ::= "for" RExp Block;                                  -- possiamo definirlo con il for
+StateFor.	  	    Statement ::= "for" Decl ";" RExp ";" Decl Block ;
+StateWhile.       	Statement ::= "for" RExp Block ;
 
-StateDecl.        	Statement ::= Decl;
 StateBreak.        	Statement ::= "break"; 
 StateContinue.     	Statement ::= "continue";
 --StateTryCatch.	  	Statement ::= "try" Block "catch" Block;
@@ -140,19 +149,16 @@ rules ReadType    ::= "readInt" | "readFloat" | "readChar" | "readString" ;
 StateWrite. 		Statement ::= WriteType "(" RExp ")";
 StateRead.  		Statement ::= ReadType "(" ")" ; --"(" RExp ")"; 
 
-
-
 --(:[]).	[CIdent] ::= CIdent;
 --(:).	[CIdent] ::= CIdent "," [CIdent];
 
 --(:[]).	[RExp] ::= RExp;
 --(:).	[RExp] ::= RExp "," [RExp];
 
-[].	    [StatementSmpl] ::= ;
-(:[]).	[StatementSmpl] ::= StatementSmpl;
+--[].	    [Decl] ::= ;
+--(:[]).	[Decl] ::= Decl;
 
 separator nonempty CIdent "," ;
 separator nonempty RExp "," ;
 separator Param "," ;
 separator Statement "" ;
-

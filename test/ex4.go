@@ -13,11 +13,8 @@ func prova () float{
 		continue
 		} 
 	}
-	try {
 		e:=5 + 6 * 7
-	} catch {
 	e = 4 + 5 
-	}
 }
 
 
