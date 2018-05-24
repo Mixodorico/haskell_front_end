@@ -6,8 +6,8 @@ Raccogliamo un po' di definizioni ed assegnamenti
 
 func sum (x, y int) *int {
     y := x *(y+2*((5)))
-    x = *y
 	b :=&a
+    x++
     var boolean = true
     var e int 
     var ciao char = 'a'
@@ -24,8 +24,8 @@ func sum (x, y int) *int {
     x -= 49846
     x *= 56
     x /= 655
-    //x++
     x = -5
+    x++
     writeFloat ("dsdsds")
     readFloat()
     return *x

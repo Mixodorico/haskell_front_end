@@ -52,7 +52,7 @@ Bool.      	RExp12 ::= Boolean ;
 
 ------------- LEFT EXPR -------------
 
-coercions      LExp 2 ;
+coercions      LExp 1 ;
 
 LExprex.       RExp13 ::= LExp ;
 --Par.           RExp14 ::= "(" RExp ")";
@@ -62,14 +62,14 @@ LExprex.       RExp13 ::= LExp ;
 
 --PCall.         LExp ::= ProcCall 
 --Deref.         LExp ::= "*" RExp ;
---PostInc.       LExp1 ::= LExp2 "++" ;
---PostDecr.      LExp1 ::= LExp2 "--" ;
+PostInc.       LExp ::= LExp1 "++" ;
+PostDecr.      LExp ::= LExp1 "--" ;
 
 BLExprex.      LExp1 ::= BLexp ;
 LexpId.        LExp1 ::= CIdent ;
 
 ExpArr.        BLexp ::= BLexp "[" RExp "]" ;
-ExpId.         BLexp ::= CIdent "[" RExp "]" ;
+ExpId.         BLexp ::= CIdent "[" RExp "]";
 
 
 Prog. Program ::= "package" CIdent [Statement];
@@ -86,7 +86,7 @@ DeclVarInitType.  Decl         ::= "var"  [CIdent] BasicType "=" [RExp] ;   -- a
 
 DeclVarShort.     Decl         ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente        
 
---StateExp.	      Decl         ::= LExp;
+StateExp.	      Decl         ::= LExp;
 StateAsgn.	      Decl         ::= LExp Assignment_op RExp;
 
 DeclF.            DeclFun      ::= "func" CIdent "(" [Param] ")" BasicType Block ;
@@ -127,7 +127,7 @@ StateBlock.       	Statement ::= Block ;
 StateDecl.        	Statement ::= Decl;
 StateDeclFun.	    Statement ::= DeclFun ;
 StateFunCall.       Statement ::= FunCall ;
-
+--StateLexp.          Statement ::= LExp ;
 
 StateReturn.      	Statement ::= "return" RExp ;
 

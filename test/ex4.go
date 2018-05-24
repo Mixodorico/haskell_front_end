@@ -4,8 +4,9 @@ package main
 func prova () float{
 			
 	e:=3
-	for i:=0 ; i<9; i=i+1 {
-		i:=6	
+	for i:=0 ; i<9; i++ {
+		i:=6
+        x++ = 5	
 		if i>4 { 
 			break
 		}else{
