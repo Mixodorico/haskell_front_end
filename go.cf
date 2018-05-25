@@ -86,17 +86,8 @@ DeclVarInitType.  Decl         ::= "var"  [CIdent] BasicType "=" [RExp] ;   -- a
 
 DeclVarShort.     Decl         ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente        
 
-StateExp.	      Decl         ::= LExp;
-StateAsgn.	      Decl         ::= LExp Assignment_op RExp;
-
 DeclF.            DeclFun      ::= "func" CIdent "(" [Param] ")" BasicType Block ;
 --DeclP.            DeclFun      ::= "func" CIdent "(" [Param] ")" "void" Block ;
-
-Assign.     Assignment_op ::= "=" ;
-AssgnMul.   Assignment_op ::= "*=" ;
-AssgnAdd.   Assignment_op ::= "+=" ;
-AssgnDiv.   Assignment_op ::= "/=" ;
-AssgnSub.   Assignment_op ::= "-=" ;
 
 ------------- DEFINIZIONE PARAMETRI ----------------
 
@@ -118,7 +109,7 @@ PassValueRes.   Pass         ::=  "valres" ;   -- lo teniamo??
 --StateAsgnInc.  	    StatementSmpl ::= LExp "++";
 --StateAsgnDec.  	    StatementSmpl ::= LExp "--";
 
-BodyBlock.          Block ::= "{" [Statement] "}";
+BodyBlock.          Block ::= "{" [CompStatement] "}";
 
 ExpFuncEmpty.       FunCall ::= CIdent "(" ")" ;
 ExpFunc.            FunCall ::= CIdent "(" [RExp] ")" ;
@@ -129,15 +120,26 @@ StateDeclFun.	    Statement ::= DeclFun ;
 StateFunCall.       Statement ::= FunCall ;
 --StateLexp.          Statement ::= LExp ;
 
+StateExp.	      Statement ::= LExp;
+StateAsgn.	      Statement ::= LExp Assignment_op RExp;
+
+Assign.     Assignment_op ::= "=" ;
+AssgnMul.   Assignment_op ::= "*=" ;
+AssgnAdd.   Assignment_op ::= "+=" ;
+AssgnDiv.   Assignment_op ::= "/=" ;
+AssgnSub.   Assignment_op ::= "-=" ;
+
+
 StateReturn.      	Statement ::= "return" RExp ;
 
-StateIf.	  	    Statement ::= "if" RExp Block ;                         -- singola condizione
-StateIfElse.	  	Statement ::= "if" RExp Block "else" Block ;            -- "" ""
-StateIfStm.	  	    Statement ::= "if" Decl ";" RExp Block ;                -- + condizioni
-StateIfElseStm.	  	Statement ::= "if" Decl ";" RExp Block "else" Block ;   -- "" ""
+CompStmt.           CompStatement ::= Statement ;
+StateIf.	  	    CompStatement ::= "if" RExp Block ;                         -- singola condizione
+StateIfElse.	  	CompStatement ::= "if" RExp Block "else" Block ;            -- "" ""
+StateIfStm.	  	    CompStatement ::= "if" Statement ";" RExp Block ;                -- + condizioni
+StateIfElseStm.	  	CompStatement ::= "if" Statement ";" RExp Block "else" Block ;   -- "" ""
 
-StateFor.	  	    Statement ::= "for" Decl ";" RExp ";" Decl Block ;
-StateWhile.       	Statement ::= "for" RExp Block ;
+StateFor.	  	    CompStatement ::= "for" Statement ";" RExp ";" Statement Block ;
+StateWhile.       	CompStatement ::= "for" RExp Block ;
 
 StateBreak.        	Statement ::= "break"; 
 StateContinue.     	Statement ::= "continue";
@@ -158,7 +160,9 @@ StateRead.  		Statement ::= ReadType "(" ")" ; --"(" RExp ")";
 --[].	    [Decl] ::= ;
 --(:[]).	[Decl] ::= Decl;
 
+
 separator nonempty CIdent "," ;
 separator nonempty RExp "," ;
 separator Param "," ;
 separator Statement "" ;
+separator CompStatement "" ;
