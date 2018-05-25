@@ -72,7 +72,7 @@ ExpArr.        BLexp ::= BLexp "[" RExp "]" ;
 ExpId.         BLexp ::= CIdent "[" RExp "]";
 
 
-Prog. Program ::= "package" CIdent [Statement];
+Prog. Program ::= "package" CIdent [CompStatement];
 
 -------------DICHIARAZIONI -------------
 
@@ -133,6 +133,7 @@ AssgnSub.   Assignment_op ::= "-=" ;
 StateReturn.      	Statement ::= "return" RExp ;
 
 CompStmt.           CompStatement ::= Statement ;
+
 StateIf.	  	    CompStatement ::= "if" RExp Block ;                         -- singola condizione
 StateIfElse.	  	CompStatement ::= "if" RExp Block "else" Block ;            -- "" ""
 StateIfStm.	  	    CompStatement ::= "if" Statement ";" RExp Block ;                -- + condizioni
