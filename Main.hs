@@ -1,7 +1,3 @@
-{--
-   Autor: Paweł Kapica, 334579
-   Interpreter języka Swifty
---}
 {-# LANGUAGE FlexibleContexts #-}
 module Main where
 
