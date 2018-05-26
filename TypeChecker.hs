@@ -1,8 +1,3 @@
-{--
-   Autor: Paweł Kapica, 334579
-   Interpreter języka Swifty
-   Plik zawierający funkcje odpowiedzialne za kontrolę typow przed wykonaniem programu
---}
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -46,6 +41,7 @@ type TState = S.State Env
 -- ERRORS
 errorExpected t1 t2 f1 f2 = error $ concat ["Type error: Expected: ",show t1,",",show t2,", found: ",show f1,",",show f2]
 errorExpected2 t f = error $ concat ["Type error: Expected: ",show t,", found: ",show f]
+errorExpected3 t = error $ concat ["Type error: Expected: numeric, found: ",show t]
 undefVar (CIdent x) = error $ "Name error: Undefined variable: " ++ (show x)
 undefFunc (CIdent f) = error $ "Name error: Undefined function: " ++ (show f)
 notArray = error $ "Type error: Not an array"
@@ -101,7 +97,25 @@ checkDecl (DeclVar xs t) = do
                                          T BasicType_void -> voidTypeError
                                          _ -> toTCBasicType t
                              (mapM (\(x',t') -> newVar x' t') $ zip xs (replicate (length xs) t')) >> return None
-
+checkDecl (DeclVarInit xs xe) = do
+                                  xt <- mapM (\e -> checkExpr e) xe
+                                  let lxs = length xs
+                                  let les = length xe
+                                  if lxs /= les
+                                    then errorMultAssign lxs les
+                                    else (mapM (\(x',t') -> newVar x' t') $ zip xs xt) >> return None
+checkDecl (DeclVarInitType xs t xe) = do
+                                  xt <- mapM (\e -> checkExpr e) xe
+                                  let lxs = length xs
+                                  let les = length xe
+                                  if lxs /= les
+                                    then errorMultAssign lxs les
+                                    --else scanl1 (\t' -> if t' /= tct then errorExpected2 tct t' else return None) xt
+                                    else (mapM (\(x',t') -> if check t t' then newVar x' t' else errorExpected2 t t') $ zip xs xt) >> return None
+                                  return None
+                                  where
+                                    check t1 t2 = toTCBasicType t1 == t2
+checkDecl (DeclVarShort xs xe) = checkDecl (DeclVarInit xs xe)
 {-
 checkDecl (D_MVar x xs e) = do
                               t <- checkExpr e
@@ -145,8 +159,19 @@ checkBlock (BodyBlock stmts) = do
 checkStatement :: MonadState Env m => CompStatement -> m TCBasicType
 checkStatement (CompStmt (StateDecl d)) = checkDecl d
 checkStatement (CompStmt (StateBlock b)) = checkBlock b
+checkStatement (CompStmt (StateAsgn (LExpId e1) op e2)) = do
+                    t1 <- getBasicType e1
+                    t2 <- checkExpr e2
+                    if t1 /= t2
+                      then errorExpected2 t1 t2
+                      else case op of
+                          Assign -> return None
+                          _ -> if t1 == T BasicType_int || t1 == T BasicType_float
+                                  then return None
+                                  else errorExpected3 t1
+                                  
 {-checkStatement (S_Assign acc e) = do
-                              t1 <- getAccBasicType acc
+                              t1 <- getBasicType acc
                               t2 <- checkExpr e
                               if t1 == None
                                  then updateStrBasicType acc t2
@@ -167,7 +192,7 @@ checkStatement (StateWhile e b) = do
                               then checkBlock b
                               else errorExpected2 BasicType_bool t
 {-checkStatement (StateFor x acc s) = do
-                              t <- getAccBasicType acc
+                              t <- getBasicType acc
                               env@(ev,ef,f) <- get
                               case t of
                                  A t' -> do
@@ -274,7 +299,7 @@ checkExpr (Int _) = return $ T BasicType_int
 checkExpr (Float _) = return $ T BasicType_float
 checkExpr (Char _) = return $ T BasicType_char
 checkExpr (String _) = return $ T BasicType_string
-checkExpr (LExprex (LExpId i)) = getAccBasicType i
+checkExpr (LExprex (LExpId i)) = getBasicType i
 checkExpr (Or e1 e2) = checkBoolean e1 e2
 checkExpr (And e1 e2) = checkBoolean e1 e2
 checkExpr (Eq e1 e2) = checkEq e1 e2
@@ -317,32 +342,32 @@ checkExpr (LExprex (BLExprex (ExpArr e1 e2))) = do
                                                        return t1
 --ExpId CIdent RExp
 {-checkExpr (LExprex (BLExprex (ExpId i e))) = do
-                                                t <- getAccBasicType i
+                                                t <- getBasicType i
                                                 return t
 
 checkExpr (E_TupI tup) = checkTupleInit tup
 checkExpr (E_ArrS arr sub) = do
                               _ <- checkArrSub sub
-                              getAccBasicType (A_Arr arr sub)
-checkExpr (E_StrS str sub) = getAccBasicType (A_Str str sub)
+                              getBasicType (A_Arr arr sub)
+checkExpr (E_StrS str sub) = getBasicType (A_Str str sub)
 checkExpr e@(E_FuncCall fc) = checkFunCall fc >> inferBasicType e
 checkExpr e@(E_VarName x) = inferBasicType e
 checkExpr e@(E_Const c) = inferBasicType e
 -}
---getAccBasicType :: MonadState Env m => CIdent -> m TCBasicType
-getAccBasicType (CIdent x) = do
+--getBasicType :: MonadState Env m => CIdent -> m TCBasicType
+getBasicType (CIdent x) = do
                            (ev,_,_) <- get
                            case M.lookup (CIdent x) ev of
                               Just t -> return t
                               Nothing -> undefVar $ CIdent x
 {-
-getAccBasicType (A_Arr acc _) = do
-                              t <- getAccBasicType acc
+getBasicType (A_Arr acc _) = do
+                              t <- getBasicType acc
                               case t of
                                  A t' -> return t'
                                  _ -> notArray
-getAccBasicType (A_Str acc (Str_Sub x)) = do
-                                       t <- getAccBasicType acc
+getBasicType (A_Str acc (Str_Sub x)) = do
+                                       t <- getBasicType acc
                                        case t of
                                           S m -> return $ fromMaybe None $ M.lookup x m
                                           _ -> notStruct
