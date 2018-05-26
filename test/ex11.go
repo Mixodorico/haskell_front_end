@@ -1,7 +1,7 @@
 package programma
 /*
-Raccogliamo un po' di definizioni ed assegnamenti
+Scritto in base al type checker
 */
-
-    y := x *(y+2*((5)))
-    x = *x  
+    
+    var i bool
+    for true {}
