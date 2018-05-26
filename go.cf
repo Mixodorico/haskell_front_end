@@ -66,10 +66,10 @@ PostInc.       LExp ::= LExp1 "++" ;
 PostDecr.      LExp ::= LExp1 "--" ;
 
 BLExprex.      LExp1 ::= BLexp ;
-LexpId.        LExp1 ::= CIdent ;
+LExpId.        LExp1 ::= CIdent ;
 
 ExpArr.        BLexp ::= BLexp "[" RExp "]" ;
-ExpId.         BLexp ::= CIdent "[" RExp "]";
+ExpArrId.      BLexp ::= CIdent "[" RExp "]" ;
 
 
 Prog. Program ::= "package" CIdent [CompStatement];
@@ -165,5 +165,5 @@ StateRead.  		Statement ::= ReadType "(" ")" ; --"(" RExp ")";
 separator nonempty CIdent "," ;
 separator nonempty RExp "," ;
 separator Param "," ;
-separator Statement "" ;
+--separator Statement "" ;
 separator CompStatement "" ;
