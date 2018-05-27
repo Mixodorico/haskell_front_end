@@ -30,6 +30,7 @@ func sum (x, y int) *int {
     x *= 56
     x /= 655
     x = -5
+    x = f(x)
     
     // dichiarazione vettore
     var vettore [5] string
