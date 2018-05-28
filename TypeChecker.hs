@@ -31,7 +31,6 @@ instance Show TCBasicType where
    show (T BasicType_float)  = "float"
    show (T BasicType_char)   = "Char"
    show (T BasicType_string) = "String"
-   show (T BasicType_void)   = "Void"
    show (R t) = "&" ++ show t
    show (A t) = (show t) ++ "[]"
    show None = "None"
@@ -39,24 +38,25 @@ instance Show TCBasicType where
 type TState = S.State Env
 
 -- ERRORS
-errorExpected t1 t2 f1 f2 = error $ concat ["Type error: Expected: ",show t1,",",show t2,", found: ",show f1,",",show f2]
-errorExpected2 t f = error $ concat ["Type error: Expected: ",show t,", found: ",show f]
-errorExpected3 t = error $ concat ["Type error: Expected: numeric, found: ",show t]
-undefVar (CIdent x) = error $ "Name error: Undefined variable: " ++ (show x)
-undefFunc (CIdent f) = error $ "Name error: Undefined function: " ++ (show f)
-notArray = error $ "Type error: Not an array"
-notValidArrSub x = error $ "Type error: Not valid array subscript: " ++ (show x)
+errorExpected t1 t2 f1 f2 = error $ concat ["Type error: expected: ",show t1,",",show t2,", found: ",show f1,",",show f2]
+errorExpected2 t f = error $ concat ["Type error: expected: ",show t,", found: ",show f]
+errorExpected3 t = error $ concat ["Type error: expected: numeric, found: ",show t]
+undefVar (CIdent x) = error $ "Name error: undefined variable: " ++ (show x)
+undefFunc (CIdent f) = error $ "Name error: undefined function: " ++ (show f)
+notArray = error $ "Type error: not an array"
+notValidArrSub x = error $ "Type error: not valid array subscript: " ++ (show x)
 argsNoMatch l1 l2 = let
                         l1' = concat $ ["[",intercalate "," (map show l1),"]"]
                         l2' = concat $ ["[",intercalate "," (map show l2),"]"]
-                    in error $ concat ["Type error: Mismatched function parameters. Expected: ",l1', ", found: ", l2']
-notIterable = error $ "Type error: Not iterable"
-arrayElemsError = error "Type error: Array elements must be of same type"
-invRetType = error "Type error: Type of return value does not match function's return type"
-refTypeError = error "Type error: Expected type, found reference"
-voidTypeError = error "Type error: Expected variable type, found void"
-errorMultAssign l1 l2 = error $ concat ["Error in multiple assign: ", "Expected: ", show l1 , " values, found: ", show l2]
-errorProcAssign = error "Type error: Fuction does not return any value"
+                    in error $ concat ["Type error: mismatched function parameters. Expected: ",l1', ", found: ", l2']
+notIterable = error $ "Type error: not iterable"
+arrayElemsError = error "Type error: array elements must be of same type"
+invRetType = error "Different return types in function declaration"
+wrongRetType t1 t2 = error $ "Type error: type of return value is " ++ (show t2) ++ " while function type is " ++ (show t1)
+missingReturn = error $ "Missing return statement"
+refTypeError = error "Type error: expected type, found reference"
+errorMultAssign l1 l2 = error $ concat ["Error in multiple assign: ", "expected: ", show l1 , " values, found: ", show l2]
+errorProcAssign = error "Type error: fuction does not return any value"
 
 emptyEnv = (M.empty, M.empty, St.empty)
 
@@ -83,19 +83,25 @@ checkDecl (D_Var x e) = do
                               then newVar x t >> return None
                               else errorProcAssign
 -}
+checkDeclFun :: MonadState Env m => DeclFun -> m TCBasicType
 checkDeclFun (DeclF x pd t s) = do
                               let t' = case toTCBasicType t of
                                           R _ -> refTypeError
                                           _ -> toTCBasicType t
-                              if (t == BasicType_void)
-                                then newProc x (getParams pd) s
-                                else newFunc x t' (getParams pd) s
-                              return None
+                              newFunc x t' (getParams pd) s
+                              t'' <- checkBlock s
+                              if (t'' == None)
+                                then missingReturn
+                                else if (t' /= t'')
+                                  then wrongRetType t' t''
+                                  else return None
+checkDeclProc (DeclP x pd s) = do
+                                newProc x (getParams pd) s
+                                return None
+
 checkDecl :: MonadState Env m => Decl -> m TCBasicType
 checkDecl (DeclVar xs t) = do
-                             let t' = case toTCBasicType t of
-                                         T BasicType_void -> voidTypeError
-                                         _ -> toTCBasicType t
+                             let t' = toTCBasicType t
                              (mapM (\(x',t') -> newVar x' t') $ zip xs (replicate (length xs) t')) >> return None
 checkDecl (DeclVarInit xs xe) = do
                                   xt <- mapM (\e -> checkExpr e) xe
@@ -158,6 +164,8 @@ checkBlock (BodyBlock stmts) = do
 -- STATEMENTS
 checkStatement :: MonadState Env m => CompStatement -> m TCBasicType
 checkStatement (CompStmt (StateDecl d)) = checkDecl d
+checkStatement (CompStmt (StateDeclFun d)) = checkDeclFun d
+checkStatement (CompStmt (StateDeclProc d)) = checkDeclProc d
 checkStatement (CompStmt (StateBlock b)) = checkBlock b
 checkStatement (CompStmt (StateAsgn (LExpId e1) op e2)) = do
                     t1 <- getBasicType e1
@@ -231,7 +239,7 @@ checkStatement (StateIfElseStm d r b1 b2) = do
                                  _ -> errorExpected2 (T BasicType_bool) t
 checkStatement (CompStmt (StateReturn r)) = checkExpr r >>= return
 --checkStatement (S_Print e) = checkExpr e >> return None
-checkStatement (CompStmt (StateFunCall fc)) = checkFunCall fc
+checkStatement (CompStmt (StateProcCall fc)) = checkProcCall fc
 
 checkFuncParams :: MonadState Env m => [RExp] -> m [TCBasicType]
 checkFuncParams exprs = mapM checkExpr' exprs >>= return
@@ -239,7 +247,7 @@ checkFuncParams exprs = mapM checkExpr' exprs >>= return
                               checkExpr' e = case e of
                                                 LExprex (LExpId _) -> do
                                                                   t <- checkExpr e
-                                                                  return $ R t
+                                                                  return t
                                                 _ -> checkExpr e
 
 checkFunCall :: MonadState Env m => FunCall -> m TCBasicType
@@ -261,7 +269,43 @@ checkFunCall (ExpFunc x exprs) = do
                                                    rt <- checkBlock s
                                                    put (ev,ef,fs')        -- monade state ha put, penso venga da lì
                                                    if rt /= t
-                                                      then invRetType
+                                                      --then invRetType
+                                                      then missingReturn
+                                                      else return rt
+                                       else argsNoMatch params args
+                                          where
+                                             fromRef :: TCBasicType -> TCBasicType
+                                             fromRef t = case t of
+                                                            R t -> t
+                                                            x -> x
+                                             paramsMatch :: [TCBasicType] -> [TCBasicType] -> Bool
+                                             paramsMatch args params = let
+                                                                        l = zip args params
+                                                                        f = (\(x,y) -> (x == y) || (fromRef x == y))
+                                                                       in if length args == length params
+                                                                           then and $ map f l
+                                                                           else argsNoMatch params $ filter (/= None) args
+checkProcCall :: MonadState Env m => ProcCall -> m TCBasicType
+checkProcCall (ExpProc x exprs) = do
+                                    args <- checkFuncParams exprs
+                                    env@(ev,ef,fs) <- get
+                                    let foo = fromMaybe (undefFunc x) $ M.lookup x ef
+                                    let (t,parTyp,s) = case foo of
+                                                         F _ -> error $ "function without assignment"
+                                                         P (x,y) -> (None,x,y)
+                                    let params = map snd parTyp
+                                    if paramsMatch args params
+                                       then if St.member x fs
+                                                then return t
+                                                else do
+                                                   let fs' = St.insert x fs
+                                                   put (ev,ef,fs')
+                                                   mapM (\(x',t') -> modify (\(ev,ef,fs) -> (M.insert x' (fromRef t') ev, ef,fs))) parTyp
+                                                   rt <- checkBlock s
+                                                   put (ev,ef,fs')        -- monade state ha put, penso venga da lì
+                                                   if rt /= t
+                                                      --then invRetType
+                                                      then missingReturn
                                                       else return rt
                                        else argsNoMatch params args
                                           where
@@ -340,6 +384,7 @@ checkExpr (LExprex (BLExprex (ExpArr e1 e2))) = do
                                                     else do
                                                        t1 <- checkExpr $ LExprex $ BLExprex e1
                                                        return t1
+checkExpr (FCall f) = checkFunCall f
 --ExpId CIdent RExp
 {-checkExpr (LExprex (BLExprex (ExpId i e))) = do
                                                 t <- getBasicType i

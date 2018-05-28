@@ -78,7 +78,7 @@ Prog. Program ::= "package" CIdent [CompStatement];
 
 --separator Decl "" ;
 
-rules BasicType ::= "void" | "bool" | "char" | "float" | "int" | "string" | "[" Integer "]" BasicType | "*" BasicType ;
+rules BasicType ::= "bool" | "char" | "float" | "int" | "string" | "[" Integer "]" BasicType | "*" BasicType ;
 
 DeclVar. 	      Decl         ::= "var"  [CIdent] BasicType ;
 DeclVarInit. 	  Decl         ::= "var"  [CIdent] "=" [RExp] ;   
@@ -87,7 +87,7 @@ DeclVarInitType.  Decl         ::= "var"  [CIdent] BasicType "=" [RExp] ;   -- a
 DeclVarShort.     Decl         ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente        
 
 DeclF.            DeclFun      ::= "func" CIdent "(" [Param] ")" BasicType Block ;
---DeclP.            DeclFun      ::= "func" CIdent "(" [Param] ")" "void" Block ;
+DeclP.            DeclProc     ::= "func" CIdent "(" [Param] ")" "void" Block ;
 
 ------------- DEFINIZIONE PARAMETRI ----------------
 
@@ -114,10 +114,14 @@ BodyBlock.          Block ::= "{" [CompStatement] "}";
 ExpFuncEmpty.       FunCall ::= CIdent "(" ")" ;
 ExpFunc.            FunCall ::= CIdent "(" [RExp] ")" ;
 
+ExpProcEmpty.       ProcCall ::= CIdent "(" ")" ;
+ExpProc.            ProcCall ::= CIdent "(" [RExp] ")" ;
+
 StateBlock.       	Statement ::= Block ;
 StateDecl.        	Statement ::= Decl;
 StateDeclFun.	    Statement ::= DeclFun ;
-StateFunCall.       Statement ::= FunCall ;
+StateDeclProc.	    Statement ::= DeclProc ;
+StateProcCall.       Statement ::= ProcCall ;
 --StateLexp.          Statement ::= LExp ;
 
 StateExp.	      Statement ::= LExp;

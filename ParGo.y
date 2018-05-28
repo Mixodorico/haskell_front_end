@@ -151,8 +151,7 @@ BLexp : BLexp '[' RExp ']' { AbsGo.ExpArr $1 $3 }
 Program :: { Program }
 Program : 'package' CIdent ListCompStatement { AbsGo.Prog $2 (reverse $3) }
 BasicType :: { BasicType }
-BasicType : 'void' { AbsGo.BasicType_void }
-          | 'bool' { AbsGo.BasicType_bool }
+BasicType : 'bool' { AbsGo.BasicType_bool }
           | 'char' { AbsGo.BasicType_char }
           | 'float' { AbsGo.BasicType_float }
           | 'int' { AbsGo.BasicType_int }
@@ -166,6 +165,8 @@ Decl : 'var' ListCIdent BasicType { AbsGo.DeclVar $2 $3 }
      | ListCIdent ':=' ListRExp { AbsGo.DeclVarShort $1 $3 }
 DeclFun :: { DeclFun }
 DeclFun : 'func' CIdent '(' ListParam ')' BasicType Block { AbsGo.DeclF $2 $4 $6 $7 }
+DeclProc :: { DeclProc }
+DeclProc : 'func' CIdent '(' ListParam ')' 'void' Block { AbsGo.DeclP $2 $4 $7 }
 Param :: { Param }
 Param : ListCIdent BasicType { AbsGo.ParamL $1 $2 }
 Block :: { Block }
@@ -173,11 +174,15 @@ Block : '{' ListCompStatement '}' { AbsGo.BodyBlock (reverse $2) }
 FunCall :: { FunCall }
 FunCall : CIdent '(' ')' { AbsGo.ExpFuncEmpty $1 }
         | CIdent '(' ListRExp ')' { AbsGo.ExpFunc $1 $3 }
+ProcCall :: { ProcCall }
+ProcCall : CIdent '(' ')' { AbsGo.ExpProcEmpty $1 }
+         | CIdent '(' ListRExp ')' { AbsGo.ExpProc $1 $3 }
 Statement :: { Statement }
 Statement : Block { AbsGo.StateBlock $1 }
           | Decl { AbsGo.StateDecl $1 }
           | DeclFun { AbsGo.StateDeclFun $1 }
-          | FunCall { AbsGo.StateFunCall $1 }
+          | DeclProc { AbsGo.StateDeclProc $1 }
+          | ProcCall { AbsGo.StateProcCall $1 }
           | LExp { AbsGo.StateExp $1 }
           | LExp Assignment_op RExp { AbsGo.StateAsgn $1 $2 $3 }
           | 'return' RExp { AbsGo.StateReturn $2 }

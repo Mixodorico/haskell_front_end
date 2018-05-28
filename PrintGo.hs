@@ -136,7 +136,6 @@ instance Print Program where
 
 instance Print BasicType where
   prt i e = case e of
-    BasicType_void -> prPrec i 0 (concatD [doc (showString "void")])
     BasicType_bool -> prPrec i 0 (concatD [doc (showString "bool")])
     BasicType_char -> prPrec i 0 (concatD [doc (showString "char")])
     BasicType_float -> prPrec i 0 (concatD [doc (showString "float")])
@@ -156,6 +155,10 @@ instance Print DeclFun where
   prt i e = case e of
     DeclF cident params basictype block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 cident, doc (showString "("), prt 0 params, doc (showString ")"), prt 0 basictype, prt 0 block])
 
+instance Print DeclProc where
+  prt i e = case e of
+    DeclP cident params block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 cident, doc (showString "("), prt 0 params, doc (showString ")"), doc (showString "void"), prt 0 block])
+
 instance Print Param where
   prt i e = case e of
     ParamL cidents basictype -> prPrec i 0 (concatD [prt 0 cidents, prt 0 basictype])
@@ -171,12 +174,18 @@ instance Print FunCall where
     ExpFuncEmpty cident -> prPrec i 0 (concatD [prt 0 cident, doc (showString "("), doc (showString ")")])
     ExpFunc cident rexps -> prPrec i 0 (concatD [prt 0 cident, doc (showString "("), prt 0 rexps, doc (showString ")")])
 
+instance Print ProcCall where
+  prt i e = case e of
+    ExpProcEmpty cident -> prPrec i 0 (concatD [prt 0 cident, doc (showString "("), doc (showString ")")])
+    ExpProc cident rexps -> prPrec i 0 (concatD [prt 0 cident, doc (showString "("), prt 0 rexps, doc (showString ")")])
+
 instance Print Statement where
   prt i e = case e of
     StateBlock block -> prPrec i 0 (concatD [prt 0 block])
     StateDecl decl -> prPrec i 0 (concatD [prt 0 decl])
     StateDeclFun declfun -> prPrec i 0 (concatD [prt 0 declfun])
-    StateFunCall funcall -> prPrec i 0 (concatD [prt 0 funcall])
+    StateDeclProc declproc -> prPrec i 0 (concatD [prt 0 declproc])
+    StateProcCall proccall -> prPrec i 0 (concatD [prt 0 proccall])
     StateExp lexp -> prPrec i 0 (concatD [prt 0 lexp])
     StateAsgn lexp assignmentop rexp -> prPrec i 0 (concatD [prt 0 lexp, prt 0 assignmentop, prt 0 rexp])
     StateReturn rexp -> prPrec i 0 (concatD [doc (showString "return"), prt 0 rexp])

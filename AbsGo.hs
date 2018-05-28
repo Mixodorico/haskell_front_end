@@ -49,8 +49,7 @@ data Program = Prog CIdent [CompStatement]
   deriving (Eq, Ord, Show, Read)
 
 data BasicType
-    = BasicType_void
-    | BasicType_bool
+    = BasicType_bool
     | BasicType_char
     | BasicType_float
     | BasicType_int
@@ -69,6 +68,9 @@ data Decl
 data DeclFun = DeclF CIdent [Param] BasicType Block
   deriving (Eq, Ord, Show, Read)
 
+data DeclProc = DeclP CIdent [Param] Block
+  deriving (Eq, Ord, Show, Read)
+
 data Param = ParamL [CIdent] BasicType
   deriving (Eq, Ord, Show, Read)
 
@@ -78,11 +80,15 @@ data Block = BodyBlock [CompStatement]
 data FunCall = ExpFuncEmpty CIdent | ExpFunc CIdent [RExp]
   deriving (Eq, Ord, Show, Read)
 
+data ProcCall = ExpProcEmpty CIdent | ExpProc CIdent [RExp]
+  deriving (Eq, Ord, Show, Read)
+
 data Statement
     = StateBlock Block
     | StateDecl Decl
     | StateDeclFun DeclFun
-    | StateFunCall FunCall
+    | StateDeclProc DeclProc
+    | StateProcCall ProcCall
     | StateExp LExp
     | StateAsgn LExp Assignment_op RExp
     | StateReturn RExp

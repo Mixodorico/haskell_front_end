@@ -57,7 +57,6 @@ transProgram x = case x of
   Prog cident compstatements -> failure x
 transBasicType :: BasicType -> Result
 transBasicType x = case x of
-  BasicType_void -> failure x
   BasicType_bool -> failure x
   BasicType_char -> failure x
   BasicType_float -> failure x
@@ -74,6 +73,9 @@ transDecl x = case x of
 transDeclFun :: DeclFun -> Result
 transDeclFun x = case x of
   DeclF cident params basictype block -> failure x
+transDeclProc :: DeclProc -> Result
+transDeclProc x = case x of
+  DeclP cident params block -> failure x
 transParam :: Param -> Result
 transParam x = case x of
   ParamL cidents basictype -> failure x
@@ -84,12 +86,17 @@ transFunCall :: FunCall -> Result
 transFunCall x = case x of
   ExpFuncEmpty cident -> failure x
   ExpFunc cident rexps -> failure x
+transProcCall :: ProcCall -> Result
+transProcCall x = case x of
+  ExpProcEmpty cident -> failure x
+  ExpProc cident rexps -> failure x
 transStatement :: Statement -> Result
 transStatement x = case x of
   StateBlock block -> failure x
   StateDecl decl -> failure x
   StateDeclFun declfun -> failure x
-  StateFunCall funcall -> failure x
+  StateDeclProc declproc -> failure x
+  StateProcCall proccall -> failure x
   StateExp lexp -> failure x
   StateAsgn lexp assignmentop rexp -> failure x
   StateReturn rexp -> failure x
