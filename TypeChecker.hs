@@ -45,13 +45,14 @@ undefVar (CIdent x) = error $ "Name error: undefined variable: " ++ (show x)
 undefFunc (CIdent f) = error $ "Name error: undefined function: " ++ (show f)
 notArray = error $ "Type error: not an array"
 notValidArrSub x = error $ "Type error: not valid array subscript: " ++ (show x)
+wrongDimensions = error "Type error on array: incorrect number of dimensions"
 argsNoMatch l1 l2 = let
                         l1' = concat ["(",intercalate "," (map show l1),")"]
                         l2' = concat ["(",intercalate "," (map show l2),")"]
                     in error $ concat ["Type error: mismatched function parameters. Expected: ",l1', ", found: ", l2']
-notIterable = error $ "Type error: not iterable"
+--notIterable = error $ "Type error: not iterable"
 arrayElemsError = error "Type error: array elements must be of same type"
-invRetType = error "Different return types in function declaration"
+invRetType = error "Type error: different return types in function declaration"
 wrongRetType t1 t2 = error $ concat ["Type error: type of return value is ", (show t2), " while function type is ", (show t1)]
 missingReturn = error "Missing return statement"
 foundReturn = error "Found return statement in procedure declaration"
@@ -206,6 +207,8 @@ findReturn _                          = return None
 checkStatement :: MonadState Env m => CompStatement -> m TCBasicType
 --checkStatement (CompStmt (StateExp (LExprex (LExpId e)))) = checkExpr e 
 checkStatement (CompStmt (StateExp (LExpId e))) = getBasicType e
+--checkStatement (CompStmt (StateExp (BLExprex (ExpArrId e _)))) = getBasicType e
+--checkStatement (CompStmt (StateExp (BLExprex (ExpArr e _)))) = checkExpr e
 checkStatement (CompStmt (StateDecl d)) = checkDecl d
 checkStatement (CompStmt (StateDeclFun d)) = checkDeclFun d
 checkStatement (CompStmt (StateDeclProc d)) = checkDeclProc d
@@ -220,7 +223,43 @@ checkStatement (CompStmt (StateAsgn (LExpId e1) op e2)) = do
                           _ -> if t1 == T BasicType_int || t1 == T BasicType_float
                                   then return None
                                   else errorExpected3 t1
-                                  
+checkStatement (CompStmt (StateExp (BLExprex e))) = --------------------------------------------------------------------------------------
+                   case e of
+                        ExpArrId id e1 -> do
+                            A t <- getBasicType id
+                            t1 <- checkExpr e1
+                            if (t1 /= T BasicType_int)
+                              then errorExpected2 (T BasicType_int) t1
+                              else return t
+                        ExpArr blexp e1 -> do
+                            t <- checkStatement (CompStmt (StateExp (BLExprex blexp)))
+                            t' <- case t of
+                                   (A t) -> return t
+                                   _     -> wrongDimensions
+                            t1 <- checkExpr e1
+                            if (t1 /= T BasicType_int)
+                              then errorExpected2 (T BasicType_int) t1
+                              else return t'
+
+checkStatement (CompStmt (StateAsgn (BLExprex e) op e2)) = --------------------------------------------------------------------------------------
+                   case e of
+                        ExpArrId _ _ -> do
+                            t <- checkStatement (CompStmt (StateExp (BLExprex e)))
+                            --t' <- basic t
+                            t2 <- checkExpr e2
+                            if t /= t2
+                              then errorExpected2 t t2
+                              else return t
+                        ExpArr _ _ -> do
+                            t <- checkStatement (CompStmt (StateExp (BLExprex e)))
+                            t2 <- checkExpr e2
+                            if t /= t2
+                              then errorExpected2 t t2
+                              else return t
+                  --where
+                    --basic (A t) = basic t
+                    --basic t = return t
+
 {-checkStatement (S_Assign acc e) = do
                               t1 <- getBasicType acc
                               t2 <- checkExpr e
@@ -404,13 +443,10 @@ checkExpr (E_ArrI2 s e) = do
                               then return $ A te
                               else errorExpected2 (T BasicType_int) ts
 -}
-checkExpr (LExprex (BLExprex (ExpArr e1 e2))) = do
-                                                  t2 <- checkExpr e2
-                                                  if t2 /= T BasicType_int  
-                                                    then errorExpected2 (T BasicType_int) t2
-                                                    else do
-                                                       t1 <- checkExpr $ LExprex $ BLExprex e1
-                                                       return t1
+--checkStatement (CompStmt (StateExp (BLExprex e)))
+checkExpr (LExprex blexp) = checkStatement (CompStmt (StateExp blexp))
+
+
 checkExpr (FCall f) = checkFunCall f
 --ExpId CIdent RExp
 {-checkExpr (LExprex (BLExprex (ExpId i e))) = do
