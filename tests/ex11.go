@@ -25,20 +25,29 @@ Scritto in base al type checker
 */
     var h bool
     
-    func f (i int) int
+    //f()
+    
+    func f (i int, j bool) void
     {
-      f (8)
-      h
-      if true {
-        return 4
+      i = 9
+      gh := "lol"
+      if i = -7; 3 == 4
+      {
       } else {
-        return 9
-        return 10
-        {
-          //return "yolo"
-        }
+        gh = "loi"
       }
+      
+      j = true
+      j
+      
+      g := -3
+      
       
     }
     
     
+        
+    //i = 0
+    
+    
+  
