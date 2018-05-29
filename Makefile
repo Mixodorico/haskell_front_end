@@ -17,7 +17,7 @@ Lexer.hs: LexGo.x
 
 .PHONY : clean
 clean:
-	-rm -fv $(base) Parser.hs Lexer.hs *.o *.hi
+	-rm -fv $(base) Parser.hs Lexer.hs *.o *.hi *.bak
 
 .PHONY : ex1
 ex1: $(base)
