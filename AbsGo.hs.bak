@@ -80,11 +80,15 @@ data Block = BodyBlock [CompStatement]
 data FunCall = ExpFuncEmpty CIdent | ExpFunc CIdent [RExp]
   deriving (Eq, Ord, Show, Read)
 
+data ProcCall = ExpProcEmpty CIdent | ExpProc CIdent [RExp]
+  deriving (Eq, Ord, Show, Read)
+
 data Statement
     = StateBlock Block
     | StateDecl Decl
     | StateDeclFun DeclFun
     | StateDeclProc DeclProc
+    | StateProcCall ProcCall
     | StateFunCall FunCall
     | StateExp LExp
     | StateAsgn LExp Assignment_op RExp

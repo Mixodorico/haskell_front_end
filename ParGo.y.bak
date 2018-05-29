@@ -174,11 +174,15 @@ Block : '{' ListCompStatement '}' { AbsGo.BodyBlock (reverse $2) }
 FunCall :: { FunCall }
 FunCall : CIdent '(' ')' { AbsGo.ExpFuncEmpty $1 }
         | CIdent '(' ListRExp ')' { AbsGo.ExpFunc $1 $3 }
+ProcCall :: { ProcCall }
+ProcCall : CIdent '(' ')' { AbsGo.ExpProcEmpty $1 }
+         | CIdent '(' ListRExp ')' { AbsGo.ExpProc $1 $3 }
 Statement :: { Statement }
 Statement : Block { AbsGo.StateBlock $1 }
           | Decl { AbsGo.StateDecl $1 }
           | DeclFun { AbsGo.StateDeclFun $1 }
           | DeclProc { AbsGo.StateDeclProc $1 }
+          | ProcCall { AbsGo.StateProcCall $1 }
           | FunCall { AbsGo.StateFunCall $1 }
           | LExp { AbsGo.StateExp $1 }
           | LExp Assignment_op RExp { AbsGo.StateAsgn $1 $2 $3 }

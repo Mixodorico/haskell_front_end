@@ -114,14 +114,11 @@ BodyBlock.          Block ::= "{" [CompStatement] "}";
 ExpFuncEmpty.       FunCall ::= CIdent "(" ")" ;
 ExpFunc.            FunCall ::= CIdent "(" [RExp] ")" ;
 
-ExpProcEmpty.       ProcCall ::= CIdent "(" ")" ;
-ExpProc.            ProcCall ::= CIdent "(" [RExp] ")" ;
-
 StateBlock.       	Statement ::= Block ;
 StateDecl.        	Statement ::= Decl;
 StateDeclFun.	    Statement ::= DeclFun ;
 StateDeclProc.	    Statement ::= DeclProc ;
-StateProcCall.       Statement ::= ProcCall ;
+StateFunCall.       Statement ::= FunCall ;
 --StateLexp.          Statement ::= LExp ;
 
 StateExp.	      Statement ::= LExp;

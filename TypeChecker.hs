@@ -53,7 +53,8 @@ notIterable = error $ "Type error: not iterable"
 arrayElemsError = error "Type error: array elements must be of same type"
 invRetType = error "Different return types in function declaration"
 wrongRetType t1 t2 = error $ "Type error: type of return value is " ++ (show t2) ++ " while function type is " ++ (show t1)
-missingReturn = error $ "Missing return statement"
+missingReturn = error "Missing return statement"
+foundReturn = error "Found return statement in procedure declaration"
 refTypeError = error "Type error: expected type, found reference"
 errorMultAssign l1 l2 = error $ concat ["Error in multiple assign: ", "expected: ", show l1 , " values, found: ", show l2]
 errorProcAssign = error "Type error: fuction does not return any value"
@@ -97,7 +98,10 @@ checkDeclFun (DeclF x pd t s) = do
                                   else return None
 checkDeclProc (DeclP x pd s) = do
                                 newProc x (getParams pd) s
-                                return None
+                                t <- checkBlock s
+                                if (t /= None)
+                                  then error foundReturn
+                                  else return None
 
 checkDecl :: MonadState Env m => Decl -> m TCBasicType
 checkDecl (DeclVar xs t) = do
@@ -147,6 +151,7 @@ getParams :: [Param] -> [(Var, TCBasicType)]
 getParams = concatMap (\(ParamL xs t) -> ( map (\x -> (x, toTCBasicType t)) xs))
 
 -- BLOCKS
+{-
 checkBlock :: MonadState Env m => Block -> m TCBasicType
 checkBlock (BodyBlock stmts) = do
                               env <- get
@@ -159,10 +164,39 @@ checkBlock (BodyBlock stmts) = do
                                           t0 = head types'
                                        in if all (== t0) types'
                                              then return t0
+                                             else invRetType-}
+-- BLOCKS
+checkBlock :: MonadState Env m => Block -> m TCBasicType
+checkBlock (BodyBlock stmts) = do
+                              env <- get
+                              types <- mapM checkStatement stmts
+                              put env
+                              
+                              retTypes <- mapM findReturn stmts
+                              let types' = filter (/= None) retTypes
+                              if types' == []
+                                 then return None
+                                 else let
+                                          t0 = head types'
+                                       in if all (== t0) types'
+                                             then return t0
                                              else invRetType
+
+findReturn (CompStmt (StateReturn r)) = checkExpr r >>= return
+findReturn (CompStmt (StateBlock b))  = checkBlock b
+findReturn (StateWhile e b)           = checkBlock b
+findReturn (StateFor d1 e d2 b)       = checkBlock b
+findReturn (StateIf r b)              = checkBlock b
+findReturn (StateIfElse r b1 b2)      = checkBlock b1 >> checkBlock b2
+findReturn (StateIfElse r b1 b2)      = checkBlock b1 >> checkBlock b2
+findReturn (StateIfStm d r b)         = checkBlock b
+findReturn (StateIfElseStm d r b1 b2) = checkBlock b1 >> checkBlock b2
+findReturn _                          = return None
 
 -- STATEMENTS
 checkStatement :: MonadState Env m => CompStatement -> m TCBasicType
+--checkStatement (CompStmt (StateExp (LExprex (LExpId e)))) = checkExpr e 
+checkStatement (CompStmt (StateExp (LExpId e))) = getBasicType e
 checkStatement (CompStmt (StateDecl d)) = checkDecl d
 checkStatement (CompStmt (StateDeclFun d)) = checkDeclFun d
 checkStatement (CompStmt (StateDeclProc d)) = checkDeclProc d
@@ -239,7 +273,7 @@ checkStatement (StateIfElseStm d r b1 b2) = do
                                  _ -> errorExpected2 (T BasicType_bool) t
 checkStatement (CompStmt (StateReturn r)) = checkExpr r >>= return
 --checkStatement (S_Print e) = checkExpr e >> return None
-checkStatement (CompStmt (StateProcCall fc)) = checkProcCall fc
+checkStatement (CompStmt (StateFunCall s)) = checkFunCall s
 
 checkFuncParams :: MonadState Env m => [RExp] -> m [TCBasicType]
 checkFuncParams exprs = mapM checkExpr' exprs >>= return
@@ -257,41 +291,6 @@ checkFunCall (ExpFunc x exprs) = do
                                     let foo = fromMaybe (undefFunc x) $ M.lookup x ef
                                     let (t,parTyp,s) = case foo of
                                                          F x -> x
-                                                         --P (x,y) -> (None,x,y)
-                                    let params = map snd parTyp
-                                    if paramsMatch args params
-                                       then if St.member x fs
-                                                then return t
-                                                else do
-                                                   let fs' = St.insert x fs
-                                                   put (ev,ef,fs')
-                                                   mapM (\(x',t') -> modify (\(ev,ef,fs) -> (M.insert x' (fromRef t') ev, ef,fs))) parTyp
-                                                   rt <- checkBlock s
-                                                   put (ev,ef,fs')        -- monade state ha put, penso venga da lì
-                                                   if rt /= t
-                                                      --then invRetType
-                                                      then missingReturn
-                                                      else return rt
-                                       else argsNoMatch params args
-                                          where
-                                             fromRef :: TCBasicType -> TCBasicType
-                                             fromRef t = case t of
-                                                            R t -> t
-                                                            x -> x
-                                             paramsMatch :: [TCBasicType] -> [TCBasicType] -> Bool
-                                             paramsMatch args params = let
-                                                                        l = zip args params
-                                                                        f = (\(x,y) -> (x == y) || (fromRef x == y))
-                                                                       in if length args == length params
-                                                                           then and $ map f l
-                                                                           else argsNoMatch params $ filter (/= None) args
-checkProcCall :: MonadState Env m => ProcCall -> m TCBasicType
-checkProcCall (ExpProc x exprs) = do
-                                    args <- checkFuncParams exprs
-                                    env@(ev,ef,fs) <- get
-                                    let foo = fromMaybe (undefFunc x) $ M.lookup x ef
-                                    let (t,parTyp,s) = case foo of
-                                                         F _ -> error $ "function without assignment"
                                                          P (x,y) -> (None,x,y)
                                     let params = map snd parTyp
                                     if paramsMatch args params
@@ -304,8 +303,8 @@ checkProcCall (ExpProc x exprs) = do
                                                    rt <- checkBlock s
                                                    put (ev,ef,fs')        -- monade state ha put, penso venga da lì
                                                    if rt /= t
-                                                      --then invRetType
-                                                      then missingReturn
+                                                      then invRetType
+                                                      --then missingReturn
                                                       else return rt
                                        else argsNoMatch params args
                                           where
@@ -320,6 +319,15 @@ checkProcCall (ExpProc x exprs) = do
                                                                        in if length args == length params
                                                                            then and $ map f l
                                                                            else argsNoMatch params $ filter (/= None) args
+checkFunCall (ExpFuncEmpty x) = do
+                                    env@(ev,ef,fs) <- get
+                                    let foo = fromMaybe (undefFunc x) $ M.lookup x ef
+                                    let (t,parTyp,s) = case foo of
+                                                         F x -> x
+                                                         P (x,y) -> (None,x,y)
+                                    rt <- checkBlock s
+                                    return rt
+
 {-
 updateStrBasicType :: MonadState Env m => Acc -> TCBasicType -> m TCBasicType
 updateStrBasicType acc t = do
@@ -337,6 +345,8 @@ updateStrBasicType acc t = do
 -}
 
 -- EXPRESSIONS
+--checkLExpr (LExpId i) = checkExpr i
+
 checkExpr :: MonadState Env m => RExp -> m TCBasicType
 checkExpr (Bool _) = return $ T BasicType_bool
 checkExpr (Int _) = return $ T BasicType_int

@@ -23,9 +23,22 @@ Scritto in base al type checker
     
     if b = 5; i {} else { i = true }
 */
-    func f (kk int) int
+    var h bool
+    
+    func f (i int) int
     {
-      return 81
+      f (8)
+      h
+      if true {
+        return 4
+      } else {
+        return 9
+        return 10
+        {
+          //return "yolo"
+        }
+      }
+      
     }
     
-    f(89) //posso chiamare una funzione qui o no?
+    

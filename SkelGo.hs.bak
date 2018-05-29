@@ -86,12 +86,17 @@ transFunCall :: FunCall -> Result
 transFunCall x = case x of
   ExpFuncEmpty cident -> failure x
   ExpFunc cident rexps -> failure x
+transProcCall :: ProcCall -> Result
+transProcCall x = case x of
+  ExpProcEmpty cident -> failure x
+  ExpProc cident rexps -> failure x
 transStatement :: Statement -> Result
 transStatement x = case x of
   StateBlock block -> failure x
   StateDecl decl -> failure x
   StateDeclFun declfun -> failure x
   StateDeclProc declproc -> failure x
+  StateProcCall proccall -> failure x
   StateFunCall funcall -> failure x
   StateExp lexp -> failure x
   StateAsgn lexp assignmentop rexp -> failure x
