@@ -50,7 +50,6 @@ argsNoMatch l1 l2 = let
                         l1' = concat ["(",intercalate "," (map show l1),")"]
                         l2' = concat ["(",intercalate "," (map show l2),")"]
                     in error $ concat ["Type error: mismatched function parameters. Expected: ",l1', ", found: ", l2']
---notIterable = error $ "Type error: not iterable"
 arrayElemsError = error "Type error: array elements must be of same type"
 invRetType = error "Type error: different return types in function declaration"
 wrongRetType t1 t2 = error $ concat ["Type error: type of return value is ", (show t2), " while function type is ", (show t1)]
@@ -65,9 +64,6 @@ emptyEnv = (M.empty, M.empty, St.empty)
 -- HELPER FUNCTIONS
 newVar x t = modify (\(ev,ef,cf) -> (M.insert x t ev,ef,cf))
 newFunc x t args s = modify (\(ev,ef,cf) -> (ev, M.insert x (F (t,args,s)) ef, St.delete x cf))
---newFunc x t args s = modify (\(ev,ef,cf) -> (
---                                             M.insert (fst $ head args) (snd $ head args) ev
---                                            , M.insert x (F (t,args,s)) ef, St.delete x cf))
 newProc x args s = modify (\(ev,ef,cf) -> (ev, M.insert x (P (args,s)) ef, St.delete x cf))
 
 -- PROGRAM
@@ -81,21 +77,12 @@ checkProg (Prog id p) = checkProg' p emptyEnv
                                                       checkProg' ss env'
 
 -- DECLARATIONS
-{-
-checkDecl (D_Var x e) = do
-                           t <- checkExpr e
-                           if t /= None
-                              then newVar x t >> return None
-                              else errorProcAssign
--}
 checkDeclFun :: MonadState Env m => DeclFun -> m TCBasicType
 checkDeclFun (DeclF x pd t s) = do
                               let t' = case toTCBasicType t of
                                           R _ -> refTypeError
                                           _ -> toTCBasicType t
                               newFunc x t' (getParams pd) s
-                              --return None
-                              --------------------------------------------------------------------------------------------------------------------------
                               t'' <- checkBlockFun (getParams pd) s
                               if (t'' == None)
                                 then missingReturn
@@ -196,7 +183,6 @@ checkBlockFun ls (BodyBlock stmts) = do
 findReturn (CompStmt (StateReturn r)) = checkExpr r >>= return
 findReturn (CompStmt (StateBlock b))  = checkBlock b
 findReturn (StateWhile e b)           = checkBlock b
-findReturn (StateFor d1 e d2 b)       = checkBlock b
 findReturn (StateIf r b)              = checkBlock b
 findReturn (StateIfElse r b1 b2)      = checkBlock b1 >> checkBlock b2
 findReturn (StateIfStm d r b)         = checkBlock b
@@ -216,14 +202,17 @@ checkStatement (CompStmt (StateBlock b)) = checkBlock b
 checkStatement (CompStmt (StateAsgn (LExpId e1) op e2)) = do
                     t1 <- getBasicType e1
                     t2 <- checkExpr e2
-                    if t1 /= t2
-                      then errorExpected2 t1 t2
-                      else case op of
-                          Assign -> return None
-                          _ -> if t1 == T BasicType_int || t1 == T BasicType_float
-                                  then return None
-                                  else errorExpected3 t1
-checkStatement (CompStmt (StateExp (BLExprex e))) = --------------------------------------------------------------------------------------
+                    case op of
+                         Assign -> equal t1 t2
+                         _      -> if t1 /= T BasicType_int && t1 /= T BasicType_float
+                                     then errorExpected3 t1
+                                     else if t2 /= T BasicType_int && t2 /= T BasicType_float
+                                       then errorExpected3 t2
+                                       else equal t1 t2
+                    where equal t1 t2 = if t1 /= t2
+                                          then errorExpected2 t1 t2
+                                          else return None
+checkStatement (CompStmt (StateExp (BLExprex e))) =
                    case e of
                         ExpArrId id e1 -> do
                             A t <- getBasicType id
@@ -241,64 +230,37 @@ checkStatement (CompStmt (StateExp (BLExprex e))) = ----------------------------
                               then errorExpected2 (T BasicType_int) t1
                               else return t'
 
-checkStatement (CompStmt (StateAsgn (BLExprex e) op e2)) = --------------------------------------------------------------------------------------
+checkStatement (CompStmt (StateAsgn (BLExprex e) op e2)) =
                    case e of
                         ExpArrId _ _ -> do
-                            t <- checkStatement (CompStmt (StateExp (BLExprex e)))
-                            --t' <- basic t
+                            t1 <- checkStatement (CompStmt (StateExp (BLExprex e)))
                             t2 <- checkExpr e2
-                            if t /= t2
-                              then errorExpected2 t t2
-                              else return t
+                            case op of
+                                 Assign -> equal t1 t2
+                                 _      -> if t1 /= T BasicType_int && t1 /= T BasicType_float
+                                             then errorExpected3 t1
+                                             else if t2 /= T BasicType_int && t2 /= T BasicType_float
+                                               then errorExpected3 t2
+                                               else equal t1 t2
                         ExpArr _ _ -> do
-                            t <- checkStatement (CompStmt (StateExp (BLExprex e)))
+                            t1 <- checkStatement (CompStmt (StateExp (BLExprex e)))
                             t2 <- checkExpr e2
-                            if t /= t2
-                              then errorExpected2 t t2
-                              else return t
-                  --where
-                    --basic (A t) = basic t
-                    --basic t = return t
+                            case op of
+                                 Assign -> equal t1 t2
+                                 _      -> if t1 /= T BasicType_int && t1 /= T BasicType_float
+                                             then errorExpected3 t1
+                                             else if t2 /= T BasicType_int && t2 /= T BasicType_float
+                                               then errorExpected3 t2
+                                               else equal t1 t2
+                   where equal t1 t2 = if t1 /= t2
+                                         then errorExpected2 t1 t2
+                                         else return None
 
-{-checkStatement (S_Assign acc e) = do
-                              t1 <- getBasicType acc
-                              t2 <- checkExpr e
-                              if t1 == None
-                                 then updateStrBasicType acc t2
-                                 else if t1 == t2
-                                       then return None
-                                       else errorExpected2 t1 t2
--}
-{-checkStatement (S_MAss a as (Tup e es)) = do
-                                       let l1 = length (a:as)
-                                       let l2 = length (e:es)
-                                       if l1 == l2
-                                          then (mapM (\(a',e') -> checkStatement (S_Assign a' e')) $ zip (a:as) (e:es)) >> return None
-                                          else errorMultAssign l1 l2
--}
 checkStatement (StateWhile e b) = do
                            t <- checkExpr e
                            if t == T BasicType_bool
                               then checkBlock b
                               else errorExpected2 BasicType_bool t
-{-checkStatement (StateFor x acc s) = do
-                              t <- getBasicType acc
-                              env@(ev,ef,f) <- get
-                              case t of
-                                 A t' -> do
-                                          newVar x t'
-                                          checkStatement s
-                                          put env
-                                          return None
-                                 _ -> notIterable
--}
-checkStatement (StateFor d1 e d2 b) = do
-                                t <- checkExpr e
-                                if t == T BasicType_bool
-                                  then do checkBlock b
-                                          checkStatement $ CompStmt d1
-                                          checkStatement $ CompStmt d2
-                                  else errorExpected2 BasicType_bool t
 checkStatement (StateIf r b) = do
                         t <- checkExpr r
                         case t of

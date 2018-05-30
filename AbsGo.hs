@@ -30,6 +30,7 @@ data RExp
     | Ref LExp
     | Deref RExp
     | FCall FunCall
+    | FRead ReadType
     | Int Integer
     | Float Double
     | Char Char
@@ -105,7 +106,6 @@ data CompStatement
     | StateIfElse RExp Block Block
     | StateIfStm Statement RExp Block
     | StateIfElseStm Statement RExp Block Block
-    | StateFor Statement RExp Statement Block
     | StateWhile RExp Block
   deriving (Eq, Ord, Show, Read)
 

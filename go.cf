@@ -41,6 +41,7 @@ Deref.      RExp10 ::= "*" RExp ;
 --ExpValue.      RExp ::= Value ;
 
 FCall.        RExp11 ::= FunCall ;
+FRead.        RExp11 ::= ReadType ;
 
 ------------- TYPES ----------------
 
@@ -140,7 +141,6 @@ StateIfElse.	  	CompStatement ::= "if" RExp Block "else" Block ;            -- "
 StateIfStm.	  	    CompStatement ::= "if" Statement ";" RExp Block ;                -- + condizioni
 StateIfElseStm.	  	CompStatement ::= "if" Statement ";" RExp Block "else" Block ;   -- "" ""
 
-StateFor.	  	    CompStatement ::= "for" Statement ";" RExp ";" Statement Block ;
 StateWhile.       	CompStatement ::= "for" RExp Block ;
 
 StateBreak.        	Statement ::= "break"; 

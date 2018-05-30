@@ -125,7 +125,9 @@ RExp10 : RExp11 { $1 }
        | '&' LExp { AbsGo.Ref $2 }
        | '*' RExp { AbsGo.Deref $2 }
 RExp11 :: { RExp }
-RExp11 : RExp12 { $1 } | FunCall { AbsGo.FCall $1 }
+RExp11 : RExp12 { $1 }
+       | FunCall { AbsGo.FCall $1 }
+       | ReadType { AbsGo.FRead $1 }
 RExp12 :: { RExp }
 RExp12 : RExp13 { $1 }
        | Integer { AbsGo.Int $1 }
@@ -199,7 +201,6 @@ CompStatement : Statement { AbsGo.CompStmt $1 }
               | 'if' RExp Block 'else' Block { AbsGo.StateIfElse $2 $3 $5 }
               | 'if' Statement ';' RExp Block { AbsGo.StateIfStm $2 $4 $5 }
               | 'if' Statement ';' RExp Block 'else' Block { AbsGo.StateIfElseStm $2 $4 $5 $7 }
-              | 'for' Statement ';' RExp ';' Statement Block { AbsGo.StateFor $2 $4 $6 $7 }
               | 'for' RExp Block { AbsGo.StateWhile $2 $3 }
 WriteType :: { WriteType }
 WriteType : 'writeInt' { AbsGo.WriteType_writeInt }

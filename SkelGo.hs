@@ -36,6 +36,7 @@ transRExp x = case x of
   Ref lexp -> failure x
   Deref rexp -> failure x
   FCall funcall -> failure x
+  FRead readtype -> failure x
   Int integer -> failure x
   Float double -> failure x
   Char char -> failure x
@@ -114,7 +115,6 @@ transCompStatement x = case x of
   StateIfElse rexp block1 block2 -> failure x
   StateIfStm statement rexp block -> failure x
   StateIfElseStm statement rexp block1 block2 -> failure x
-  StateFor statement1 rexp statement2 block -> failure x
   StateWhile rexp block -> failure x
 transWriteType :: WriteType -> Result
 transWriteType x = case x of

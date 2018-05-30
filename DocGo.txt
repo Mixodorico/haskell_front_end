@@ -99,6 +99,7 @@ All other symbols are terminals.
   |  |  **|**  | ``*`` //RExp// 
   | //RExp11// | -> | //RExp12// 
   |  |  **|**  | //FunCall// 
+  |  |  **|**  | //ReadType// 
   | //RExp12// | -> | //RExp13// 
   |  |  **|**  | //Integer// 
   |  |  **|**  | //Double// 
@@ -156,7 +157,6 @@ All other symbols are terminals.
   |  |  **|**  | ``if`` //RExp// //Block// ``else`` //Block// 
   |  |  **|**  | ``if`` //Statement// ``;`` //RExp// //Block// 
   |  |  **|**  | ``if`` //Statement// ``;`` //RExp// //Block// ``else`` //Block// 
-  |  |  **|**  | ``for`` //Statement// ``;`` //RExp// ``;`` //Statement// //Block// 
   |  |  **|**  | ``for`` //RExp// //Block// 
   | //WriteType// | -> | ``writeInt`` 
   |  |  **|**  | ``writeFloat`` 
