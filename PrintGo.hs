@@ -203,8 +203,6 @@ instance Print CompStatement where
     CompStmt statement -> prPrec i 0 (concatD [prt 0 statement])
     StateIf rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block])
     StateIfElse rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
-    StateIfStm statement rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 statement, doc (showString ";"), prt 0 rexp, prt 0 block])
-    StateIfElseStm statement rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 statement, doc (showString ";"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
     StateWhile rexp block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 rexp, prt 0 block])
   prtList _ [] = (concatD [])
   prtList _ (x:xs) = (concatD [prt 0 x, prt 0 xs])

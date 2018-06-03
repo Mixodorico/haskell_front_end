@@ -3,19 +3,11 @@ package programma
 Scritto in base al type checker
 */
   
-  var i, j int
-  /*var m[10][1] int
-  var m2[9] bool
+  var i, j float
   
+  var m[10] int
+  var n[1][1] int
   
-  func c (ert[2] int) [3] bool
-  {
-    ert[2]
-    return m2
-  }
-  */
-  
-  i := *i
-  
-  
+  i = i % m[1]
 
+  //if 4.8 == true {}

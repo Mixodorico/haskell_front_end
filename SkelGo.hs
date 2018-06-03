@@ -113,8 +113,6 @@ transCompStatement x = case x of
   CompStmt statement -> failure x
   StateIf rexp block -> failure x
   StateIfElse rexp block1 block2 -> failure x
-  StateIfStm statement rexp block -> failure x
-  StateIfElseStm statement rexp block1 block2 -> failure x
   StateWhile rexp block -> failure x
 transWriteType :: WriteType -> Result
 transWriteType x = case x of

@@ -32,43 +32,42 @@ import ErrM
   '/' { PT _ (TS _ 17) }
   '/=' { PT _ (TS _ 18) }
   ':=' { PT _ (TS _ 19) }
-  ';' { PT _ (TS _ 20) }
-  '<' { PT _ (TS _ 21) }
-  '<=' { PT _ (TS _ 22) }
-  '=' { PT _ (TS _ 23) }
-  '==' { PT _ (TS _ 24) }
-  '>' { PT _ (TS _ 25) }
-  '>=' { PT _ (TS _ 26) }
-  '[' { PT _ (TS _ 27) }
-  ']' { PT _ (TS _ 28) }
-  'bool' { PT _ (TS _ 29) }
-  'break' { PT _ (TS _ 30) }
-  'char' { PT _ (TS _ 31) }
-  'continue' { PT _ (TS _ 32) }
-  'else' { PT _ (TS _ 33) }
-  'false' { PT _ (TS _ 34) }
-  'float' { PT _ (TS _ 35) }
-  'for' { PT _ (TS _ 36) }
-  'func' { PT _ (TS _ 37) }
-  'if' { PT _ (TS _ 38) }
-  'int' { PT _ (TS _ 39) }
-  'package' { PT _ (TS _ 40) }
-  'readChar' { PT _ (TS _ 41) }
-  'readFloat' { PT _ (TS _ 42) }
-  'readInt' { PT _ (TS _ 43) }
-  'readString' { PT _ (TS _ 44) }
-  'return' { PT _ (TS _ 45) }
-  'string' { PT _ (TS _ 46) }
-  'true' { PT _ (TS _ 47) }
-  'var' { PT _ (TS _ 48) }
-  'void' { PT _ (TS _ 49) }
-  'writeChar' { PT _ (TS _ 50) }
-  'writeFloat' { PT _ (TS _ 51) }
-  'writeInt' { PT _ (TS _ 52) }
-  'writeString' { PT _ (TS _ 53) }
-  '{' { PT _ (TS _ 54) }
-  '||' { PT _ (TS _ 55) }
-  '}' { PT _ (TS _ 56) }
+  '<' { PT _ (TS _ 20) }
+  '<=' { PT _ (TS _ 21) }
+  '=' { PT _ (TS _ 22) }
+  '==' { PT _ (TS _ 23) }
+  '>' { PT _ (TS _ 24) }
+  '>=' { PT _ (TS _ 25) }
+  '[' { PT _ (TS _ 26) }
+  ']' { PT _ (TS _ 27) }
+  'bool' { PT _ (TS _ 28) }
+  'break' { PT _ (TS _ 29) }
+  'char' { PT _ (TS _ 30) }
+  'continue' { PT _ (TS _ 31) }
+  'else' { PT _ (TS _ 32) }
+  'false' { PT _ (TS _ 33) }
+  'float' { PT _ (TS _ 34) }
+  'for' { PT _ (TS _ 35) }
+  'func' { PT _ (TS _ 36) }
+  'if' { PT _ (TS _ 37) }
+  'int' { PT _ (TS _ 38) }
+  'package' { PT _ (TS _ 39) }
+  'readChar' { PT _ (TS _ 40) }
+  'readFloat' { PT _ (TS _ 41) }
+  'readInt' { PT _ (TS _ 42) }
+  'readString' { PT _ (TS _ 43) }
+  'return' { PT _ (TS _ 44) }
+  'string' { PT _ (TS _ 45) }
+  'true' { PT _ (TS _ 46) }
+  'var' { PT _ (TS _ 47) }
+  'void' { PT _ (TS _ 48) }
+  'writeChar' { PT _ (TS _ 49) }
+  'writeFloat' { PT _ (TS _ 50) }
+  'writeInt' { PT _ (TS _ 51) }
+  'writeString' { PT _ (TS _ 52) }
+  '{' { PT _ (TS _ 53) }
+  '||' { PT _ (TS _ 54) }
+  '}' { PT _ (TS _ 55) }
 
 L_integ  { PT _ (TI $$) }
 L_doubl  { PT _ (TD $$) }
@@ -199,8 +198,6 @@ CompStatement :: { CompStatement }
 CompStatement : Statement { AbsGo.CompStmt $1 }
               | 'if' RExp Block { AbsGo.StateIf $2 $3 }
               | 'if' RExp Block 'else' Block { AbsGo.StateIfElse $2 $3 $5 }
-              | 'if' Statement ';' RExp Block { AbsGo.StateIfStm $2 $4 $5 }
-              | 'if' Statement ';' RExp Block 'else' Block { AbsGo.StateIfElseStm $2 $4 $5 $7 }
               | 'for' RExp Block { AbsGo.StateWhile $2 $3 }
 WriteType :: { WriteType }
 WriteType : 'writeInt' { AbsGo.WriteType_writeInt }

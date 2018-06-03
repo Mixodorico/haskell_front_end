@@ -21,7 +21,7 @@ $i = [$l $d _ ']          -- identifier character
 $u = [\0-\255]          -- universal: any character
 
 @rsyms =    -- symbols and non-identifier-like reserved words
-   \( | \) | \| \| | \& \& | \! | \= \= | \! \= | \< | \< \= | \> | \> \= | \+ | \- | \* | \/ | \% | \& | \+ \+ | \- \- | \[ | \] | \= | \: \= | \{ | \} | \* \= | \+ \= | \/ \= | \- \= | \; | \,
+   \( | \) | \| \| | \& \& | \! | \= \= | \! \= | \< | \< \= | \> | \> \= | \+ | \- | \* | \/ | \% | \& | \+ \+ | \- \- | \[ | \] | \= | \: \= | \{ | \} | \* \= | \+ \= | \/ \= | \- \= | \,
 
 :-
 "//" [.]* ; -- Toss single line comments
@@ -101,7 +101,7 @@ eitherResIdent tv s = treeFind resWords
                               | s == a = t
 
 resWords :: BTree
-resWords = b "bool" 29 (b "--" 15 (b "*" 8 (b "&" 4 (b "!=" 2 (b "!" 1 N N) (b "%" 3 N N)) (b "(" 6 (b "&&" 5 N N) (b ")" 7 N N))) (b "+=" 12 (b "+" 10 (b "*=" 9 N N) (b "++" 11 N N)) (b "-" 14 (b "," 13 N N) N))) (b "<=" 22 (b ":=" 19 (b "/" 17 (b "-=" 16 N N) (b "/=" 18 N N)) (b "<" 21 (b ";" 20 N N) N)) (b ">=" 26 (b "==" 24 (b "=" 23 N N) (b ">" 25 N N)) (b "]" 28 (b "[" 27 N N) N)))) (b "readInt" 43 (b "for" 36 (b "else" 33 (b "char" 31 (b "break" 30 N N) (b "continue" 32 N N)) (b "float" 35 (b "false" 34 N N) N)) (b "package" 40 (b "if" 38 (b "func" 37 N N) (b "int" 39 N N)) (b "readFloat" 42 (b "readChar" 41 N N) N))) (b "writeChar" 50 (b "true" 47 (b "return" 45 (b "readString" 44 N N) (b "string" 46 N N)) (b "void" 49 (b "var" 48 N N) N)) (b "{" 54 (b "writeInt" 52 (b "writeFloat" 51 N N) (b "writeString" 53 N N)) (b "}" 56 (b "||" 55 N N) N))))
+resWords = b "bool" 28 (b "-" 14 (b ")" 7 (b "&" 4 (b "!=" 2 (b "!" 1 N N) (b "%" 3 N N)) (b "(" 6 (b "&&" 5 N N) N)) (b "++" 11 (b "*=" 9 (b "*" 8 N N) (b "+" 10 N N)) (b "," 13 (b "+=" 12 N N) N))) (b "<=" 21 (b "/=" 18 (b "-=" 16 (b "--" 15 N N) (b "/" 17 N N)) (b "<" 20 (b ":=" 19 N N) N)) (b ">=" 25 (b "==" 23 (b "=" 22 N N) (b ">" 24 N N)) (b "]" 27 (b "[" 26 N N) N)))) (b "readInt" 42 (b "for" 35 (b "else" 32 (b "char" 30 (b "break" 29 N N) (b "continue" 31 N N)) (b "float" 34 (b "false" 33 N N) N)) (b "package" 39 (b "if" 37 (b "func" 36 N N) (b "int" 38 N N)) (b "readFloat" 41 (b "readChar" 40 N N) N))) (b "writeChar" 49 (b "true" 46 (b "return" 44 (b "readString" 43 N N) (b "string" 45 N N)) (b "void" 48 (b "var" 47 N N) N)) (b "{" 53 (b "writeInt" 51 (b "writeFloat" 50 N N) (b "writeString" 52 N N)) (b "}" 55 (b "||" 54 N N) N))))
    where b s n = let bs = id s
                   in B bs (TS bs n)
 

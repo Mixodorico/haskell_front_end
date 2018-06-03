@@ -104,8 +104,6 @@ data CompStatement
     = CompStmt Statement
     | StateIf RExp Block
     | StateIfElse RExp Block Block
-    | StateIfStm Statement RExp Block
-    | StateIfElseStm Statement RExp Block Block
     | StateWhile RExp Block
   deriving (Eq, Ord, Show, Read)
 

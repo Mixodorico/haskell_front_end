@@ -117,12 +117,12 @@ ExpFunc.            FunCall ::= CIdent "(" [RExp] ")" ;
 
 StateBlock.       	Statement ::= Block ;
 StateDecl.        	Statement ::= Decl;
-StateDeclFun.	    Statement ::= DeclFun ;
+StateDeclFun.	      Statement ::= DeclFun ;
 StateDeclProc.	    Statement ::= DeclProc ;
 StateFunCall.       Statement ::= FunCall ;
 --StateLexp.          Statement ::= LExp ;
 
-StateExp.	      Statement ::= LExp;
+StateExp.	        Statement ::= LExp;
 StateAsgn.	      Statement ::= LExp Assignment_op RExp;
 
 Assign.     Assignment_op ::= "=" ;
@@ -136,10 +136,8 @@ StateReturn.      	Statement ::= "return" RExp ;
 
 CompStmt.           CompStatement ::= Statement ;
 
-StateIf.	  	    CompStatement ::= "if" RExp Block ;                         -- singola condizione
-StateIfElse.	  	CompStatement ::= "if" RExp Block "else" Block ;            -- "" ""
-StateIfStm.	  	    CompStatement ::= "if" Statement ";" RExp Block ;                -- + condizioni
-StateIfElseStm.	  	CompStatement ::= "if" Statement ";" RExp Block "else" Block ;   -- "" ""
+StateIf.	  	      CompStatement ::= "if" RExp Block ;
+StateIfElse.	    	CompStatement ::= "if" RExp Block "else" Block ;
 
 StateWhile.       	CompStatement ::= "for" RExp Block ;
 
