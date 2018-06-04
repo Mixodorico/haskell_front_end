@@ -3,11 +3,10 @@ package programma
 Scritto in base al type checker
 */
   
-  var i, j float
+  var i, j int
   
-  var m[10] int
-  var n[1][1] int
+  var m[10] int = { 1,2,3}
+  n := {{false},{true}}      // tenere questa riga in modo da poter fare esempi
   
-  i = i % m[1]
-
-  //if 4.8 == true {}
+  
+  n[1][1] = false || true && false

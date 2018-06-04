@@ -111,6 +111,7 @@ instance Print RExp where
     Deref rexp -> prPrec i 10 (concatD [doc (showString "*"), prt 0 rexp])
     FCall funcall -> prPrec i 11 (concatD [prt 0 funcall])
     FRead readtype -> prPrec i 11 (concatD [prt 0 readtype])
+    ArrInit rexps -> prPrec i 11 (concatD [doc (showString "{"), prt 0 rexps, doc (showString "}")])
     Int n -> prPrec i 12 (concatD [prt 0 n])
     Float d -> prPrec i 12 (concatD [prt 0 d])
     Char c -> prPrec i 12 (concatD [prt 0 c])
@@ -135,26 +136,26 @@ instance Print Program where
   prt i e = case e of
     Prog cident compstatements -> prPrec i 0 (concatD [doc (showString "package"), prt 0 cident, prt 0 compstatements])
 
-instance Print BasicType where
+instance Print Type where
   prt i e = case e of
-    BasicType_bool -> prPrec i 0 (concatD [doc (showString "bool")])
-    BasicType_char -> prPrec i 0 (concatD [doc (showString "char")])
-    BasicType_float -> prPrec i 0 (concatD [doc (showString "float")])
-    BasicType_int -> prPrec i 0 (concatD [doc (showString "int")])
-    BasicType_string -> prPrec i 0 (concatD [doc (showString "string")])
-    BasicType1 n basictype -> prPrec i 0 (concatD [doc (showString "["), prt 0 n, doc (showString "]"), prt 0 basictype])
-    BasicType2 basictype -> prPrec i 0 (concatD [doc (showString "*"), prt 0 basictype])
+    Type_bool -> prPrec i 0 (concatD [doc (showString "bool")])
+    Type_char -> prPrec i 0 (concatD [doc (showString "char")])
+    Type_float -> prPrec i 0 (concatD [doc (showString "float")])
+    Type_int -> prPrec i 0 (concatD [doc (showString "int")])
+    Type_string -> prPrec i 0 (concatD [doc (showString "string")])
+    Type1 n type_ -> prPrec i 0 (concatD [doc (showString "["), prt 0 n, doc (showString "]"), prt 0 type_])
+    Type2 type_ -> prPrec i 0 (concatD [doc (showString "*"), prt 0 type_])
 
 instance Print Decl where
   prt i e = case e of
-    DeclVar cidents basictype -> prPrec i 0 (concatD [doc (showString "var"), prt 0 cidents, prt 0 basictype])
+    DeclVar cidents type_ -> prPrec i 0 (concatD [doc (showString "var"), prt 0 cidents, prt 0 type_])
     DeclVarInit cidents rexps -> prPrec i 0 (concatD [doc (showString "var"), prt 0 cidents, doc (showString "="), prt 0 rexps])
-    DeclVarInitType cidents basictype rexps -> prPrec i 0 (concatD [doc (showString "var"), prt 0 cidents, prt 0 basictype, doc (showString "="), prt 0 rexps])
+    DeclVarInitType cidents type_ rexps -> prPrec i 0 (concatD [doc (showString "var"), prt 0 cidents, prt 0 type_, doc (showString "="), prt 0 rexps])
     DeclVarShort cidents rexps -> prPrec i 0 (concatD [prt 0 cidents, doc (showString ":="), prt 0 rexps])
 
 instance Print DeclFun where
   prt i e = case e of
-    DeclF cident params basictype block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 cident, doc (showString "("), prt 0 params, doc (showString ")"), prt 0 basictype, prt 0 block])
+    DeclF cident params type_ block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 cident, doc (showString "("), prt 0 params, doc (showString ")"), prt 0 type_, prt 0 block])
 
 instance Print DeclProc where
   prt i e = case e of
@@ -162,7 +163,7 @@ instance Print DeclProc where
 
 instance Print Param where
   prt i e = case e of
-    ParamL cidents basictype -> prPrec i 0 (concatD [prt 0 cidents, prt 0 basictype])
+    ParamL cidents type_ -> prPrec i 0 (concatD [prt 0 cidents, prt 0 type_])
   prtList _ [] = (concatD [])
   prtList _ [x] = (concatD [prt 0 x])
   prtList _ (x:xs) = (concatD [prt 0 x, doc (showString ","), prt 0 xs])

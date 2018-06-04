@@ -31,6 +31,7 @@ data RExp
     | Deref RExp
     | FCall FunCall
     | FRead ReadType
+    | ArrInit [RExp]
     | Int Integer
     | Float Double
     | Char Char
@@ -49,30 +50,30 @@ data BLexp = ExpArr BLexp RExp | ExpArrId CIdent RExp
 data Program = Prog CIdent [CompStatement]
   deriving (Eq, Ord, Show, Read)
 
-data BasicType
-    = BasicType_bool
-    | BasicType_char
-    | BasicType_float
-    | BasicType_int
-    | BasicType_string
-    | BasicType1 Integer BasicType
-    | BasicType2 BasicType
+data Type
+    = Type_bool
+    | Type_char
+    | Type_float
+    | Type_int
+    | Type_string
+    | Type1 Integer Type
+    | Type2 Type
   deriving (Eq, Ord, Show, Read)
 
 data Decl
-    = DeclVar [CIdent] BasicType
+    = DeclVar [CIdent] Type
     | DeclVarInit [CIdent] [RExp]
-    | DeclVarInitType [CIdent] BasicType [RExp]
+    | DeclVarInitType [CIdent] Type [RExp]
     | DeclVarShort [CIdent] [RExp]
   deriving (Eq, Ord, Show, Read)
 
-data DeclFun = DeclF CIdent [Param] BasicType Block
+data DeclFun = DeclF CIdent [Param] Type Block
   deriving (Eq, Ord, Show, Read)
 
 data DeclProc = DeclP CIdent [Param] Block
   deriving (Eq, Ord, Show, Read)
 
-data Param = ParamL [CIdent] BasicType
+data Param = ParamL [CIdent] Type
   deriving (Eq, Ord, Show, Read)
 
 data Block = BodyBlock [CompStatement]

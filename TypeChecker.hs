@@ -15,22 +15,22 @@ import Control.Monad.State as S
 
 type Var = CIdent
 type FName = CIdent
-type EnvV = M.Map Var TCBasicType
+type EnvV = M.Map Var TCType
 type EnvF = M.Map FName Func
 type CheckedFun = St.Set Var
 type Env = (EnvV,EnvF,CheckedFun)
 
-data Func = F (TCBasicType, [(Var, TCBasicType)], Block) | P ([(Var, TCBasicType)], Block)
+data Func = F (TCType, [(Var, TCType)], Block) | P ([(Var, TCType)], Block)
 
-data TCBasicType = T BasicType | A TCBasicType | R TCBasicType | None
+data TCType = T Type | A TCType | R TCType | None
    deriving (Eq, Ord)
 
-instance Show TCBasicType where
-   show (T BasicType_bool)   = "Bool"
-   show (T BasicType_int)    = "Int"
-   show (T BasicType_float)  = "Float"
-   show (T BasicType_char)   = "Char"
-   show (T BasicType_string) = "String"
+instance Show TCType where
+   show (T Type_bool)   = "Bool"
+   show (T Type_int)    = "Int"
+   show (T Type_float)  = "Float"
+   show (T Type_char)   = "Char"
+   show (T Type_string) = "String"
    show (R t) = "&" ++ show t
    show (A t) = (show t) ++ "[]"
    show None = "None"
@@ -47,7 +47,6 @@ errorExpected6 t1 t2 = error $ concat ["Type error: mod operator expects 2 Int, 
 undefVar (CIdent x) = error $ "Name error: undefined variable: " ++ (show x)
 undefFunc (CIdent f) = error $ "Name error: undefined function: " ++ (show f)
 notArray = error $ "Type error: not an array"
-notValidArrSub x = error $ "Type error: not valid array subscript: " ++ (show x)
 wrongDimensions = error "Type error on array: incorrect number of dimensions"
 argsNoMatch l1 l2 = let
                         l1' = concat ["(",intercalate "," (map show l1),")"]
@@ -83,11 +82,11 @@ checkProg (Prog id p) = checkProg' p emptyEnv
                                                       checkProg' ss env'
 
 -- DECLARATIONS
-checkDeclFun :: MonadState Env m => DeclFun -> m TCBasicType
+checkDeclFun :: MonadState Env m => DeclFun -> m TCType
 checkDeclFun (DeclF x pd t s) = do
-                              let t' = case toTCBasicType t of
+                              let t' = case toTCType t of
                                           R _ -> refTypeError
-                                          _ -> toTCBasicType t
+                                          _ -> toTCType t
                               newFunc x t' (getParams pd) s
                               t'' <- checkBlockFun (getParams pd) s
                               if (t'' == None)
@@ -102,9 +101,9 @@ checkDeclProc (DeclP x pd s) = do
                                   then error foundReturn
                                   else return None
 
-checkDecl :: MonadState Env m => Decl -> m TCBasicType
+checkDecl :: MonadState Env m => Decl -> m TCType
 checkDecl (DeclVar xs t) = do
-                             let t' = toTCBasicType t
+                             let t' = toTCType t
                              (mapM (\(x',t') -> newVar x' t') $ zip xs (replicate (length xs) t')) >> return None
 checkDecl (DeclVarInit xs xe) = do
                                   xt <- mapM (\e -> checkExpr e) xe
@@ -122,27 +121,26 @@ checkDecl (DeclVarInitType xs t xe) = do
                                   let les = length xe
                                   if lxs /= les
                                     then errorMultAssign lxs les
-                                    else (mapM (\(x',t') -> if check t t' then newVar x' t' else errorExpected2 (toTCBasicType t) t') $ zip xs xt) >> return None
+                                    else (mapM (\(x',t') -> if check t t' then newVar x' t' else errorExpected2 (toTCType t) t') $ zip xs xt) >> return None
                                   return None
                                   where
                                     check t1 t2 = if t2 /= None
-                                                    then toTCBasicType t1 == t2
+                                                    then toTCType t1 == t2
                                                     else procAssign
 checkDecl (DeclVarShort xs xe) = checkDecl (DeclVarInit xs xe)
 
-toTCBasicType :: BasicType -> TCBasicType
-toTCBasicType t = 
-                case t of
-                  BasicType2 t' -> R $ toTCBasicType t'
-                  BasicType1 _ t' -> A $ toTCBasicType t'
-                  _ -> T t
+toTCType :: Type -> TCType
+toTCType t = case t of
+              Type2 t' -> R $ toTCType t'
+              Type1 _ t' -> A $ toTCType t'
+              _ -> T t
 
-getParams :: [Param] -> [(Var, TCBasicType)]
-getParams = concatMap (\(ParamL xs t) -> ( map (\x -> (x, toTCBasicType t)) xs))
+getParams :: [Param] -> [(Var, TCType)]
+getParams = concatMap (\(ParamL xs t) -> ( map (\x -> (x, toTCType t)) xs))
 
 -- BLOCKS
 
-checkBlock :: MonadState Env m => Block -> m TCBasicType
+checkBlock :: MonadState Env m => Block -> m TCType
 checkBlock (BodyBlock stmts) = do
                               env <- get
                               types <- mapM checkStatement stmts
@@ -180,16 +178,16 @@ findReturn (StateIfElse r b1 b2)      = checkBlock b1 >> checkBlock b2
 findReturn _                          = return None
 
 -- STATEMENTS
-checkStatement :: MonadState Env m => CompStatement -> m TCBasicType
+checkStatement :: MonadState Env m => CompStatement -> m TCType
 checkStatement (CompStmt (StateExp (LExpId e))) = getBasicType e
 checkStatement (CompStmt (StateExp (PostInc e))) = do
                                                      t <- checkExpr (LExprex e)
-                                                     if t /= T BasicType_int
+                                                     if t /= T Type_int
                                                        then errorPostInc t
                                                        else return t
 checkStatement (CompStmt (StateExp (PostDecr e))) = do
                                                      t <- checkExpr (LExprex e)
-                                                     if t /= T BasicType_int
+                                                     if t /= T Type_int
                                                        then errorPostDecr t
                                                        else return t
 checkStatement (CompStmt (StateDecl d)) = checkDecl d
@@ -201,25 +199,28 @@ checkStatement (CompStmt (StateAsgn e1 op e2)) = do
                     t2 <- checkExpr e2
                     case op of
                          Assign -> assignable t1 t2
-                         _      -> if t1 /= T BasicType_int && t1 /= T BasicType_float
+                         _      -> if t1 /= T Type_int && t1 /= T Type_float
                                      then errorExpected3 t1
-                                     else if t2 /= T BasicType_int && t2 /= T BasicType_float
+                                     else if t2 /= T Type_int && t2 /= T Type_float
                                        then errorExpected3 t2
                                        else assignable t1 t2
                     where assignable t1 t2 = if t1 == t2
                                                then return None
                                                else case t1 of
-                                                         T BasicType_float -> if t2 == T BasicType_int || t2 == T BasicType_float
+                                                         T Type_float -> if t2 == T Type_int || t2 == T Type_float
                                                                                 then return None
                                                                                 else errorExpected2 t1 t2
                                                          _                 -> errorExpected2 t1 t2
 checkStatement (CompStmt (StateExp (BLExprex e))) =
                    case e of
                         ExpArrId id e1 -> do
-                            A t <- getBasicType id
+                            tId <- getBasicType id
+                            A t <- case tId of
+                                        A t -> return $ A t
+                                        _ -> notArray
                             t1 <- checkExpr e1
-                            if (t1 /= T BasicType_int)
-                              then errorExpected2 (T BasicType_int) t1
+                            if (t1 /= T Type_int)
+                              then errorExpected2 (T Type_int) t1
                               else return t
                         ExpArr blexp e1 -> do
                             t <- checkStatement (CompStmt (StateExp (BLExprex blexp)))
@@ -227,55 +228,29 @@ checkStatement (CompStmt (StateExp (BLExprex e))) =
                                    (A t) -> return t
                                    _     -> wrongDimensions
                             t1 <- checkExpr e1
-                            if (t1 /= T BasicType_int)
-                              then errorExpected2 (T BasicType_int) t1
+                            if (t1 /= T Type_int)
+                              then errorExpected2 (T Type_int) t1
                               else return t'
-
-checkStatement (CompStmt (StateAsgn (BLExprex e) op e2)) =
-                   case e of
-                        ExpArrId _ _ -> do
-                            t1 <- checkStatement (CompStmt (StateExp (BLExprex e)))
-                            t2 <- checkExpr e2
-                            case op of
-                                 Assign -> equal t1 t2
-                                 _      -> if t1 /= T BasicType_int && t1 /= T BasicType_float
-                                             then errorExpected3 t1
-                                             else if t2 /= T BasicType_int && t2 /= T BasicType_float
-                                               then errorExpected3 t2
-                                               else equal t1 t2
-                        ExpArr _ _ -> do
-                            t1 <- checkStatement (CompStmt (StateExp (BLExprex e)))
-                            t2 <- checkExpr e2
-                            case op of
-                                 Assign -> equal t1 t2
-                                 _      -> if t1 /= T BasicType_int && t1 /= T BasicType_float
-                                             then errorExpected3 t1
-                                             else if t2 /= T BasicType_int && t2 /= T BasicType_float
-                                               then errorExpected3 t2
-                                               else equal t1 t2
-                   where equal t1 t2 = if t1 /= t2
-                                         then errorExpected2 t1 t2
-                                         else return None
 
 checkStatement (StateWhile e b) = do
                            t <- checkExpr e
-                           if t == T BasicType_bool
+                           if t == T Type_bool
                               then checkBlock b
-                              else errorExpected2 BasicType_bool t
+                              else errorExpected2 Type_bool t
 checkStatement (StateIf r b) = do
                         t <- checkExpr r
                         case t of
-                           T BasicType_bool -> checkBlock b
-                           _ -> errorExpected2 (T BasicType_bool) t
+                           T Type_bool -> checkBlock b
+                           _ -> errorExpected2 (T Type_bool) t
 checkStatement (StateIfElse r b1 b2) = do
                               t <- checkExpr r
                               case t of
-                                 T BasicType_bool -> checkBlock b1 >> checkBlock b2
-                                 _ -> errorExpected2 (T BasicType_bool) t
+                                 T Type_bool -> checkBlock b1 >> checkBlock b2
+                                 _ -> errorExpected2 (T Type_bool) t
 checkStatement (CompStmt (StateReturn r)) = checkExpr r >>= return
 checkStatement (CompStmt (StateFunCall s)) = checkFunCall s
 
-checkFuncParams :: MonadState Env m => [RExp] -> m [TCBasicType]
+checkFuncParams :: MonadState Env m => [RExp] -> m [TCType]
 checkFuncParams exprs = mapM checkExpr' exprs >>= return
                            where
                               checkExpr' e = case e of
@@ -284,7 +259,7 @@ checkFuncParams exprs = mapM checkExpr' exprs >>= return
                                                                   return t
                                                 _ -> checkExpr e
 
-checkFunCall :: MonadState Env m => FunCall -> m TCBasicType
+checkFunCall :: MonadState Env m => FunCall -> m TCType
 checkFunCall (ExpFunc x exprs) = do
                                     args <- checkFuncParams exprs
                                     env@(ev,ef,fs) <- get
@@ -307,11 +282,11 @@ checkFunCall (ExpFunc x exprs) = do
                                                       else return rt
                                        else argsNoMatch params args
                                           where
-                                             fromRef :: TCBasicType -> TCBasicType
+                                             fromRef :: TCType -> TCType
                                              fromRef t = case t of
                                                             R t -> t
                                                             x -> x
-                                             paramsMatch :: [TCBasicType] -> [TCBasicType] -> Bool
+                                             paramsMatch :: [TCType] -> [TCType] -> Bool
                                              paramsMatch args params = let
                                                                         l = zip args params
                                                                         f = (\(x,y) -> (x == y) || (fromRef x == y))
@@ -340,11 +315,11 @@ checkFunCall (ExpFuncEmpty x) = do
                                                       else return rt
                                        else argsNoMatch params args
                                           where
-                                             fromRef :: TCBasicType -> TCBasicType
+                                             fromRef :: TCType -> TCType
                                              fromRef t = case t of
                                                             R t -> t
                                                             x -> x
-                                             paramsMatch :: [TCBasicType] -> [TCBasicType] -> Bool
+                                             paramsMatch :: [TCType] -> [TCType] -> Bool
                                              paramsMatch args params = let
                                                                         l = zip args params
                                                                         f = (\(x,y) -> (x == y) || (fromRef x == y))
@@ -353,12 +328,12 @@ checkFunCall (ExpFuncEmpty x) = do
                                                                            else argsNoMatch params $ filter (/= None) args
 
 -- EXPRESSIONS
-checkExpr :: MonadState Env m => RExp -> m TCBasicType
-checkExpr (Bool _) = return $ T BasicType_bool
-checkExpr (Int _) = return $ T BasicType_int
-checkExpr (Float _) = return $ T BasicType_float
-checkExpr (Char _) = return $ T BasicType_char
-checkExpr (String _) = return $ T BasicType_string
+checkExpr :: MonadState Env m => RExp -> m TCType
+checkExpr (Bool _) = return $ T Type_bool
+checkExpr (Int _) = return $ T Type_int
+checkExpr (Float _) = return $ T Type_float
+checkExpr (Char _) = return $ T Type_char
+checkExpr (String _) = return $ T Type_string
 checkExpr (LExprex (LExpId i)) = getBasicType i
 checkExpr (Or e1 e2) = checkBoolean e1 e2
 checkExpr (And e1 e2) = checkBoolean e1 e2
@@ -375,20 +350,20 @@ checkExpr (Div e1 e2) = checkArithm e1 e2
 checkExpr (Mod e1 e2) = do
                          t1 <- checkExpr e1
                          t2 <- checkExpr e2
-                         if t1 /= T BasicType_int || t2 /= T BasicType_int
+                         if t1 /= T Type_int || t2 /= T Type_int
                            then errorExpected6 t1 t2
                            else return t1
 
 checkExpr (Neg e) = do
                         t <- checkExpr e
-                        if t == T BasicType_int || t == T BasicType_float
+                        if t == T Type_int || t == T Type_float
                            then return t
                            else errorExpected3 t
 checkExpr (Not e) = do
                         t <- checkExpr e
-                        if t == T BasicType_bool
-                           then return $ T BasicType_bool
-                           else errorExpected2 (T BasicType_bool) t
+                        if t == T Type_bool
+                           then return $ T Type_bool
+                           else errorExpected2 (T Type_bool) t
 
 checkExpr (Ref e) = do
                       t <- checkExpr (LExprex e)
@@ -403,35 +378,45 @@ checkExpr (LExprex blexp) = checkStatement (CompStmt (StateExp blexp))
 
 checkExpr (FCall f) = checkFunCall f
 
-getBasicType :: MonadState Env m => CIdent -> m TCBasicType
+checkExpr (ArrInit l) = do
+                          t <- foldl1 checkSameType (map (checkExpr) l)
+                          return $ A t
+                          where checkSameType t1 t2 = do
+                                              t1' <- t1
+                                              t2' <- t2
+                                              if t1' == t2'
+                                                then t1
+                                                else arrayElemsError
+
+getBasicType :: MonadState Env m => CIdent -> m TCType
 getBasicType (CIdent x) = do
                            (ev,_,_) <- get
                            case M.lookup (CIdent x) ev of
                               Just t -> return t
                               Nothing -> undefVar $ CIdent x
 
-checkBoolean :: MonadState Env m => RExp -> RExp -> m TCBasicType
+checkBoolean :: MonadState Env m => RExp -> RExp -> m TCType
 checkBoolean e1 e2 = do
                         t1 <- checkExpr e1
                         t2 <- checkExpr e2
-                        if t1 == T BasicType_bool && t1 == t2
-                           then return $ T BasicType_bool
-                           else errorExpected (T BasicType_bool) (T BasicType_bool) t1 t2
+                        if t1 == T Type_bool && t1 == t2
+                           then return $ T Type_bool
+                           else errorExpected (T Type_bool) (T Type_bool) t1 t2
 
-checkEq :: MonadState Env m => RExp -> RExp -> m TCBasicType
+checkEq :: MonadState Env m => RExp -> RExp -> m TCType
 checkEq e1 e2 = do
                      t1 <- checkExpr e1
                      t2 <- checkExpr e2
                      if t1 == t2
-                       then return $ T BasicType_bool
+                       then return $ T Type_bool
                        else do
                               t3 <- inferNumeric t1 t2
                               if t3 /= None
-                                then return $ T BasicType_bool
+                                then return $ T Type_bool
                                 else errorExpected5 t1 t2
                               
 
-checkArithm :: MonadState Env m => RExp -> RExp -> m TCBasicType
+checkArithm :: MonadState Env m => RExp -> RExp -> m TCType
 checkArithm e1 e2 = do
                      t1 <- checkExpr e1
                      t2 <- checkExpr e2
@@ -440,23 +425,24 @@ checkArithm e1 e2 = do
                        then return t3
                        else errorExpected4 t1 t2
 
-checkComp :: MonadState Env m => RExp -> RExp -> m TCBasicType
+checkComp :: MonadState Env m => RExp -> RExp -> m TCType
 checkComp e1 e2 = do
                      t1 <- checkExpr e1
                      t2 <- checkExpr e2
                      t3 <- inferNumeric t1 t2
                      if t3 /= None
-                       then return $ T BasicType_bool
+                       then return $ T Type_bool
                        else errorExpected4 t1 t2
 
+inferNumeric :: Monad m => TCType -> TCType -> m TCType
 inferNumeric t1 t2 = case (t1,t2) of
-                          (T BasicType_int, T BasicType_int)     -> return t1
-                          (T BasicType_int, T BasicType_float)   -> return t2
-                          (T BasicType_float, T BasicType_int)   -> return t1
-                          (T BasicType_float, T BasicType_float) -> return t1
+                          (T Type_int, T Type_int)     -> return t1
+                          (T Type_int, T Type_float)   -> return t2
+                          (T Type_float, T Type_int)   -> return t1
+                          (T Type_float, T Type_float) -> return t1
                           _                                      -> return None
 
-inferBasicType :: MonadState Env m => RExp -> m TCBasicType
+inferBasicType :: MonadState Env m => RExp -> m TCType
 inferBasicType (LExprex (LExpId x)) = do
                            (ev,ef,_) <- get
                            let t = M.lookup x ev

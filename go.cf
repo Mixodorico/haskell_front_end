@@ -42,6 +42,7 @@ Deref.      RExp10 ::= "*" RExp ;
 
 FCall.        RExp11 ::= FunCall ;
 FRead.        RExp11 ::= ReadType ;
+ArrInit.      RExp11 ::= "{" [RExp] "}" ;
 
 ------------- TYPES ----------------
 
@@ -79,23 +80,23 @@ Prog. Program ::= "package" CIdent [CompStatement];
 
 --separator Decl "" ;
 
-rules BasicType ::= "bool" | "char" | "float" | "int" | "string" | "[" Integer "]" BasicType | "*" BasicType ;
+rules Type ::= "bool" | "char" | "float" | "int" | "string" | "[" Integer "]" Type | "*" Type ;
 
-DeclVar. 	      Decl         ::= "var"  [CIdent] BasicType ;
+DeclVar. 	      Decl         ::= "var"  [CIdent] Type ;
 DeclVarInit. 	  Decl         ::= "var"  [CIdent] "=" [RExp] ;   
-DeclVarInitType.  Decl         ::= "var"  [CIdent] BasicType "=" [RExp] ;   -- aggiunta
+DeclVarInitType.  Decl         ::= "var"  [CIdent] Type "=" [RExp] ;   -- aggiunta
 
 DeclVarShort.     Decl         ::= [CIdent] ":=" [RExp] ;     -- quando non c'e' un tipo lo inferisce automaticamente        
 
-DeclF.            DeclFun      ::= "func" CIdent "(" [Param] ")" BasicType Block ;
+DeclF.            DeclFun      ::= "func" CIdent "(" [Param] ")" Type Block ;
 DeclP.            DeclProc     ::= "func" CIdent "(" [Param] ")" "void" Block ;
 
 ------------- DEFINIZIONE PARAMETRI ----------------
 
-ParamL.   	    Param        ::=  [CIdent] BasicType ;     -- di default e' passaggio per valore
+ParamL.   	    Param        ::=  [CIdent] Type ;     -- di default e' passaggio per valore
 
 {-
-ParamLPassType. Param        ::=  Pass [CIdent] BasicType ;
+ParamLPassType. Param        ::=  Pass [CIdent] Type ;
 
 PassValue.	    Pass         ::=  "val" ;
 PassRef.	    Pass         ::=  "ref" ;

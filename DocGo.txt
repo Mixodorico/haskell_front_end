@@ -53,9 +53,9 @@ The symbols used in go are the following:
   | ! | == | != | <
   | <= | > | >= | +
   | - | * | / | %
-  | & | ++ | -- | [
-  | ] | = | := | {
-  | } | *= | += | /=
+  | & | { | } | ++
+  | -- | [ | ] | =
+  | := | *= | += | /=
   | -= | , |  | 
 
 ===Comments===
@@ -100,6 +100,7 @@ All other symbols are terminals.
   | //RExp11// | -> | //RExp12// 
   |  |  **|**  | //FunCall// 
   |  |  **|**  | //ReadType// 
+  |  |  **|**  | ``{`` //[RExp]// ``}`` 
   | //RExp12// | -> | //RExp13// 
   |  |  **|**  | //Integer// 
   |  |  **|**  | //Double// 
@@ -118,20 +119,20 @@ All other symbols are terminals.
   | //BLexp// | -> | //BLexp// ``[`` //RExp// ``]`` 
   |  |  **|**  | //CIdent// ``[`` //RExp// ``]`` 
   | //Program// | -> | ``package`` //CIdent// //[CompStatement]// 
-  | //BasicType// | -> | ``bool`` 
+  | //Type// | -> | ``bool`` 
   |  |  **|**  | ``char`` 
   |  |  **|**  | ``float`` 
   |  |  **|**  | ``int`` 
   |  |  **|**  | ``string`` 
-  |  |  **|**  | ``[`` //Integer// ``]`` //BasicType// 
-  |  |  **|**  | ``*`` //BasicType// 
-  | //Decl// | -> | ``var`` //[CIdent]// //BasicType// 
+  |  |  **|**  | ``[`` //Integer// ``]`` //Type// 
+  |  |  **|**  | ``*`` //Type// 
+  | //Decl// | -> | ``var`` //[CIdent]// //Type// 
   |  |  **|**  | ``var`` //[CIdent]// ``=`` //[RExp]// 
-  |  |  **|**  | ``var`` //[CIdent]// //BasicType// ``=`` //[RExp]// 
+  |  |  **|**  | ``var`` //[CIdent]// //Type// ``=`` //[RExp]// 
   |  |  **|**  | //[CIdent]// ``:=`` //[RExp]// 
-  | //DeclFun// | -> | ``func`` //CIdent// ``(`` //[Param]// ``)`` //BasicType// //Block// 
+  | //DeclFun// | -> | ``func`` //CIdent// ``(`` //[Param]// ``)`` //Type// //Block// 
   | //DeclProc// | -> | ``func`` //CIdent// ``(`` //[Param]// ``)`` ``void`` //Block// 
-  | //Param// | -> | //[CIdent]// //BasicType// 
+  | //Param// | -> | //[CIdent]// //Type// 
   | //Block// | -> | ``{`` //[CompStatement]// ``}`` 
   | //FunCall// | -> | //CIdent// ``(`` ``)`` 
   |  |  **|**  | //CIdent// ``(`` //[RExp]// ``)`` 

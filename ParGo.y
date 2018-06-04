@@ -127,6 +127,7 @@ RExp11 :: { RExp }
 RExp11 : RExp12 { $1 }
        | FunCall { AbsGo.FCall $1 }
        | ReadType { AbsGo.FRead $1 }
+       | '{' ListRExp '}' { AbsGo.ArrInit $2 }
 RExp12 :: { RExp }
 RExp12 : RExp13 { $1 }
        | Integer { AbsGo.Int $1 }
@@ -151,25 +152,25 @@ BLexp : BLexp '[' RExp ']' { AbsGo.ExpArr $1 $3 }
       | CIdent '[' RExp ']' { AbsGo.ExpArrId $1 $3 }
 Program :: { Program }
 Program : 'package' CIdent ListCompStatement { AbsGo.Prog $2 (reverse $3) }
-BasicType :: { BasicType }
-BasicType : 'bool' { AbsGo.BasicType_bool }
-          | 'char' { AbsGo.BasicType_char }
-          | 'float' { AbsGo.BasicType_float }
-          | 'int' { AbsGo.BasicType_int }
-          | 'string' { AbsGo.BasicType_string }
-          | '[' Integer ']' BasicType { AbsGo.BasicType1 $2 $4 }
-          | '*' BasicType { AbsGo.BasicType2 $2 }
+Type :: { Type }
+Type : 'bool' { AbsGo.Type_bool }
+     | 'char' { AbsGo.Type_char }
+     | 'float' { AbsGo.Type_float }
+     | 'int' { AbsGo.Type_int }
+     | 'string' { AbsGo.Type_string }
+     | '[' Integer ']' Type { AbsGo.Type1 $2 $4 }
+     | '*' Type { AbsGo.Type2 $2 }
 Decl :: { Decl }
-Decl : 'var' ListCIdent BasicType { AbsGo.DeclVar $2 $3 }
+Decl : 'var' ListCIdent Type { AbsGo.DeclVar $2 $3 }
      | 'var' ListCIdent '=' ListRExp { AbsGo.DeclVarInit $2 $4 }
-     | 'var' ListCIdent BasicType '=' ListRExp { AbsGo.DeclVarInitType $2 $3 $5 }
+     | 'var' ListCIdent Type '=' ListRExp { AbsGo.DeclVarInitType $2 $3 $5 }
      | ListCIdent ':=' ListRExp { AbsGo.DeclVarShort $1 $3 }
 DeclFun :: { DeclFun }
-DeclFun : 'func' CIdent '(' ListParam ')' BasicType Block { AbsGo.DeclF $2 $4 $6 $7 }
+DeclFun : 'func' CIdent '(' ListParam ')' Type Block { AbsGo.DeclF $2 $4 $6 $7 }
 DeclProc :: { DeclProc }
 DeclProc : 'func' CIdent '(' ListParam ')' 'void' Block { AbsGo.DeclP $2 $4 $7 }
 Param :: { Param }
-Param : ListCIdent BasicType { AbsGo.ParamL $1 $2 }
+Param : ListCIdent Type { AbsGo.ParamL $1 $2 }
 Block :: { Block }
 Block : '{' ListCompStatement '}' { AbsGo.BodyBlock (reverse $2) }
 FunCall :: { FunCall }

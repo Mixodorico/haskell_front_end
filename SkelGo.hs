@@ -37,6 +37,7 @@ transRExp x = case x of
   Deref rexp -> failure x
   FCall funcall -> failure x
   FRead readtype -> failure x
+  ArrInit rexps -> failure x
   Int integer -> failure x
   Float double -> failure x
   Char char -> failure x
@@ -56,30 +57,30 @@ transBLexp x = case x of
 transProgram :: Program -> Result
 transProgram x = case x of
   Prog cident compstatements -> failure x
-transBasicType :: BasicType -> Result
-transBasicType x = case x of
-  BasicType_bool -> failure x
-  BasicType_char -> failure x
-  BasicType_float -> failure x
-  BasicType_int -> failure x
-  BasicType_string -> failure x
-  BasicType1 integer basictype -> failure x
-  BasicType2 basictype -> failure x
+transType :: Type -> Result
+transType x = case x of
+  Type_bool -> failure x
+  Type_char -> failure x
+  Type_float -> failure x
+  Type_int -> failure x
+  Type_string -> failure x
+  Type1 integer type_ -> failure x
+  Type2 type_ -> failure x
 transDecl :: Decl -> Result
 transDecl x = case x of
-  DeclVar cidents basictype -> failure x
+  DeclVar cidents type_ -> failure x
   DeclVarInit cidents rexps -> failure x
-  DeclVarInitType cidents basictype rexps -> failure x
+  DeclVarInitType cidents type_ rexps -> failure x
   DeclVarShort cidents rexps -> failure x
 transDeclFun :: DeclFun -> Result
 transDeclFun x = case x of
-  DeclF cident params basictype block -> failure x
+  DeclF cident params type_ block -> failure x
 transDeclProc :: DeclProc -> Result
 transDeclProc x = case x of
   DeclP cident params block -> failure x
 transParam :: Param -> Result
 transParam x = case x of
-  ParamL cidents basictype -> failure x
+  ParamL cidents type_ -> failure x
 transBlock :: Block -> Result
 transBlock x = case x of
   BodyBlock compstatements -> failure x
