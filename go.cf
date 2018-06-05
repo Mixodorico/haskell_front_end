@@ -1,98 +1,96 @@
-Start.              Prog ::= "package" Id [Decl];
+StartProg. Start ::= "package" Id [Decl];
 
-DeclFun.   	        Decl ::= "func" Id "(" [Param] ")" Type Block;
-DeclProc.           Decl ::= "func" Id "(" [Param] ")" "void" Block;
-DeclVar. 	        Decl ::= "var"  [Id] Type;
-DeclVarInit. 	    Decl ::= "var"  [Id] "=" [RExp];
-DeclVarInitType.    Decl ::= "var"  [Id] Type "=" [RExp];   --aggiunta 
-
-DeclVarShort.       ShortVarDecl ::= [Id] ":=" [RExp];
+DeclFun.   	Decl ::= "func" Id "(" [Param] ")" Type Block;
+DeclProc.       Decl ::= "func" Id "(" [Param] ")" Block;
+DeclVar. 	Decl ::= "var"  [Id] Type;
+DeclVarInit. 	Decl ::= "var"  [Id] "=" [ExpR];
+DeclVarShort.   ShortVarDecl ::= [Id] ":=" [ExpR];
 
 
-ParamL.   	        Param ::=  [Id] Type;				    -- di default è passaggio per valore
-ParamLPassType.     Param ::=  Pass [Id] Type;
-PassValue.	        Pass  ::=  "val";
-PassRef.	        Pass  ::=  "ref";
-PassValueRes.       Pass  ::=  "valres";
+ParamL.   	Param ::=  [Id] Type;				-- di default è passaggio per valore
+ParamLPassType. Param ::=  Pass [Id] Type;
+PassValue.	Pass  ::=  "val";
+PassRef.	Pass  ::=  "ref";
+PassValueRes.   Pass  ::=  "valres";
 
 
-TypeInt.            Type ::= "int";
-TypeBool.           Type ::= "bool";
-TypeFloat.          Type ::= "float";
-TypeChar.           Type ::= "char";
-TypeString.         Type ::= "string";
-TypeArray.          Type ::=  "[" Integer "]" Type; 
-TypePointer.        Type ::= "*" Type; 
+TypeInt.     Type ::= "int";
+TypeBool.    Type ::= "bool";
+TypeFloat.   Type ::= "float";
+TypeChar.    Type ::= "char";
+TypeString.  Type ::= "string";
+TypeArray.   Type ::=  "[" Integer "]" Type; 
+TypePointer. Type ::= "*" Type; 
 
 
-BodyBlock.          Block ::= "{" [Stmt] "}";
+BodyBlock. Block ::= "{" [Statement] "}";
 
-StateBlock.         Stmt ::= Block;
-StateSmpl.	  	    Stmt ::= StmtSmpl;
-StateReturn.      	Stmt ::= "return" RExp;
-StateIf.	  	    Stmt ::= "if" RExp Block;
-StateIfElse.	  	Stmt ::= "if" RExp Block "else" Block;
-StateIfStm.	  	    Stmt ::= "if" StmtSmpl ";" RExp Block;
-StateIfElseStm.	    Stmt ::= "if" StmtSmpl ";" RExp Block "else" Block;
---StateFor.	  	    Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
-StateWhile.       	Stmt ::= "for" RExp Block;
-StateDecl.        	Stmt ::= Decl;
-StateBreak.        	Stmt ::= "break"; 
-StateContinue.     	Stmt ::= "continue";
-StateTryCatch.	  	Stmt ::= "try" Block "catch" Block;
-StateWrite. 		Stmt ::= "write" "(" RExp ")";
---StateRead.  		Stmt ::= "read" "(" RExp ")"; 
-StateRead.  		Stmt ::= "read"; 
+StateBlock.       	Statement ::= Block;
+StateSmpl.	  	Statement ::= StatementSmpl;
+StateReturn.      	Statement ::= "return" ExpR;
+StateIf.	  	Statement ::= "if" ExpR Block;
+StateIfElse.	  	Statement ::= "if" ExpR Block "else" Block;
+StateIfStm.	  	Statement ::= "if" StatementSmpl ";" ExpR Block;
+StateIfElseStm.	  	Statement ::= "if" StatementSmpl ";" ExpR Block "else" Block;
+StateFor.	  	Statement ::= "for" [StatementSmpl] ";" ExpR ";" [StatementSmpl] Block;
+StateWhile.       	Statement ::= "for" ExpR Block;
+StateDecl.        	Statement ::= Decl;
+StateBreak.        	Statement ::= "break"; 
+StateContinue.     	Statement ::= "continue";
+StateTryCatch.	  	Statement ::= "try" Block "catch" Block;
+StateWrite. 		Statement ::= "write" "(" ExpR ")";
+StateRead.  		Statement ::= "read" "(" ExpR ")"; 
 
-StateShortVarDecl. 	StmtSmpl ::= ShortVarDecl;
-StateExp.	   	    StmtSmpl ::= RExp;
-StateAsgn.	   	    StmtSmpl ::= LExp "=" RExp;
+StateShortVarDecl. 	StatementSmpl ::= ShortVarDecl;
+StateExp.	   	StatementSmpl ::= ExpR;
+StateAsgn.	   	StatementSmpl ::= ExpL "=" ExpR;
 
 						
-ExpId.              LExp ::= Id ;
-ExpArr.             LExp ::= LExp "[" RExp "]" ;
-ExpDeref.           LExp ::= "*" RExp ;
+ExpId.    ExpL ::= Id ;
+ExpArr.   ExpL ::= ExpL "[" ExpR "]" ;
+ExpDeref. ExpL ::= "*" ExpR ;
 
-ExpAdd.             RExp ::= RExp "+" RExp ;
-ExpSub.             RExp ::= RExp "-" RExp ;
-ExpMul.             RExp ::= RExp "*" RExp ;
-ExpDiv.             RExp ::= RExp "/" RExp ;
-ExpMod.             RExp ::= RExp "%" RExp ;						
-ExpEqu.             RExp ::= RExp "==" RExp ;
-ExpNeq.             RExp ::= RExp "!=" RExp ;
-LExpes.             RExp ::= RExp "<" RExp ;
-LExpeq.             RExp ::= RExp "<=" RExp ;
-ExpGre.             RExp ::= RExp ">" RExp ;
-ExpGrq.             RExp ::= RExp ">=" RExp ;
-ExpAnd.             RExp ::= RExp "&&" RExp ;
-ExpOr.              RExp ::= RExp "||" RExp ;
-ExpNot.             RExp ::= "!" RExp ;
-ExpNeg.             RExp ::= "-" RExp ;
-ExpValue.           RExp ::= Value ;
-LExpef.             RExp ::= LExp ;
-ExpFuncEmpty.       RExp ::= Id "(" ")" ;
-ExpFunc.            RExp ::= Id "(" [RExp] ")" ;
-RExpef.             RExp ::= "&" LExp ;
-ExpPar.             RExp ::= "(" RExp ")";
+ExpAdd. ExpR ::= ExpR "+" ExpR ;
+ExpSub. ExpR ::= ExpR "-" ExpR ;
+ExpMul. ExpR ::= ExpR "*" ExpR ;
+ExpDiv. ExpR ::= ExpR "/" ExpR ;
+ExpMod. ExpR ::= ExpR "%" ExpR ;						
+ExpEqu. ExpR ::= ExpR "==" ExpR ;
+ExpNeq. ExpR ::= ExpR "!=" ExpR ;
+ExpLes. ExpR ::= ExpR "<" ExpR ;
+ExpLeq. ExpR ::= ExpR "<=" ExpR ;
+ExpGre. ExpR ::= ExpR ">" ExpR ;
+ExpGrq. ExpR ::= ExpR ">=" ExpR ;
+ExpAnd. ExpR ::= ExpR "&&" ExpR ;
+ExpOr.  ExpR ::= ExpR "||" ExpR ;
+ExpNot. ExpR ::= "!" ExpR ;
+ExpNeg. ExpR ::= "-" ExpR ;
+ExpValue. ExpR ::= Value ;
+ExpLef.   ExpR ::= ExpL ;
+ExpFuncEmpty.  ExpR ::= Id "(" ")" ;
+ExpFunc.  ExpR ::= Id "(" [ExpR] ")" ;
+ExpRef.   ExpR ::= "&" ExpL ;
+ExpPar.   ExpR ::= "(" ExpR ")";
 
 
-Int .       	    Value ::= Integer ;
-Float .     	    Value ::= Double ;
-Char .      	    Value  ::= Char ;
-String .        	Value ::= String ;
-Bool .      	    Value  ::= Boolean ;
-BoolTrue .  	    Boolean ::= "true" ;
-BoolFalse . 	    Boolean ::= "false" ;
+Int .       	Value ::= Integer ;
+Float .     	Value ::= Double ;
+Char .      	Value  ::= Char ;
+String .    	Value ::= String ;
+Bool .      	Value  ::= Boolean ;
+BoolTrue .  	Boolean ::= "true" ;
+BoolFalse . 	Boolean ::= "false" ;
 
 
 (:[]).	[Id] ::= Id;
 (:).	[Id] ::= Id "," [Id];
 
-(:[]).	[RExp] ::= RExp;
-(:).	[RExp] ::= RExp "," [RExp];
+(:[]).	[ExpR] ::= ExpR;
+(:).	[ExpR] ::= ExpR "," [ExpR];
 
- [].	[StmtSmpl] ::= ;
-(:[]).	[StmtSmpl] ::= StmtSmpl;
+ [].	[StatementSmpl] ::= ;
+(:[]).	[StatementSmpl] ::= StatementSmpl;
+
 
 --
 
@@ -103,6 +101,6 @@ comment "/*" "*/";
 
 separator Decl "";
 separator Param ",";
-separator Stmt "";
+separator Statement "";
 
-entrypoints Prog;
+entrypoints Start;
