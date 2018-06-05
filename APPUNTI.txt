@@ -1,4 +1,0 @@
-- manca il tipo nella definizione : var uno, due = 5 , 6
-- += -=
-- post decr incr messi come statements
-- possiamo mettere un solo assegnamento all'inizio delle condizioni dell'if

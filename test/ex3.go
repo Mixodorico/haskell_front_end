@@ -1,15 +1,17 @@
 package main
 
-func ret () int{return 5}
-
+func ret () int{
+	pep:=true
+	return 5
+}
 var a,b,c= "ciao", 5+(2+8)*9 , ret()
 
-func ciao ( a int , d int) int {
+func ciao ( a int , d int) {
 	u :=4
 	u = a/d
-	ciao (u,d)
+	ciao ("4",d)
 	func bin () bool {
-		k:= ret() > 4
+		k:= ret() > 9
 		return k
 	}
 	a = 789

@@ -1,16 +1,19 @@
 package main
 
 
-func prova () int {
+func prova (){
 	func sum (x int) int {
 	return x
 	}			
 }
-func main () void{
+func main (){
 	a:= sum (2)
 }
 	
 	
+
+
+
 
 
 
