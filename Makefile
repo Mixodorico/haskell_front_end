@@ -1,7 +1,7 @@
 all:
-	happy -gcai Pargo.y
-	alex -g Lexgo.x
-	ghc --make Testgo.hs -o Testgo
+	happy -gcai ParGo.y
+	alex -g LexGo.x
+	ghc --make TestGo.hs -o Testgo
 
 clean:
 	-rm -f *.bak *.log *.aux *.hi *.o *.dvi
@@ -24,4 +24,3 @@ demo5:
 
 demo6: 
 	./Testgo ./examples/ex6.go
-	

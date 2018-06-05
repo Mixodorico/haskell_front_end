@@ -7,13 +7,3 @@ func sum (x, y int) bool {
 	x= *b
 return x
 }
-
-
-
-
-
-
-	
-
-
-

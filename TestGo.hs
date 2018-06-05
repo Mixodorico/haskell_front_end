@@ -5,11 +5,11 @@ module Main where
 import System.IO ( stdin, hGetContents )
 import System.Environment ( getArgs, getProgName )
 
-import Lexgo
-import Pargo
-import Skelgo
-import Printgo
-import Absgo
+import LexGo
+import ParGo
+import SkelGo
+import PrintGo
+import AbsGo
 import Structures
 
 
@@ -35,9 +35,9 @@ run v p s = let ts = myLLexer s in case p ts of
                           putStrV v "Error:"
                           putStrLn s
            Ok  (tree, tac) -> do putStrLn "\nParse Successful!"
-                          	 putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
-				 putStrV v $ "\n[Three Address Code]\n\n" ++ printTac tac
-				
+                                 putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
+                                 putStrV v $ "\n[Three Address Code]\n\n" ++ printTac tac
+        
 
 
 main = do args <- getArgs

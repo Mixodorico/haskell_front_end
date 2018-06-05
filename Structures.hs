@@ -1,6 +1,6 @@
 module Structures where
 
-import Absgo
+import AbsGo
 
 ----------------------------------------------------------------------------------------------
 ------------------ DATA-TYPE DI VARIABILI , FUNZIONI -----------------------------------------
@@ -9,47 +9,47 @@ import Absgo
 
 
 data ElmVar = Var Id Type Bool
-			deriving(Eq,Ord,Show)
-			
+      deriving(Eq,Ord,Show)
+      
 data ElmFun = Fun Id Type [Type]
-			deriving(Eq,Ord,Show)
+      deriving(Eq,Ord,Show)
 
 
--- determina se c'è una una variabile in una lista di variabili dato il suo id			
-searchVar id [] = 	False
-searchVar id ((Var a _ _):xs) 	| id==a = 	True
-				| otherwise = searchVar id xs
+-- determina se c'è una una variabile in una lista di variabili dato il suo id      
+searchVar id [] =   False
+searchVar id ((Var a _ _):xs)   | id==a =   True
+        | otherwise = searchVar id xs
 
--- determina se c'è una funzione in una lista di funzioni dato il suo id	
-searchFun id [] = 	False								
+-- determina se c'è una funzione in una lista di funzioni dato il suo id  
+searchFun id [] =   False               
 searchFun id ((Fun a _ _ ):xs)   | id==a = True
-				  | otherwise = searchFun id xs
+          | otherwise = searchFun id xs
 
--- dato l'id se è presente una variabile nella lista la estrae								
-extrVar id (x@(Var a _ _):xs)	| id==a = 	x
-				| otherwise = extrVar id xs
+-- dato l'id se è presente una variabile nella lista la estrae                
+extrVar id (x@(Var a _ _):xs) | id==a =   x
+        | otherwise = extrVar id xs
 
--- dato l'id se è presente una funzione nella lista la estrae	
-extrFun id (x@(Fun a _ _ ):xs)	| id==a = 	x
-				| otherwise = extrFun id xs
+-- dato l'id se è presente una funzione nella lista la estrae 
+extrFun id (x@(Fun a _ _ ):xs)  | id==a =   x
+        | otherwise = extrFun id xs
 
--- inserisce una variabile nella lista e se c'è la sovrascrive					
-insVar x@(Var a _ _) xs 	| (searchVar a xs) =   x:(deleteVar a xs)
-			| otherwise = x:xs
+-- inserisce una variabile nella lista e se c'è la sovrascrive          
+insVar x@(Var a _ _) xs   | (searchVar a xs) =   x:(deleteVar a xs)
+      | otherwise = x:xs
 
--- inserisce una funzione nella lista e se c'è la sovrascrive					   
+-- inserisce una funzione nella lista e se c'è la sovrascrive            
 insFun x@(Fun a _ _ ) xs | (searchFun a xs) =   x:(deleteFun a xs)
-			| otherwise = x:xs	
+      | otherwise = x:xs  
 
 -- elimina se presente una variabile dalla lista dato l'id
 deleteVar  id [] = []
 deleteVar  id (x@(Var a _ _):xs)  |  id==a = xs
-				|  otherwise = x:(deleteVar id xs)
+        |  otherwise = x:(deleteVar id xs)
 
 -- elimina se presente una funzione dalla lista dato l'id
-deleteFun   id [] = []								 
-deleteFun   id (x@(Fun a _ _ ):xs)  	|  id==a = xs
-					|  otherwise = x:(deleteFun id xs)
+deleteFun   id [] = []                 
+deleteFun   id (x@(Fun a _ _ ):xs)    |  id==a = xs
+          |  otherwise = x:(deleteFun id xs)
 
 -- data una lista (di ID) e un tipo crea una lista di variabili
 createList []  _ = []
@@ -61,9 +61,9 @@ createListMod (x:xs) (t:ts) = (Var x t True):(createListMod xs ts)
 
 
 --verifica se la variabile è stata definita nello stesso blocco in caso affermativo la restituisce
-ctrlDeclVar id [] = 	Nothing
-ctrlDeclVar id ((Var a _ True):xs) | id==a = 	Just a
-				   | otherwise = ctrlDeclVar id xs
+ctrlDeclVar id [] =   Nothing
+ctrlDeclVar id ((Var a _ True):xs) | id==a =  Just a
+           | otherwise = ctrlDeclVar id xs
 ctrlDeclVar id ((Var a _ False):xs) = ctrlDeclVar id xs
 
 
@@ -71,9 +71,9 @@ ctrlDeclVar id ((Var a _ False):xs) = ctrlDeclVar id xs
 -- data una lista (di ID) e la lista delle variabili ed applica ctrlDeclVar ad ogni elemento della lista di id
 ctrlDeclVarList [] _  = Nothing
 ctrlDeclVarList (x:xs) ys = case (ctrlDeclVar x ys) of {
-				Just a -> Just a;
-				Nothing -> ctrlDeclVarList xs ys;
-			}
+        Just a -> Just a;
+        Nothing -> ctrlDeclVarList xs ys;
+      }
 
 --resetta l'attributo boleano delle variabili in modo che possano essere ridefinite in un nuovo blocco
 resetEnvV [] = []
@@ -92,9 +92,9 @@ getTypeArr (TypeArray _ t) = t
 
 -- verifica se t è di tipo puntatore
 isTyipePnt t = case t of {
-		(TypePointer _) -> True;
-	      	_ -> False;
-		}
+    (TypePointer _) -> True;
+          _ -> False;
+    }
 
 -- Restiuisce l'id
 idToStr (Id str) = str
@@ -106,17 +106,17 @@ idToStr (Id str) = str
 
 
 data TacOp = 
-	  NulOp T T
-	| UnOp Op T T 
-	| BinOp Op T T T	
-	| UnCondJ Label
-	| CondJ T Label
-	| FunDecl String Id Int
-	| FunCall String T Id [T] 
-	| Lbl Label 
-	| OneExcpJ Label
-	| Return T
-	  deriving (Eq,Ord,Show)
+    NulOp T T
+  | UnOp Op T T 
+  | BinOp Op T T T  
+  | UnCondJ Label
+  | CondJ T Label
+  | FunDecl String Id Int
+  | FunCall String T Id [T] 
+  | Lbl Label 
+  | OneExcpJ Label
+  | Return T
+    deriving (Eq,Ord,Show)
 
 
 type T = String
@@ -130,21 +130,21 @@ tacAssign (x:xs) (y:ys) = (NulOp (idToStr x) y) : (tacAssign xs ys)
 -- esegue il pretty print del tac
 printTac []   = ""
 printTac (x:xs) = (case x of{
-					NulOp t1 t2 -> "\t" ++ t1 ++ " = " ++ t2;
-					UnOp op t1 t2 ->"\t" ++ t1 ++ " = " ++ op ++ " " ++ t2;
-					BinOp op t1 t2 t3 ->"\t" ++ t1 ++ " = " ++ t2 ++ " " ++ op ++ " " ++ t3;
-					UnCondJ lab -> "\t" ++ "goto label" ++ (show lab);
-					CondJ t1 lab ->	"\t" ++"if " ++ t1  ++ " goto label" ++ (show lab);
-					FunDecl str id int ->str ++ " " ++ (idToStr id) ++  "/" ++ (show int);
-					FunCall str t id lt -> (case str of {
-									"function" ->"\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
-									"procedure" -> "\tcall " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")";
-									 _ -> "error";
-								});
-					Lbl lab -> "label" ++  (show lab) ++ " :";
-					OneExcpJ lab -> "\tonexceptiongoto "  ++  "label" ++  (show lab);
-					Return t -> "\treturn " ++ t;
-				}) ++ "\n" ++ (printTac xs) 
+          NulOp t1 t2 -> "\t" ++ t1 ++ " = " ++ t2;
+          UnOp op t1 t2 ->"\t" ++ t1 ++ " = " ++ op ++ " " ++ t2;
+          BinOp op t1 t2 t3 ->"\t" ++ t1 ++ " = " ++ t2 ++ " " ++ op ++ " " ++ t3;
+          UnCondJ lab -> "\t" ++ "goto label" ++ (show lab);
+          CondJ t1 lab -> "\t" ++"if " ++ t1  ++ " goto label" ++ (show lab);
+          FunDecl str id int ->str ++ " " ++ (idToStr id) ++  "/" ++ (show int);
+          FunCall str t id lt -> (case str of {
+                  "function" ->"\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
+                  "procedure" -> "\tcall " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")";
+                   _ -> "error";
+                });
+          Lbl lab -> "label" ++  (show lab) ++ " :";
+          OneExcpJ lab -> "\tonexceptiongoto "  ++  "label" ++  (show lab);
+          Return t -> "\treturn " ++ t;
+        }) ++ "\n" ++ (printTac xs) 
 
 printParam [] = []
 printParam [x] = x
