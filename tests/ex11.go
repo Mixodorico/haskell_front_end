@@ -3,10 +3,16 @@ package programma
 Scritto in base al type checker
 */
   
-  var i, j int
+  func f () int
+  {
+    return 6
+  }
   
-  var m[10] int = { 1,2,3}
-  n := {{false},{true}}      // tenere questa riga in modo da poter fare esempi
+  var a,b,c = 123.8, "yolo", 1
   
+  n := {{false,true},{true}}      // tenere questa riga in modo da poter fare esempi
   
-  n[1][1] = false || true && false
+  n[c] = { true, true , false }
+
+  var ta bool = f()
+

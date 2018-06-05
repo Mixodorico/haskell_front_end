@@ -91,9 +91,9 @@ checkDeclFun (DeclF x pd t s) = do
                               t'' <- checkBlockFun (getParams pd) s
                               if (t'' == None)
                                 then missingReturn
-                                else if (t' /= t'')
-                                  then wrongRetType t' t''
-                                  else return None
+                                else if t' == t''
+                                  then return None
+                                  else wrongRetType t' t''
 checkDeclProc (DeclP x pd s) = do
                                 newProc x (getParams pd) s
                                 t <- checkBlockFun (getParams pd) s
@@ -125,7 +125,8 @@ checkDecl (DeclVarInitType xs t xe) = do
                                   return None
                                   where
                                     check t1 t2 = if t2 /= None
-                                                    then toTCType t1 == t2
+                                                    then toTCType t1 == t2 ||
+                                                         (t2 == T Type_int && toTCType t1 == T Type_float)
                                                     else procAssign
 checkDecl (DeclVarShort xs xe) = checkDecl (DeclVarInit xs xe)
 
@@ -150,9 +151,9 @@ checkBlock (BodyBlock stmts) = do
                                  then return None
                                  else let
                                           t0 = head types'
-                                       in if all (== t0) types'
-                                             then return t0
-                                             else invRetType
+                                      in if all (== t0) types'
+                                           then return t0
+                                           else invRetType
 
 checkBlockFun ls (BodyBlock stmts) = do
                               env <- get
@@ -210,7 +211,7 @@ checkStatement (CompStmt (StateAsgn e1 op e2)) = do
                                                          T Type_float -> if t2 == T Type_int || t2 == T Type_float
                                                                                 then return None
                                                                                 else errorExpected2 t1 t2
-                                                         _                 -> errorExpected2 t1 t2
+                                                         _            -> errorExpected2 t1 t2
 checkStatement (CompStmt (StateExp (BLExprex e))) =
                    case e of
                         ExpArrId id e1 -> do
