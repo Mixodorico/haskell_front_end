@@ -1,10 +1,11 @@
 Entry.          Start ::= "package" Id [Decl];
 
-DeclFun.        Decl ::= "func" Id "(" [Param] ")" Type Block;
-DeclProc.       Decl ::= "func" Id "(" [Param] ")" "void" Block;
-DeclVar.        Decl ::= "var"  [Id] Type;
-DeclVarInit.    Decl ::= "var"  [Id] "=" [RExp];
-DeclVarShort.   ShortVarDecl ::= [Id] ":=" [RExp];
+DeclFun.         Decl ::= "func" Id "(" [Param] ")" Type Block;
+DeclProc.        Decl ::= "func" Id "(" [Param] ")" "void" Block;
+DeclVar.         Decl ::= "var"  [Id] Type;
+DeclVarInit.     Decl ::= "var"  [Id] "=" [RExp];
+DeclVarTypeInit. Decl ::= "var"  [Id] Type "=" [RExp];
+DeclVarShort.    ShortVarDecl ::= [Id] ":=" [RExp];
 
 
 ParamL.     Param ::=  [Id] Type;       -- di default è passaggio per valore

@@ -21,6 +21,7 @@ transDecl x = case x of
   DeclProc id params block -> failure x
   DeclVar ids type_ -> failure x
   DeclVarInit ids rexps -> failure x
+  DeclVarTypeInit ids type_ rexps -> failure x
 transShortVarDecl :: ShortVarDecl -> Result
 transShortVarDecl x = case x of
   DeclVarShort ids rexps -> failure x

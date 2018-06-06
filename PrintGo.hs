@@ -95,6 +95,7 @@ instance Print Decl where
     DeclProc id params block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 id, doc (showString "("), prt 0 params, doc (showString ")"), doc (showString "void"), prt 0 block])
     DeclVar ids type_ -> prPrec i 0 (concatD [doc (showString "var"), prt 0 ids, prt 0 type_])
     DeclVarInit ids rexps -> prPrec i 0 (concatD [doc (showString "var"), prt 0 ids, doc (showString "="), prt 0 rexps])
+    DeclVarTypeInit ids type_ rexps -> prPrec i 0 (concatD [doc (showString "var"), prt 0 ids, prt 0 type_, doc (showString "="), prt 0 rexps])
   prtList _ [] = (concatD [])
   prtList _ (x:xs) = (concatD [prt 0 x, prt 0 xs])
 instance Print ShortVarDecl where

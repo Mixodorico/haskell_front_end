@@ -222,6 +222,24 @@ Decl : 'func' Id '(' ListParam ')' Type Block 	{
 							);
 						}
 
+     | 'var' ListId Type '=' ListExpR 		{ 
+						$$ = DeclVarTypeInit $2 $3 $5;
+						$5.envV = $$.envV;
+						$5.envF = $$.envF;								
+						$$.envVMod = (unionVar ( createList $2 $3) $$.envV);
+						$$.envFMod = $$.envF;
+						$5.temp = $$.temp;
+						$$.tempMod = $5.tempMod;
+						$$.tac = $5.tac ++ ( tacAssign $2 $5.addressList );
+						where ( case (ctrlDeclVarList $2 $$.envV) of {
+								Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
+								Nothing -> ( if (not(length $2 == length $5.typList)) 
+										then Bad $ "Sintax Error at "++(pos $1)++": n.of id and expression not matching"
+										else Ok ()  );
+								}
+							);
+						}
+
 -- Dichiare di variabile breve 
 ShortVarDecl : ListId ':=' ListExpR 		{ 
 						$$ = DeclVarShort $1 $3; 

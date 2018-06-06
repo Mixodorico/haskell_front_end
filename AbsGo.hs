@@ -16,6 +16,7 @@ data Decl
     | DeclProc Id [Param] Block
     | DeclVar [Id] Type
     | DeclVarInit [Id] [RExp]
+    | DeclVarTypeInit [Id] Type [RExp]
   deriving (Eq, Ord, Show, Read)
 
 data ShortVarDecl = DeclVarShort [Id] [RExp]
