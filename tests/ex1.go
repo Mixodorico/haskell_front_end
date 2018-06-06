@@ -9,7 +9,8 @@ func sum (x, y int) int {
 	x= *b
   c := false
   
-  var uiui,o int = 12, true
+  var uiui,o int = 12, 54
+
   
   ert := uiui+o
 

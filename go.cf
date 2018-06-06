@@ -34,12 +34,12 @@ StIf.             Stmt ::= "if" RExp Block;
 StIfElse.         Stmt ::= "if" RExp Block "else" Block;
 StIfStm.          Stmt ::= "if" StmtSmpl ";" RExp Block;
 StIfElseStm.      Stmt ::= "if" StmtSmpl ";" RExp Block "else" Block;
-StFor.            Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
+--StFor.            Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
 StWhile.          Stmt ::= "for" RExp Block;
 StDecl.           Stmt ::= Decl;
 StBreak.          Stmt ::= "break"; 
 StContinue.       Stmt ::= "continue";
-StTryCatch.       Stmt ::= "try" Block "catch" Block;
+--StTryCatch.       Stmt ::= "try" Block "catch" Block;
 StWrite.          Stmt ::= "write" "(" RExp ")";
 StRead.           Stmt ::= "read" "(" RExp ")"; 
 
@@ -93,8 +93,8 @@ separator nonempty Id "," ;
 --(:).  [RExp] ::= RExp "," [RExp];
 separator nonempty RExp "," ;
 
- [].  [StmtSmpl] ::= ;
-(:[]).  [StmtSmpl] ::= StmtSmpl;
+-- [].  [StmtSmpl] ::= ;
+--(:[]).  [StmtSmpl] ::= StmtSmpl;
 
 
 --

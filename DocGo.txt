@@ -40,12 +40,12 @@ Id literals are recognized by the regular expression
 The set of reserved words is the set of terminals appearing in the grammar. Those reserved words that consist of non-letter characters are called symbols, and they are treated in a different way from those that are similar to identifiers. The lexer follows rules familiar from languages like Haskell, C, and Java, including longest match and spacing conventions.
 
 The reserved words used in go are the following:
-  | ``bool`` | ``break`` | ``catch`` | ``char``
-  | ``continue`` | ``else`` | ``false`` | ``float``
-  | ``for`` | ``func`` | ``if`` | ``int``
-  | ``package`` | ``read`` | ``ref`` | ``return``
-  | ``string`` | ``true`` | ``try`` | ``val``
-  | ``valres`` | ``var`` | ``void`` | ``write``
+  | ``bool`` | ``break`` | ``char`` | ``continue``
+  | ``else`` | ``false`` | ``float`` | ``for``
+  | ``func`` | ``if`` | ``int`` | ``package``
+  | ``read`` | ``ref`` | ``return`` | ``string``
+  | ``true`` | ``val`` | ``valres`` | ``var``
+  | ``void`` | ``write`` |  | 
 
 The symbols used in go are the following:
   | ( | ) | = | :=
@@ -93,12 +93,10 @@ All other symbols are terminals.
   |  |  **|**  | ``if`` //RExp// //Block// ``else`` //Block// 
   |  |  **|**  | ``if`` //StmtSmpl// ``;`` //RExp// //Block// 
   |  |  **|**  | ``if`` //StmtSmpl// ``;`` //RExp// //Block// ``else`` //Block// 
-  |  |  **|**  | ``for`` //[StmtSmpl]// ``;`` //RExp// ``;`` //[StmtSmpl]// //Block// 
   |  |  **|**  | ``for`` //RExp// //Block// 
   |  |  **|**  | //Decl// 
   |  |  **|**  | ``break`` 
   |  |  **|**  | ``continue`` 
-  |  |  **|**  | ``try`` //Block// ``catch`` //Block// 
   |  |  **|**  | ``write`` ``(`` //RExp// ``)`` 
   |  |  **|**  | ``read`` ``(`` //RExp// ``)`` 
   | //StmtSmpl// | -> | //ShortVarDecl// 
@@ -139,8 +137,6 @@ All other symbols are terminals.
   |  |  **|**  | //Id// ``,`` //[Id]// 
   | //[RExp]// | -> | //RExp// 
   |  |  **|**  | //RExp// ``,`` //[RExp]// 
-  | //[StmtSmpl]// | -> | **eps**
-  |  |  **|**  | //StmtSmpl// 
   | //[Decl]// | -> | **eps**
   |  |  **|**  | //Decl// //[Decl]// 
   | //[Param]// | -> | **eps**

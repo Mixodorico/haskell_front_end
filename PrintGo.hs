@@ -139,12 +139,10 @@ instance Print Stmt where
     StIfElse rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
     StIfStm stmtsmpl rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 stmtsmpl, doc (showString ";"), prt 0 rexp, prt 0 block])
     StIfElseStm stmtsmpl rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 stmtsmpl, doc (showString ";"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
-    StFor stmtsmpls1 rexp stmtsmpls2 block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 stmtsmpls1, doc (showString ";"), prt 0 rexp, doc (showString ";"), prt 0 stmtsmpls2, prt 0 block])
     StWhile rexp block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 rexp, prt 0 block])
     StDecl decl -> prPrec i 0 (concatD [prt 0 decl])
     StBreak -> prPrec i 0 (concatD [doc (showString "break")])
     StContinue -> prPrec i 0 (concatD [doc (showString "continue")])
-    StTryCatch block1 block2 -> prPrec i 0 (concatD [doc (showString "try"), prt 0 block1, doc (showString "catch"), prt 0 block2])
     StWrite rexp -> prPrec i 0 (concatD [doc (showString "write"), doc (showString "("), prt 0 rexp, doc (showString ")")])
     StRead rexp -> prPrec i 0 (concatD [doc (showString "read"), doc (showString "("), prt 0 rexp, doc (showString ")")])
   prtList _ [] = (concatD [])
@@ -154,8 +152,7 @@ instance Print StmtSmpl where
     StShortVarDecl shortvardecl -> prPrec i 0 (concatD [prt 0 shortvardecl])
     StExp rexp -> prPrec i 0 (concatD [prt 0 rexp])
     StAsgn lexp rexp -> prPrec i 0 (concatD [prt 0 lexp, doc (showString "="), prt 0 rexp])
-  prtList _ [] = (concatD [])
-  prtList _ [x] = (concatD [prt 0 x])
+
 instance Print LExp where
   prt i e = case e of
     ExpId id -> prPrec i 0 (concatD [prt 0 id])

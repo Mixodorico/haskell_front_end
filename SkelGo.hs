@@ -56,12 +56,10 @@ transStmt x = case x of
   StIfElse rexp block1 block2 -> failure x
   StIfStm stmtsmpl rexp block -> failure x
   StIfElseStm stmtsmpl rexp block1 block2 -> failure x
-  StFor stmtsmpls1 rexp stmtsmpls2 block -> failure x
   StWhile rexp block -> failure x
   StDecl decl -> failure x
   StBreak -> failure x
   StContinue -> failure x
-  StTryCatch block1 block2 -> failure x
   StWrite rexp -> failure x
   StRead rexp -> failure x
 transStmtSmpl :: StmtSmpl -> Result

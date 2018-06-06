@@ -50,12 +50,10 @@ data Stmt
     | StIfElse RExp Block Block
     | StIfStm StmtSmpl RExp Block
     | StIfElseStm StmtSmpl RExp Block Block
-    | StFor [StmtSmpl] RExp [StmtSmpl] Block
     | StWhile RExp Block
     | StDecl Decl
     | StBreak
     | StContinue
-    | StTryCatch Block Block
     | StWrite RExp
     | StRead RExp
   deriving (Eq, Ord, Show, Read)
