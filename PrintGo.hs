@@ -92,7 +92,7 @@ instance Print Start where
 instance Print Decl where
   prt i e = case e of
     DeclFun id params type_ block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 id, doc (showString "("), prt 0 params, doc (showString ")"), prt 0 type_, prt 0 block])
-    DeclProc id params block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 id, doc (showString "("), prt 0 params, doc (showString ")"), prt 0 block])
+    DeclProc id params block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 id, doc (showString "("), prt 0 params, doc (showString ")"), doc (showString "void"), prt 0 block])
     DeclVar ids type_ -> prPrec i 0 (concatD [doc (showString "var"), prt 0 ids, prt 0 type_])
     DeclVarInit ids rexps -> prPrec i 0 (concatD [doc (showString "var"), prt 0 ids, doc (showString "="), prt 0 rexps])
   prtList _ [] = (concatD [])
@@ -116,43 +116,43 @@ instance Print Pass where
 
 instance Print Type where
   prt i e = case e of
-    TypeVoid -> prPrec i 0 (concatD [doc (showString "void")])
-    TypeInt -> prPrec i 0 (concatD [doc (showString "int")])
-    TypeBool -> prPrec i 0 (concatD [doc (showString "bool")])
-    TypeFloat -> prPrec i 0 (concatD [doc (showString "float")])
-    TypeChar -> prPrec i 0 (concatD [doc (showString "char")])
-    TypeString -> prPrec i 0 (concatD [doc (showString "string")])
-    TypeArray n type_ -> prPrec i 0 (concatD [doc (showString "["), prt 0 n, doc (showString "]"), prt 0 type_])
-    TypePointer type_ -> prPrec i 0 (concatD [doc (showString "*"), prt 0 type_])
+    TVoid -> prPrec i 0 (concatD [doc (showString "void")])
+    TInt -> prPrec i 0 (concatD [doc (showString "int")])
+    TBool -> prPrec i 0 (concatD [doc (showString "bool")])
+    TFloat -> prPrec i 0 (concatD [doc (showString "float")])
+    TChar -> prPrec i 0 (concatD [doc (showString "char")])
+    TString -> prPrec i 0 (concatD [doc (showString "string")])
+    TArray n type_ -> prPrec i 0 (concatD [doc (showString "["), prt 0 n, doc (showString "]"), prt 0 type_])
+    TPointer type_ -> prPrec i 0 (concatD [doc (showString "*"), prt 0 type_])
 
 instance Print Block where
   prt i e = case e of
-    BodyBlock statements -> prPrec i 0 (concatD [doc (showString "{"), prt 0 statements, doc (showString "}")])
+    BodyBlock stmts -> prPrec i 0 (concatD [doc (showString "{"), prt 0 stmts, doc (showString "}")])
 
-instance Print Statement where
+instance Print Stmt where
   prt i e = case e of
-    StateBlock block -> prPrec i 0 (concatD [prt 0 block])
-    StateSmpl statementsmpl -> prPrec i 0 (concatD [prt 0 statementsmpl])
-    StateReturn rexp -> prPrec i 0 (concatD [doc (showString "return"), prt 0 rexp])
-    StateIf rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block])
-    StateIfElse rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
-    StateIfStm statementsmpl rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 statementsmpl, doc (showString ";"), prt 0 rexp, prt 0 block])
-    StateIfElseStm statementsmpl rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 statementsmpl, doc (showString ";"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
-    StateFor statementsmpls1 rexp statementsmpls2 block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 statementsmpls1, doc (showString ";"), prt 0 rexp, doc (showString ";"), prt 0 statementsmpls2, prt 0 block])
-    StateWhile rexp block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 rexp, prt 0 block])
-    StateDecl decl -> prPrec i 0 (concatD [prt 0 decl])
-    StateBreak -> prPrec i 0 (concatD [doc (showString "break")])
-    StateContinue -> prPrec i 0 (concatD [doc (showString "continue")])
-    StateTryCatch block1 block2 -> prPrec i 0 (concatD [doc (showString "try"), prt 0 block1, doc (showString "catch"), prt 0 block2])
-    StateWrite rexp -> prPrec i 0 (concatD [doc (showString "write"), doc (showString "("), prt 0 rexp, doc (showString ")")])
-    StateRead rexp -> prPrec i 0 (concatD [doc (showString "read"), doc (showString "("), prt 0 rexp, doc (showString ")")])
+    StBlock block -> prPrec i 0 (concatD [prt 0 block])
+    StSmpl stmtsmpl -> prPrec i 0 (concatD [prt 0 stmtsmpl])
+    StReturn rexp -> prPrec i 0 (concatD [doc (showString "return"), prt 0 rexp])
+    StIf rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block])
+    StIfElse rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
+    StIfStm stmtsmpl rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 stmtsmpl, doc (showString ";"), prt 0 rexp, prt 0 block])
+    StIfElseStm stmtsmpl rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 stmtsmpl, doc (showString ";"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
+    StFor stmtsmpls1 rexp stmtsmpls2 block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 stmtsmpls1, doc (showString ";"), prt 0 rexp, doc (showString ";"), prt 0 stmtsmpls2, prt 0 block])
+    StWhile rexp block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 rexp, prt 0 block])
+    StDecl decl -> prPrec i 0 (concatD [prt 0 decl])
+    StBreak -> prPrec i 0 (concatD [doc (showString "break")])
+    StContinue -> prPrec i 0 (concatD [doc (showString "continue")])
+    StTryCatch block1 block2 -> prPrec i 0 (concatD [doc (showString "try"), prt 0 block1, doc (showString "catch"), prt 0 block2])
+    StWrite rexp -> prPrec i 0 (concatD [doc (showString "write"), doc (showString "("), prt 0 rexp, doc (showString ")")])
+    StRead rexp -> prPrec i 0 (concatD [doc (showString "read"), doc (showString "("), prt 0 rexp, doc (showString ")")])
   prtList _ [] = (concatD [])
   prtList _ (x:xs) = (concatD [prt 0 x, prt 0 xs])
-instance Print StatementSmpl where
+instance Print StmtSmpl where
   prt i e = case e of
-    StateShortVarDecl shortvardecl -> prPrec i 0 (concatD [prt 0 shortvardecl])
-    StateExp rexp -> prPrec i 0 (concatD [prt 0 rexp])
-    StateAsgn lexp rexp -> prPrec i 0 (concatD [prt 0 lexp, doc (showString "="), prt 0 rexp])
+    StShortVarDecl shortvardecl -> prPrec i 0 (concatD [prt 0 shortvardecl])
+    StExp rexp -> prPrec i 0 (concatD [prt 0 rexp])
+    StAsgn lexp rexp -> prPrec i 0 (concatD [prt 0 lexp, doc (showString "="), prt 0 rexp])
   prtList _ [] = (concatD [])
   prtList _ [x] = (concatD [prt 0 x])
 instance Print LExp where

@@ -1,9 +1,10 @@
 package main
 
 
-func sum (x, y int) bool {
+func sum (x, y int) void {
 	a :=x+y
 	b :=&a
 	x= *b
-return x
+  c := false
+
 }

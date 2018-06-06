@@ -4,13 +4,13 @@ module Main where
 
 import System.IO ( stdin, hGetContents )
 import System.Environment ( getArgs, getProgName )
+import System.Exit ( exitFailure, exitSuccess )
 
 import LexGo
 import ParGo
 import SkelGo
 import PrintGo
 import AbsGo
-import Structures
 
 
 
@@ -23,28 +23,50 @@ myLLexer = myLexer
 
 type Verbosity = Int
 
-
+putStrV :: Verbosity -> String -> IO ()
 putStrV v s = if v > 1 then putStrLn s else return ()
 
-
+runFile :: (Print a, Show a) => Verbosity -> ParseFun a -> FilePath -> IO ()
 runFile v p f = putStrLn f >> readFile f >>= run v p
 
-
+run :: (Print a, Show a) => Verbosity -> ParseFun a -> String -> IO ()
 run v p s = let ts = myLLexer s in case p ts of
            Bad s    -> do putStrLn "\nParse              Failed...\n"
-                          putStrV v "Error:"
+                          putStrV v "Tokens:"
+                          putStrV v $ show ts
                           putStrLn s
-           Ok  (tree, tac) -> do putStrLn "\nParse Successful!"
-                                 putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
-                                 putStrV v $ "\n[Three Address Code]\n\n" ++ printTac tac
-        
+                          exitFailure
+           Ok  tree -> do putStrLn "\nParse Successful!"
+                          showTree v tree
+
+                          exitSuccess
 
 
-main = do args <- getArgs
-          case args of
-            [] -> hGetContents stdin >>= run 2 pStart
-            "-s":fs -> mapM_ (runFile 0 pStart) fs
-            fs -> mapM_ (runFile 2 pStart) fs
+showTree :: (Show a, Print a) => Int -> a -> IO ()
+showTree v tree
+ = do
+      putStrV v $ "\n[Abstract Syntax]\n\n" ++ show tree
+      putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
+
+usage :: IO ()
+usage = do
+  putStrLn $ unlines
+    [ "usage: Call with one of the following argument combinations:"
+    , "  --help          Display this help message."
+    , "  (no arguments)  Parse stdin verbosely."
+    , "  (files)         Parse content of files verbosely."
+    , "  -s (files)      Silent mode. Parse content of files silently."
+    ]
+  exitFailure
+
+main :: IO ()
+main = do
+  args <- getArgs
+  case args of
+    ["--help"] -> usage
+    [] -> hGetContents stdin >>= run 2 pStart
+    "-s":fs -> mapM_ (runFile 0 pStart) fs
+    fs -> mapM_ (runFile 2 pStart) fs
 
 
 

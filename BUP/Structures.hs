@@ -87,12 +87,12 @@ unionVar (x:xs) ys = insVar x (unionVar xs ys)
 getTypeFun (Fun _ t _ ) = t
 getTypeListFun (Fun _ _ tl ) = tl
 getTypeVar (Var _ t _) = t
-getTypePnt (TypePointer t) = t
-getTypeArr (TypeArray _ t) = t
+getTypePnt (TPointer t) = t
+getTypeArr (TArray _ t) = t
 
 -- verifica se t è di tipo puntatore
 isTyipePnt t = case t of {
-    (TypePointer _) -> True;
+    (TPointer _) -> True;
           _ -> False;
     }
 

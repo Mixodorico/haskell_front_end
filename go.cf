@@ -1,7 +1,7 @@
 Entry.          Start ::= "package" Id [Decl];
 
 DeclFun.   	    Decl ::= "func" Id "(" [Param] ")" Type Block;
-DeclProc.       Decl ::= "func" Id "(" [Param] ")" Block;
+DeclProc.       Decl ::= "func" Id "(" [Param] ")" "void" Block;
 DeclVar. 	      Decl ::= "var"  [Id] Type;
 DeclVarInit. 	  Decl ::= "var"  [Id] "=" [RExp];
 DeclVarShort.   ShortVarDecl ::= [Id] ":=" [RExp];
@@ -14,37 +14,37 @@ PassRef.	Pass  ::=  "ref";
 PassValueRes.   Pass  ::=  "valres";
 
 
-TypeVoid.    Type ::= "void";
-TypeInt.     Type ::= "int";
-TypeBool.    Type ::= "bool";
-TypeFloat.   Type ::= "float";
-TypeChar.    Type ::= "char";
-TypeString.  Type ::= "string";
-TypeArray.   Type ::=  "[" Integer "]" Type; 
-TypePointer. Type ::= "*" Type; 
+TVoid.    Type ::= "void";
+TInt.     Type ::= "int";
+TBool.    Type ::= "bool";
+TFloat.   Type ::= "float";
+TChar.    Type ::= "char";
+TString.  Type ::= "string";
+TArray.   Type ::=  "[" Integer "]" Type; 
+TPointer. Type ::= "*" Type; 
 
 
-BodyBlock. Block ::= "{" [Statement] "}";
+BodyBlock. Block ::= "{" [Stmt] "}";
 
-StateBlock.       	Statement ::= Block;
-StateSmpl.	  	Statement ::= StatementSmpl;
-StateReturn.      	Statement ::= "return" RExp;
-StateIf.	  	Statement ::= "if" RExp Block;
-StateIfElse.	  	Statement ::= "if" RExp Block "else" Block;
-StateIfStm.	  	Statement ::= "if" StatementSmpl ";" RExp Block;
-StateIfElseStm.	  	Statement ::= "if" StatementSmpl ";" RExp Block "else" Block;
-StateFor.	  	Statement ::= "for" [StatementSmpl] ";" RExp ";" [StatementSmpl] Block;
-StateWhile.       	Statement ::= "for" RExp Block;
-StateDecl.        	Statement ::= Decl;
-StateBreak.        	Statement ::= "break"; 
-StateContinue.     	Statement ::= "continue";
-StateTryCatch.	  	Statement ::= "try" Block "catch" Block;
-StateWrite. 		Statement ::= "write" "(" RExp ")";
-StateRead.  		Statement ::= "read" "(" RExp ")"; 
+StBlock.       	Stmt ::= Block;
+StSmpl.	  	    Stmt ::= StmtSmpl;
+StReturn.      	Stmt ::= "return" RExp;
+StIf.	  	      Stmt ::= "if" RExp Block;
+StIfElse.	    	Stmt ::= "if" RExp Block "else" Block;
+StIfStm.	      	Stmt ::= "if" StmtSmpl ";" RExp Block;
+StIfElseStm.	  	Stmt ::= "if" StmtSmpl ";" RExp Block "else" Block;
+StFor.	  	      Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
+StWhile.       	Stmt ::= "for" RExp Block;
+StDecl.        	Stmt ::= Decl;
+StBreak.        	Stmt ::= "break"; 
+StContinue.     	Stmt ::= "continue";
+StTryCatch.	  	Stmt ::= "try" Block "catch" Block;
+StWrite. 	    	Stmt ::= "write" "(" RExp ")";
+StRead.  	    	Stmt ::= "read" "(" RExp ")"; 
 
-StateShortVarDecl. 	StatementSmpl ::= ShortVarDecl;
-StateExp.	   	StatementSmpl ::= RExp;
-StateAsgn.	   	StatementSmpl ::= LExp "=" RExp;
+StShortVarDecl. 	StmtSmpl ::= ShortVarDecl;
+StExp.	   	StmtSmpl ::= RExp;
+StAsgn.	   	StmtSmpl ::= LExp "=" RExp;
 
 						
 ExpId.    LExp ::= Id ;
@@ -89,8 +89,8 @@ BoolFalse . 	Boolean ::= "false" ;
 (:[]).	[RExp] ::= RExp;
 (:).	[RExp] ::= RExp "," [RExp];
 
- [].	[StatementSmpl] ::= ;
-(:[]).	[StatementSmpl] ::= StatementSmpl;
+ [].	[StmtSmpl] ::= ;
+(:[]).	[StmtSmpl] ::= StmtSmpl;
 
 
 --
@@ -102,6 +102,6 @@ comment "/*" "*/";
 
 separator Decl "";
 separator Param ",";
-separator Statement "";
+separator Stmt "";
 
 entrypoints Start;

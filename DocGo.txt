@@ -67,7 +67,7 @@ All other symbols are terminals.
 
   | //Start// | -> | ``package`` //Id// //[Decl]// 
   | //Decl// | -> | ``func`` //Id// ``(`` //[Param]// ``)`` //Type// //Block// 
-  |  |  **|**  | ``func`` //Id// ``(`` //[Param]// ``)`` //Block// 
+  |  |  **|**  | ``func`` //Id// ``(`` //[Param]// ``)`` ``void`` //Block// 
   |  |  **|**  | ``var`` //[Id]// //Type// 
   |  |  **|**  | ``var`` //[Id]// ``=`` //[RExp]// 
   | //ShortVarDecl// | -> | //[Id]// ``:=`` //[RExp]// 
@@ -84,15 +84,15 @@ All other symbols are terminals.
   |  |  **|**  | ``string`` 
   |  |  **|**  | ``[`` //Integer// ``]`` //Type// 
   |  |  **|**  | ``*`` //Type// 
-  | //Block// | -> | ``{`` //[Statement]// ``}`` 
-  | //Statement// | -> | //Block// 
-  |  |  **|**  | //StatementSmpl// 
+  | //Block// | -> | ``{`` //[Stmt]// ``}`` 
+  | //Stmt// | -> | //Block// 
+  |  |  **|**  | //StmtSmpl// 
   |  |  **|**  | ``return`` //RExp// 
   |  |  **|**  | ``if`` //RExp// //Block// 
   |  |  **|**  | ``if`` //RExp// //Block// ``else`` //Block// 
-  |  |  **|**  | ``if`` //StatementSmpl// ``;`` //RExp// //Block// 
-  |  |  **|**  | ``if`` //StatementSmpl// ``;`` //RExp// //Block// ``else`` //Block// 
-  |  |  **|**  | ``for`` //[StatementSmpl]// ``;`` //RExp// ``;`` //[StatementSmpl]// //Block// 
+  |  |  **|**  | ``if`` //StmtSmpl// ``;`` //RExp// //Block// 
+  |  |  **|**  | ``if`` //StmtSmpl// ``;`` //RExp// //Block// ``else`` //Block// 
+  |  |  **|**  | ``for`` //[StmtSmpl]// ``;`` //RExp// ``;`` //[StmtSmpl]// //Block// 
   |  |  **|**  | ``for`` //RExp// //Block// 
   |  |  **|**  | //Decl// 
   |  |  **|**  | ``break`` 
@@ -100,7 +100,7 @@ All other symbols are terminals.
   |  |  **|**  | ``try`` //Block// ``catch`` //Block// 
   |  |  **|**  | ``write`` ``(`` //RExp// ``)`` 
   |  |  **|**  | ``read`` ``(`` //RExp// ``)`` 
-  | //StatementSmpl// | -> | //ShortVarDecl// 
+  | //StmtSmpl// | -> | //ShortVarDecl// 
   |  |  **|**  | //RExp// 
   |  |  **|**  | //LExp// ``=`` //RExp// 
   | //LExp// | -> | //Id// 
@@ -138,14 +138,14 @@ All other symbols are terminals.
   |  |  **|**  | //Id// ``,`` //[Id]// 
   | //[RExp]// | -> | //RExp// 
   |  |  **|**  | //RExp// ``,`` //[RExp]// 
-  | //[StatementSmpl]// | -> | **eps**
-  |  |  **|**  | //StatementSmpl// 
+  | //[StmtSmpl]// | -> | **eps**
+  |  |  **|**  | //StmtSmpl// 
   | //[Decl]// | -> | **eps**
   |  |  **|**  | //Decl// //[Decl]// 
   | //[Param]// | -> | **eps**
   |  |  **|**  | //Param// 
   |  |  **|**  | //Param// ``,`` //[Param]// 
-  | //[Statement]// | -> | **eps**
-  |  |  **|**  | //Statement// //[Statement]// 
+  | //[Stmt]// | -> | **eps**
+  |  |  **|**  | //Stmt// //[Stmt]// 
 
 

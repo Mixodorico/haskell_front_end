@@ -1,5 +1,10 @@
 base = Go
 
+all:
+	happy -gcai ParGo.y
+	alex -g LexGo.x
+	ghc --make TestGo.hs -o Go
+
 LEX = alex -g
 PAR = happy -gca
 GHC = ghc

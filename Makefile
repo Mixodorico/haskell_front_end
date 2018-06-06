@@ -1,11 +1,9 @@
-<<<<<<< HEAD
 base = Go
-=======
+
 all:
 	happy -gcai ParGo.y
 	alex -g LexGo.x
-	ghc --make TestGo.hs -o Testgo
->>>>>>> 8dc0aecc859b6f6d9ce4971a9d2dceb953375103
+	ghc --make TestGo.hs -o Go
 
 LEX = alex -g
 PAR = happy -gca
@@ -48,7 +46,6 @@ ex4: $(base)
 ex5: $(base)
 	-./$(base) ./tests/ex5.go
 
-<<<<<<< HEAD
 .PHONY : ex6
 ex6: $(base)
 	-./$(base) ./tests/ex6.go
@@ -60,7 +57,3 @@ ex7: $(base)
 .PHONY : prova
 ex8: $(base)
 	-./$(base) ./tests/prova.go
-=======
-demo6: 
-	./Testgo ./examples/ex6.go
->>>>>>> 8dc0aecc859b6f6d9ce4971a9d2dceb953375103

@@ -35,39 +35,39 @@ transPass x = case x of
   PassValueRes -> failure x
 transType :: Type -> Result
 transType x = case x of
-  TypeVoid -> failure x
-  TypeInt -> failure x
-  TypeBool -> failure x
-  TypeFloat -> failure x
-  TypeChar -> failure x
-  TypeString -> failure x
-  TypeArray integer type_ -> failure x
-  TypePointer type_ -> failure x
+  TVoid -> failure x
+  TInt -> failure x
+  TBool -> failure x
+  TFloat -> failure x
+  TChar -> failure x
+  TString -> failure x
+  TArray integer type_ -> failure x
+  TPointer type_ -> failure x
 transBlock :: Block -> Result
 transBlock x = case x of
-  BodyBlock statements -> failure x
-transStatement :: Statement -> Result
-transStatement x = case x of
-  StateBlock block -> failure x
-  StateSmpl statementsmpl -> failure x
-  StateReturn rexp -> failure x
-  StateIf rexp block -> failure x
-  StateIfElse rexp block1 block2 -> failure x
-  StateIfStm statementsmpl rexp block -> failure x
-  StateIfElseStm statementsmpl rexp block1 block2 -> failure x
-  StateFor statementsmpls1 rexp statementsmpls2 block -> failure x
-  StateWhile rexp block -> failure x
-  StateDecl decl -> failure x
-  StateBreak -> failure x
-  StateContinue -> failure x
-  StateTryCatch block1 block2 -> failure x
-  StateWrite rexp -> failure x
-  StateRead rexp -> failure x
-transStatementSmpl :: StatementSmpl -> Result
-transStatementSmpl x = case x of
-  StateShortVarDecl shortvardecl -> failure x
-  StateExp rexp -> failure x
-  StateAsgn lexp rexp -> failure x
+  BodyBlock stmts -> failure x
+transStmt :: Stmt -> Result
+transStmt x = case x of
+  StBlock block -> failure x
+  StSmpl stmtsmpl -> failure x
+  StReturn rexp -> failure x
+  StIf rexp block -> failure x
+  StIfElse rexp block1 block2 -> failure x
+  StIfStm stmtsmpl rexp block -> failure x
+  StIfElseStm stmtsmpl rexp block1 block2 -> failure x
+  StFor stmtsmpls1 rexp stmtsmpls2 block -> failure x
+  StWhile rexp block -> failure x
+  StDecl decl -> failure x
+  StBreak -> failure x
+  StContinue -> failure x
+  StTryCatch block1 block2 -> failure x
+  StWrite rexp -> failure x
+  StRead rexp -> failure x
+transStmtSmpl :: StmtSmpl -> Result
+transStmtSmpl x = case x of
+  StShortVarDecl shortvardecl -> failure x
+  StExp rexp -> failure x
+  StAsgn lexp rexp -> failure x
 transLExp :: LExp -> Result
 transLExp x = case x of
   ExpId id -> failure x

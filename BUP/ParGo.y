@@ -27,11 +27,11 @@ import Structures
 %attribute idList	{ [Id] }
 -- contiene il tipo del nodo
 %attribute typ		{ Type }
--- usato per nelle dichiarazioni di variabili multiple 
+-- usato per nelle dichiarazioni di variabili multiple
 %attribute typList	{ [Type] }
--- tipo di ritorno della funzone 
+-- tipo di ritorno della funzone
 %attribute typFun       { Type }
--- usato nel controllo del return  
+-- usato nel controllo del return
 %attribute isReturn     { Bool }
 -- contiene gli errori di espressioni sottostanti
 %attribute err       { String }
@@ -149,7 +149,7 @@ Id     : L_Id { $$ = Id ($1)}
 
 Start : 'package' Id ListDecl 		{
 					$$ = (Entry $2 (reverse $3), $$.tac);
-				  	$$.typ = TypeInt; 
+				  	$$.typ = TInt; 
 					$$.envV = [];
 					$$.envF = [];
 					$3.envV = $$.envV;
@@ -176,17 +176,17 @@ Decl : 'func' Id '(' ListParam ')' Type Block 	{
 							else when (not($7.isReturn)) $ Bad $ "Sintax Error at "++(pos $1)++": missing return at end of function" );
 						}
 
-     | 'func' Id '(' ListParam ')' Block 	{ 
-						$$ = DeclProc $2 $4 $6;
+     | 'func' Id '(' ListParam ')' 'void' Block 	{ 
+						$$ = DeclProc $2 $4 $7;
 						$$.envVMod = $$.envV;
-						$$.envFMod = (insFun (Fun $2 TypeVoid $4.typList) $$.envF );
-						$6.envV = (unionVar $4.envV (resetEnvV $$.envV) ); 
-						$6.envF = $$.envFMod;
-						$6.typFun = TypeVoid; 
-						$6.loopLabels = (-1,-1);
-						$6.temp = $$.temp;
-						$$.tempMod = ( (fst $6.tempMod) , ((snd $6.tempMod)+1) );
-						$$.tac = [FunDecl "procedure" $2 (length $4.typList)]++$6.tac++[Lbl ((snd $6.tempMod)+1)] ;
+						$$.envFMod = (insFun (Fun $2 TVoid $4.typList) $$.envF );
+						$7.envV = (unionVar $4.envV (resetEnvV $$.envV) ); 
+						$7.envF = $$.envFMod;
+						$7.typFun = TVoid; 
+						$7.loopLabels = (-1,-1);
+						$7.temp = $$.temp;
+						$$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
+						$$.tac = [FunDecl "procedure" $2 (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
 						where (if (searchFun $2 $$.envF) 
 							then Bad $ "Scope Error at "++(pos $1)++": procedure "++(idToStr $2)++" already declared"
 							else Ok () );
@@ -260,16 +260,16 @@ Pass : 'val' 					{ $$ = PassValue; }
   | 'valres' 					{ $$ = PassValueRes; }
 
 --Tipi di dato
-Type : 'int' 			{ $$ = TypeInt;} 
-  | 'bool' 			{ $$ = TypeBool;} 
-  | 'float' 			{ $$ = TypeFloat;} 
-  | 'char' 			{ $$ = TypeChar;} 
-  | 'string' 			{ $$ = TypeString;} 
-  | '[' Integer ']' Type 	{ $$ = TypeArray $2 $4;} 
-  | '*' Type   	%prec PUN	{ $$ = TypePointer $2;}
+Type : 'int' 			{ $$ = TInt;} 
+  | 'bool' 			{ $$ = TBool;} 
+  | 'float' 			{ $$ = TFloat;} 
+  | 'char' 			{ $$ = TChar;} 
+  | 'string' 			{ $$ = TString;} 
+  | '[' Integer ']' Type 	{ $$ = TArray $2 $4;} 
+  | '*' Type   	%prec PUN	{ $$ = TPointer $2;}
 
 -- Blocco di comandi 
-Block : '{' ListStatement '}' 		{ 
+Block : '{' ListStmt '}' 		{ 
 					$$ = (BodyBlock (reverse $2)); 
 					$2.envV = $$.envV;
 					$2.envF = $$.envF;
@@ -283,8 +283,8 @@ Block : '{' ListStatement '}' 		{
 					$$.tac = $2.tac;
 					} 
 -- Comandi base del linguaggio
-Statement : Block 			{ 
-					$$ = StateBlock $1; 
+Stmt : Block 			{ 
+					$$ = StBlock $1; 
 					$1.envV = (resetEnvV $$.envV);
 					$1.envF = $$.envF;
 					$$.envVMod = $$.envV;
@@ -297,8 +297,8 @@ Statement : Block 			{
 					$$.tac = $1.tac;
 					} 
 
-  | StatementSmpl 			{ 
-					$$ = StateSmpl $1; 
+  | StmtSmpl 			{ 
+					$$ = StSmpl $1; 
 					$1.envV = $$.envV;
 					$1.envF = $$.envF;
 					$$.envVMod = $1.envVMod;
@@ -310,7 +310,7 @@ Statement : Block 			{
 					}
 
   | 'return' RExp 			{ 
-					$$ = StateReturn $2; 
+					$$ = StReturn $2; 
 					$2.envV = $$.envV;
 					$2.envF = $$.envF;
 					$$.envVMod = $$.envV;
@@ -321,7 +321,7 @@ Statement : Block 			{
 					$$.tac = $2.tac ++ [ Return $2.address ];
 					where ( if ($2.err== "") 
 						then ( case $$.typFun of {
-							TypeVoid -> ( Bad $ "Sintax Error at "++(pos $1)++": Cannot return any value" );
+							TVoid -> ( Bad $ "Sintax Error at "++(pos $1)++": Cannot return any value" );
 							_ -> ( when (not($2.typ == $$.typFun)) $ Bad $ "Type Error at "++(pos $1)++": Cannot use type "++(showType $2.typ)++" as type "++(showType $$.typFun)++" in return argument" );
 
 						})
@@ -330,7 +330,7 @@ Statement : Block 			{
 					}
 
   | 'if' RExp Block 			{ 
-					$$ = StateIf $2 $3; 
+					$$ = StIf $2 $3; 
 					$2.envV = $$.envV;
 					$2.envF = $$.envF;
 					$3.envV = (resetEnvV $$.envV);
@@ -347,13 +347,13 @@ Statement : Block 			{
 							++ $3.tac
 							++ [Lbl ((snd $3.tempMod)+1)];
 					where ( if ($2.err== "") 
-						then (when (not($2.typ == TypeBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
+						then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
 						else ( Bad $ $2.err) 
 					);
 					}
 
   | 'if' RExp Block 'else' Block 	{ 
-					$$ = StateIfElse $2 $3 $5; 
+					$$ = StIfElse $2 $3 $5; 
 					$2.envV = $$.envV;
 					$2.envF = $$.envF;
 					$3.envV = (resetEnvV $$.envV);
@@ -378,13 +378,13 @@ Statement : Block 			{
 							++ $5.tac
 							++ [Lbl ((snd $5.tempMod)+2)];
 					where ( if ($2.err== "") 
-						then (when (not($2.typ == TypeBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
+						then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
 						else ( Bad $ $2.err) 
 					);
 					}
 
-  | 'if' StatementSmpl ';' RExp Block 	{ 
-					$$ = StateIfStm $2 $4 $5; 
+  | 'if' StmtSmpl ';' RExp Block 	{ 
+					$$ = StIfStm $2 $4 $5; 
 					$2.envV = (resetEnvV $$.envV);
 					$2.envF = $$.envF;
 					$4.envV = $2.envVMod;
@@ -404,13 +404,13 @@ Statement : Block 			{
 							++ $5.tac 
 							++ [Lbl ((snd $5.tempMod)+1)];
 					where ( if ($4.err== "") 
-						then (when (not($4.typ == TypeBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $4.typ) ++" used as if-condition" )
+						then (when (not($4.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $4.typ) ++" used as if-condition" )
 						else ( Bad $ $4.err) 
 				);
 					}
 
-  | 'if' StatementSmpl ';' RExp Block 'else' Block 	{ 
-							$$ = StateIfElseStm $2 $4 $5 $7; 
+  | 'if' StmtSmpl ';' RExp Block 'else' Block 	{ 
+							$$ = StIfElseStm $2 $4 $5 $7; 
 							$2.envV = (resetEnvV $$.envV);
 							$2.envF = $$.envF;
 							$4.envV = $2.envVMod;
@@ -438,13 +438,13 @@ Statement : Block 			{
 									++ $7.tac
 									++ [Lbl ((snd $7.tempMod)+2)];
 							where ( if ($4.err== "") 
-								then (when (not($4.typ == TypeBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $4.typ) ++" used as if-condition" )
+								then (when (not($4.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $4.typ) ++" used as if-condition" )
 								else ( Bad $ $4.err) 
 							);
 							}
 
-  | 'for' ListStatementSmpl ';' RExp ';' ListStatementSmpl Block 	{ 
-									$$ = StateFor $2 $4 $6 $7; 
+  | 'for' ListStmtSmpl ';' RExp ';' ListStmtSmpl Block 	{ 
+									$$ = StFor $2 $4 $6 $7; 
 									$2.envV = (resetEnvV $$.envV);
 									$2.envF = $$.envF;
 									$4.envV = $2.envVMod;
@@ -474,7 +474,7 @@ Statement : Block 			{
 											++ [UnCondJ ((snd $7.tempMod)+1)] 
 											++ [Lbl ((snd $7.tempMod)+3)];
 									where ( if ($4.err== "") 
-										then (if ($4.typ == TypeBool) 
+										then (if ($4.typ == TBool) 
 											then if $6.checkForIncr
 												then Ok ()
 												else Bad $ "Sintax Error at "++(pos $1)++": Cannot declare in the for-increment"
@@ -484,7 +484,7 @@ Statement : Block 			{
 									}
 
   | 'for' RExp Block 		{ 
-				$$ = StateWhile $2 $3;
+				$$ = StWhile $2 $3;
 				$2.envV = $$.envV;
 				$2.envF = $$.envF;
 				$3.envV = (resetEnvV $$.envV);
@@ -504,13 +504,13 @@ Statement : Block 			{
 						++ [UnCondJ ((snd $3.tempMod)+1)] 
 						++ [Lbl ((snd $3.tempMod)+2)];
 				where ( if ($2.err== "") 
-					then (when (not($2.typ == TypeBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as for-condition" )
+					then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as for-condition" )
 					else ( Bad $ $2.err) 
 				);
 				}
 
   | Decl 			{ 
-				$$ = StateDecl $1; 
+				$$ = StDecl $1; 
 				$1.envV = $$.envV;
 				$1.envF = $$.envF;
 				$$.envVMod = $1.envVMod;
@@ -522,7 +522,7 @@ Statement : Block 			{
 				}
 
   | 'break' 			{ 
-				$$ = StateBreak; 
+				$$ = StBreak; 
 				$$.envVMod = $$.envV;
 				$$.envFMod = $$.envF;
 				$$.isReturn = False;
@@ -532,7 +532,7 @@ Statement : Block 			{
 				}
 
   | 'continue' 			{ 
-				$$ = StateContinue;
+				$$ = StContinue;
 				$$.envVMod = $$.envV;
 				$$.envFMod = $$.envF;
 				$$.isReturn = False;
@@ -542,7 +542,7 @@ Statement : Block 			{
 				}
 
   | 'try' Block 'catch' Block 	{ 
-				$$ = StateTryCatch $2 $4;
+				$$ = StTryCatch $2 $4;
 				$2.envV = (resetEnvV $$.envV);
 				$2.envF = $$.envF;
 				$4.envV = (resetEnvV $$.envV);
@@ -565,7 +565,7 @@ Statement : Block 			{
 				}
 
   | 'write' '(' RExp ')' 	{ 
-				$$ = StateWrite $3; 
+				$$ = StWrite $3; 
 				$3.envV = $$.envV;
 				$3.envF = $$.envF;
 				$$.envVMod = $$.envV;
@@ -575,12 +575,12 @@ Statement : Block 			{
 				$$.tempMod = $3.tempMod;
 				$$.tac = $3.tac ++ [FunCall "procedure" "" (Id "write") [$3.address]];
 				where ( if $3.err == ""
-					then when ( $3.typ == TypeBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as write-argument"
+					then when ( $3.typ == TBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as write-argument"
 					else Bad $ $3.err );
 				}
 
   | 'read' '(' RExp ')' 	{ 
-				$$ = StateRead $3;
+				$$ = StRead $3;
 				$3.envV = $$.envV;
 				$3.envF = $$.envF;
 				$$.envVMod = $$.envV;
@@ -590,14 +590,14 @@ Statement : Block 			{
 				$$.tempMod = $3.tempMod;
 				$$.tac = $3.tac ++ [FunCall "procedure" "" (Id "read") [$3.address]];
 				where ( if $3.err == ""
-					then when ( $3.typ == TypeBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as read-argument"
+					then when ( $3.typ == TBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as read-argument"
 					else Bad $ $3.err );
 				}
 
 
 -- Sotto insieme dei comandi utilizzato in alcune situazioni particolari (ad es: all'interno di if e for)
-StatementSmpl : ShortVarDecl 	{ 
-				$$ = StateShortVarDecl $1; 
+StmtSmpl : ShortVarDecl 	{ 
+				$$ = StShortVarDecl $1; 
 				$1.envV = $$.envV;
 				$1.envF = $$.envF;
 				$$.envVMod = $1.envVMod;
@@ -609,7 +609,7 @@ StatementSmpl : ShortVarDecl 	{
 				} 
 
   | RExp			{ 
-				$$ = StateExp $1; 
+				$$ = StExp $1; 
 				$1.envV = $$.envV;
 				$1.envF = $$.envF;
 				$$.envVMod = $$.envV;
@@ -627,7 +627,7 @@ StatementSmpl : ShortVarDecl 	{
 				}
 
   | LExp '=' RExp 		{ 
-				$$ = StateAsgn $1 $3; 
+				$$ = StAsgn $1 $3; 
 				$1.envV = $$.envV;
 				$1.envF = $$.envF;
 				$3.envV = $$.envV;
@@ -640,7 +640,7 @@ StatementSmpl : ShortVarDecl 	{
 				$$.tempMod = $3.tempMod;
 				$$.tac = $1.tac ++ $3.tac ++ [NulOp $1.address $3.address ] ;
 				where ( if ( ($1.err== "") && ($3.err== "" ) ) 
-						then (if (($1.typ == TypeFloat) && ($3.typ == TypeInt)) 
+						then (if (($1.typ == TFloat) && ($3.typ == TInt)) 
 							then (Ok ()) 
 							else when (not($1.typ == $3.typ)) $ Bad $ "Type Error at "++(pos $2)++": Cannot use "++(showType $3.typ)++" as type "++(showType $1.typ)++" in assignment"
 						)
@@ -679,7 +679,7 @@ LExp : Id 		{
 			$$.typ = getTypeArr $1.typ;
 			$$.err = if ( ($1.err == "") && ($3.err == "")  )
 				    then  (case $1.typ of { 
-						(TypeArray _ _ ) -> (if (not($3.typ == TypeInt)) 
+						(TArray _ _ ) -> (if (not($3.typ == TInt)) 
 								     then "Type Error at "++(pos $2)++": Type int expected, founded " ++ showType ($3.typ) 
 								     else ""
 								    );
@@ -699,7 +699,7 @@ LExp : Id 		{
 
 			where (  if ( ($1.err == "") && ($3.err == "")  )
 				    then  case $1.typ of { 
-						(TypeArray _ _ ) -> (if (not($3.typ == TypeInt)) 
+						(TArray _ _ ) -> (if (not($3.typ == TInt)) 
 								     then Bad $ "Type Error at "++(pos $2)++": Type int expected, founded " ++ showType ($3.typ) 
 								     else Ok ()
 								    );
@@ -741,7 +741,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);	 
-			$$.typ = if (($1.typ == TypeInt) && ($3.typ == TypeInt)) then TypeInt else TypeFloat ;
+			$$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -760,7 +760,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);	 
-			$$.typ = if (($1.typ == TypeInt) && ($3.typ == TypeInt)) then TypeInt else TypeFloat ;
+			$$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -779,7 +779,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);	 
-			$$.typ = if (($1.typ == TypeInt) && ($3.typ == TypeInt)) then TypeInt else TypeFloat ;
+			$$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -798,7 +798,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);	 
-			$$.typ = if (($1.typ == TypeInt) && ($3.typ == TypeInt)) then TypeInt else TypeFloat ;
+			$$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -817,7 +817,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);	 
-			$$.typ = if (($1.typ == TypeInt) && ($3.typ == TypeInt)) then TypeInt else TypeFloat ;
+			$$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -836,7 +836,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;		
 			$$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;	 
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -855,7 +855,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;	 
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -874,7 +874,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;	 
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -893,7 +893,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;	 
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -912,7 +912,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;	 
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -931,7 +931,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;	 
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -950,7 +950,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;	 
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -969,7 +969,7 @@ RExp : RExp '+' RExp 	{
 			$3.envV = $$.envV;
 			$3.envF = $$.envF;
 			$$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;	 
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$3.temp = $1.tempMod;
 			$$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
@@ -986,18 +986,18 @@ RExp : RExp '+' RExp 	{
 			$2.envV = $$.envV;
 			$2.envF = $$.envF;
 			$$.err = if ($2.err == "")  
-					then 	(if (not($2.typ == TypeBool))
+					then 	(if (not($2.typ == TBool))
 				 		then "Type Error at "++(pos $1)++": Expected boolean type"
 						else ""
 					)
 					else $2.err;
-			$$.typ = TypeBool;
+			$$.typ = TBool;
 			$1.temp = $$.temp;
 			$$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
 			$$.address = "t"++ (show  (fst $$.tempMod) );
 			$$.tac = $2.tac ++ [(UnOp "!" $$.address $2.address)];
 			where ( if ($2.err == "")  
-				then 	(if (not($2.typ == TypeBool))
+				then 	(if (not($2.typ == TBool))
 				 	then Bad $ "Type Error at "++(pos $1)++": Expected boolean type"
 					else Ok ()
 					)
@@ -1009,7 +1009,7 @@ RExp : RExp '+' RExp 	{
 			$2.envV = $$.envV;
 			$2.envF = $$.envF;
 			$$.err = if ($2.err == "")  
-					then 	(if (not($2.typ == TypeInt || $2.typ == TypeFloat))
+					then 	(if (not($2.typ == TInt || $2.typ == TFloat))
 				 		then "Type Error at "++(pos $1)++": Expected numeric type (int or float)"
 						else ""
 					)
@@ -1020,7 +1020,7 @@ RExp : RExp '+' RExp 	{
 			$$.address = "t"++ (show  (fst $$.tempMod) );
 			$$.tac = $2.tac ++ [(UnOp "-" $$.address $2.address)];
 			where ( if ($2.err == "")  
-				then 	(if (not($2.typ == TypeInt || $2.typ == TypeFloat))
+				then 	(if (not($2.typ == TInt || $2.typ == TFloat))
 				 	then Bad $ "Type Error at "++(pos $1)++": Expected numeric type (int or float)"
 					else Ok ()
 					)
@@ -1054,9 +1054,9 @@ RExp : RExp '+' RExp 	{
 			$$ = ExpFuncEmpty $1; 
 			$$.typ = getTypeFun (extrFun $1 $$.envF);	
 			$$.err = checkErrProc $1 $$.envF [] $2;
-			$$.tempMod = if ($$.typ==TypeVoid) then ( $$.temp ) else ( ((fst $$.temp) + 1), (snd $$.temp) );
-			$$.address = if ($$.typ==TypeVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
-			$$.tac = if ($$.typ==TypeVoid) then [FunCall "procedure" "" $1 []] else [FunCall "function" $$.address $1 []];
+			$$.tempMod = if ($$.typ==TVoid) then ( $$.temp ) else ( ((fst $$.temp) + 1), (snd $$.temp) );
+			$$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
+			$$.tac = if ($$.typ==TVoid) then [FunCall "procedure" "" $1 []] else [FunCall "function" $$.address $1 []];
 			where (case checkErrProc $1 $$.envF [] $2 of {
 					"" -> Ok ();
 					x -> Bad $ x; 				
@@ -1070,9 +1070,9 @@ RExp : RExp '+' RExp 	{
 			$$.typ = getTypeFun (extrFun $1 $$.envF);
 			$$.err = checkErrFun $3.err $1 $$.envF $3.typList $2;
 			$3.temp = $$.temp;
-			$$.tempMod = if ($$.typ==TypeVoid) then ( $3.tempMod ) else ( ((fst $3.tempMod) + 1), (snd $3.tempMod) ); 
-			$$.address = if ($$.typ==TypeVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
-			$$.tac = if ($$.typ==TypeVoid) 
+			$$.tempMod = if ($$.typ==TVoid) then ( $3.tempMod ) else ( ((fst $3.tempMod) + 1), (snd $3.tempMod) ); 
+			$$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
+			$$.tac = if ($$.typ==TVoid) 
 					then $3.tac ++ [FunCall "procedure" "" $1 $3.addressList] 
 					else $3.tac ++ [FunCall "function" $$.address $1 $3.addressList];
 			where (case checkErrFun $3.err $1 $$.envF $3.typList $2 of {
@@ -1087,7 +1087,7 @@ RExp : RExp '+' RExp 	{
 			$2.envV = $$.envV;
 			$2.envF = $$.envF;
 			$$.err = $2.err;
-			$$.typ = TypePointer $2.typ;
+			$$.typ = TPointer $2.typ;
 			$2.temp = $$.temp;
 			$$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
 			$$.address = "t"++(show (fst $$.tempMod) );
@@ -1110,27 +1110,27 @@ RExp : RExp '+' RExp 	{
 -- Valori base
 Value : Integer { 
 		$$ = Int $1; 
-		$$.typ = TypeInt;
+		$$.typ = TInt;
 		} 
 
   | Double 	{ 
 		$$ = Float $1; 
-		$$.typ = TypeFloat;
+		$$.typ = TFloat;
 		}
 
   | Char 	{ 
 		$$ = Char $1; 
-		$$.typ = TypeChar;
+		$$.typ = TChar;
 		}
 
   | String 	{ 
 		$$ = String $1; 
-		$$.typ = TypeString;
+		$$.typ = TString;
 		}
 
   |  Boolean 	{ 
 		$$ = Bool $1; 
-		$$.typ = TypeBool;
+		$$.typ = TBool;
 		}
 
 
@@ -1182,7 +1182,7 @@ ListExpR : RExp 	{
 
 
 -- Lista di comandi semplici (zero o uno)
-ListStatementSmpl : {- empty -} 	{ 
+ListStmtSmpl : {- empty -} 	{ 
 					$$ = []; 
 					$$.envVMod = $$.envV;
 					$$.envFMod = $$.envF;
@@ -1191,7 +1191,7 @@ ListStatementSmpl : {- empty -} 	{
 					$$.tac = [] ;
 					} 
 
-  		   | StatementSmpl 	{ 
+  		   | StmtSmpl 	{ 
 					$$ = (:[]) $1; 
 					$1.envV = $$.envV;
 					$1.envF = $$.envF;
@@ -1254,7 +1254,7 @@ ListParam : {- empty -} 		{
 
 
 -- Lista di comandi  (zero o più)
-ListStatement : {- empty -} 			{ 
+ListStmt : {- empty -} 			{ 
 						$$ = []; 
 						$$.envVMod = $$.envV;
 						$$.envFMod = $$.envF;
@@ -1263,7 +1263,7 @@ ListStatement : {- empty -} 			{
 						$$.tac = [];
 						}
  
-  		| ListStatement Statement 	{ 
+  		| ListStmt Stmt 	{ 
 						$$ = flip (:) $1 $2; 
 						$1.envV = $$.envV;
 						$1.envF = $$.envF;
@@ -1293,7 +1293,7 @@ ListStatement : {- empty -} 			{
 
 -- controlli di tipo sulle operazioni matematiche
 checkMathOp t1 t2 e1 e2 p = if ( (e1 == "") && (e2 == "")  ) 
-				 then ( if ((t1 == TypeInt || t1 == TypeFloat) && (t2 == TypeInt || t2 == TypeFloat))
+				 then ( if ((t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat))
 					then ""
 					else "Type Error at "++(pos p)++": Math operator expected numeric type (int or float)"
 					)
@@ -1306,7 +1306,7 @@ checkMathOp t1 t2 e1 e2 p = if ( (e1 == "") && (e2 == "")  )
 checkRelOp t1 t2 e1 e2 p = if ( (e1 == "") && (e2 == "")  ) 
 				then  (	if (t1 == t2) 
 					then ""
-					else if ((t1 == TypeInt || t1 == TypeFloat) && (t2 == TypeInt || t2 == TypeFloat))
+					else if ((t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat))
 						then ""
 						else "Type Error at "++(pos p)++": Couldn't match type "++(showType t1)++" with type "++ (showType t2)
 					)
@@ -1318,7 +1318,7 @@ checkRelOp t1 t2 e1 e2 p = if ( (e1 == "") && (e2 == "")  )
 -- controlli di tipo sulle operazioni booleane
 checkBoolOp t1 t2 e1 e2 p  = if ( (e1 == "") && (e2 == "")  ) 
 				then 	(if (t2 == t1)
-				 	then 	if (t1/=TypeBool) 
+				 	then 	if (t1/=TBool) 
 						then "Type Error at "++(pos p)++": Expected boolean type" 
 						else ""
 					else "Type Error at "++(pos p)++": Couldn't match type "++(showType t1)++" with type "++ (showType t2)
@@ -1354,13 +1354,13 @@ matchTypeList (x:xs) (y:ys) 	| x/=y = Just (x,y)
 
 -- costante moltiplicativa per l'allocazione di array (tac)
 mem typ = case typ of {
-		TypeInt -> 4;
-		TypeFloat -> 8;
-		TypeChar -> 2;
-		TypeString -> 32;
-		TypeBool -> 1;
-		(TypePointer _) -> 4;
-		(TypeArray d t) -> d * (mem t);
+		TInt -> 4;
+		TFloat -> 8;
+		TChar -> 2;
+		TString -> 32;
+		TBool -> 1;
+		(TPointer _) -> 4;
+		(TArray d t) -> d * (mem t);
 		}
 
 
@@ -1373,14 +1373,14 @@ checkVarParamList (x@(Var a _ _):xs) ys | (searchVar a ys) =  Just a
 -- posizione del token 
 pos tok = tokenPos [tok]
 
-showType (TypeInt) =   "int"
-showType (TypeFloat) = "float"
-showType (TypeChar) =  "char"
-showType (TypeString) = "string"
-showType (TypeBool) =  "boolean"
-showType (TypeVoid) = "void"
-showType (TypeArray n t) = "array["++(show n)++"] "++showType t
-showType (TypePointer t) = "pointer -> "++showType t
+showType (TInt) =   "int"
+showType (TFloat) = "float"
+showType (TChar) =  "char"
+showType (TString) = "string"
+showType (TBool) =  "boolean"
+showType (TVoid) = "void"
+showType (TArray n t) = "array["++(show n)++"] "++showType t
+showType (TPointer t) = "pointer -> "++showType t
 
  
 showVal (Int i) = show i

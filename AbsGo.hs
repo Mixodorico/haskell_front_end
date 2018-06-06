@@ -28,41 +28,39 @@ data Pass = PassValue | PassRef | PassValueRes
   deriving (Eq, Ord, Show, Read)
 
 data Type
-    = TypeVoid
-    | TypeInt
-    | TypeBool
-    | TypeFloat
-    | TypeChar
-    | TypeString
-    | TypeArray Integer Type
-    | TypePointer Type
+    = TVoid
+    | TInt
+    | TBool
+    | TFloat
+    | TChar
+    | TString
+    | TArray Integer Type
+    | TPointer Type
   deriving (Eq, Ord, Show, Read)
 
-data Block = BodyBlock [Statement]
+data Block = BodyBlock [Stmt]
   deriving (Eq, Ord, Show, Read)
 
-data Statement
-    = StateBlock Block
-    | StateSmpl StatementSmpl
-    | StateReturn RExp
-    | StateIf RExp Block
-    | StateIfElse RExp Block Block
-    | StateIfStm StatementSmpl RExp Block
-    | StateIfElseStm StatementSmpl RExp Block Block
-    | StateFor [StatementSmpl] RExp [StatementSmpl] Block
-    | StateWhile RExp Block
-    | StateDecl Decl
-    | StateBreak
-    | StateContinue
-    | StateTryCatch Block Block
-    | StateWrite RExp
-    | StateRead RExp
+data Stmt
+    = StBlock Block
+    | StSmpl StmtSmpl
+    | StReturn RExp
+    | StIf RExp Block
+    | StIfElse RExp Block Block
+    | StIfStm StmtSmpl RExp Block
+    | StIfElseStm StmtSmpl RExp Block Block
+    | StFor [StmtSmpl] RExp [StmtSmpl] Block
+    | StWhile RExp Block
+    | StDecl Decl
+    | StBreak
+    | StContinue
+    | StTryCatch Block Block
+    | StWrite RExp
+    | StRead RExp
   deriving (Eq, Ord, Show, Read)
 
-data StatementSmpl
-    = StateShortVarDecl ShortVarDecl
-    | StateExp RExp
-    | StateAsgn LExp RExp
+data StmtSmpl
+    = StShortVarDecl ShortVarDecl | StExp RExp | StAsgn LExp RExp
   deriving (Eq, Ord, Show, Read)
 
 data LExp = ExpId Id | ExpArr LExp RExp | ExpDeref RExp
