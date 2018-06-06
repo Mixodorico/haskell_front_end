@@ -4,6 +4,7 @@ package main
 func ciao ( a int , d int) void {
   
   u :=4
+  
   func tryww () int {
     
     var arr[10] bool

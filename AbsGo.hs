@@ -72,17 +72,17 @@ data RExp
     | ExpMul RExp RExp
     | ExpDiv RExp RExp
     | ExpMod RExp RExp
-    | ExpEqu RExp RExp
+    | ExpEq RExp RExp
     | ExpNeq RExp RExp
-    | ExpLes RExp RExp
-    | ExpLeq RExp RExp
-    | ExpGre RExp RExp
-    | ExpGrq RExp RExp
+    | ExpLt RExp RExp
+    | ExpLtE RExp RExp
+    | ExpGt RExp RExp
+    | ExpGtE RExp RExp
     | ExpAnd RExp RExp
     | ExpOr RExp RExp
     | ExpNot RExp
     | ExpNeg RExp
-    | ExpValue Value
+    | ExpVal Value
     | ExpLef LExp
     | ExpFuncEmpty Id
     | ExpFunc Id [RExp]
@@ -98,6 +98,6 @@ data Value
     | Bool Boolean
   deriving (Eq, Ord, Show, Read)
 
-data Boolean = BoolTrue | BoolFalse
+data Boolean = Boolean_true | Boolean_false
   deriving (Eq, Ord, Show, Read)
 

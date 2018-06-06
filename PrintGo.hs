@@ -168,17 +168,17 @@ instance Print RExp where
     ExpMul rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "*"), prt 0 rexp2])
     ExpDiv rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "/"), prt 0 rexp2])
     ExpMod rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "%"), prt 0 rexp2])
-    ExpEqu rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "=="), prt 0 rexp2])
+    ExpEq rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "=="), prt 0 rexp2])
     ExpNeq rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "!="), prt 0 rexp2])
-    ExpLes rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "<"), prt 0 rexp2])
-    ExpLeq rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "<="), prt 0 rexp2])
-    ExpGre rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString ">"), prt 0 rexp2])
-    ExpGrq rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString ">="), prt 0 rexp2])
+    ExpLt rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "<"), prt 0 rexp2])
+    ExpLtE rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "<="), prt 0 rexp2])
+    ExpGt rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString ">"), prt 0 rexp2])
+    ExpGtE rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString ">="), prt 0 rexp2])
     ExpAnd rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "&&"), prt 0 rexp2])
     ExpOr rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "||"), prt 0 rexp2])
     ExpNot rexp -> prPrec i 0 (concatD [doc (showString "!"), prt 0 rexp])
     ExpNeg rexp -> prPrec i 0 (concatD [doc (showString "-"), prt 0 rexp])
-    ExpValue value -> prPrec i 0 (concatD [prt 0 value])
+    ExpVal value -> prPrec i 0 (concatD [prt 0 value])
     ExpLef lexp -> prPrec i 0 (concatD [prt 0 lexp])
     ExpFuncEmpty id -> prPrec i 0 (concatD [prt 0 id, doc (showString "("), doc (showString ")")])
     ExpFunc id rexps -> prPrec i 0 (concatD [prt 0 id, doc (showString "("), prt 0 rexps, doc (showString ")")])
@@ -196,7 +196,7 @@ instance Print Value where
 
 instance Print Boolean where
   prt i e = case e of
-    BoolTrue -> prPrec i 0 (concatD [doc (showString "true")])
-    BoolFalse -> prPrec i 0 (concatD [doc (showString "false")])
+    Boolean_true -> prPrec i 0 (concatD [doc (showString "true")])
+    Boolean_false -> prPrec i 0 (concatD [doc (showString "false")])
 
 

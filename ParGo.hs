@@ -776,7 +776,7 @@ happyReduction_51 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp " ==" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpEqu (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp " ==" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpEq (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_52 = happySpecReduce_3  15# happyReduction_52
@@ -798,7 +798,7 @@ happyReduction_53 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "<" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpLes (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "<" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpLt (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_54 = happySpecReduce_3  15# happyReduction_54
@@ -809,7 +809,7 @@ happyReduction_54 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "< =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpLeq (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "< =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpLtE (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_55 = happySpecReduce_3  15# happyReduction_55
@@ -820,7 +820,7 @@ happyReduction_55 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp ">" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpGre (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp ">" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpGt (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_56 = happySpecReduce_3  15# happyReduction_56
@@ -831,7 +831,7 @@ happyReduction_56 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "> =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpGrq (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "> =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpGtE (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_57 = happySpecReduce_3  15# happyReduction_57
@@ -878,7 +878,7 @@ happyReduce_61 = happySpecReduce_1  15# happyReduction_61
 happyReduction_61 happy_x_1
 	 =  case happyOut20 happy_x_1 of { happy_var_1 -> 
 	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , address = (showVal (value happySubAttrs_1) ) , tempMod = (temp happySelfAttrs) , err = "" , typ = (typ happySubAttrs_1) , value = ExpValue (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envV = (envV happySelfAttrs) , envF = (envF happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , address = (showVal (value happySubAttrs_1) ) , tempMod = (temp happySelfAttrs) , err = "" , typ = (typ happySubAttrs_1) , value = ExpVal (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envV = (envV happySelfAttrs) , envF = (envF happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
 happyReduce_62 = happySpecReduce_1  15# happyReduction_62
@@ -966,13 +966,13 @@ happyReduction_71 happy_x_1
 happyReduce_72 = happySpecReduce_1  17# happyReduction_72
 happyReduction_72 happy_x_1
 	 =  happyIn21
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = BoolTrue  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = Boolean_true  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
 happyReduce_73 = happySpecReduce_1  17# happyReduction_73
 happyReduction_73 happy_x_1
 	 =  happyIn21
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = BoolFalse  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = Boolean_false  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
 happyReduce_74 = happySpecReduce_1  18# happyReduction_74
@@ -1261,8 +1261,8 @@ showVal (Int i) = show i
 showVal (Float f) = show f
 showVal (Char c)= "'"++(c:"'")
 showVal (String s)= "\""++s++"\""
-showVal (Bool BoolTrue)= "true"
-showVal (Bool BoolFalse)= "false"
+showVal (Bool Boolean_true)= "true"
+showVal (Bool Boolean_false)= "false"
 
 
 

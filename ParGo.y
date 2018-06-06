@@ -830,7 +830,7 @@ RExp : RExp '+' RExp 	{
 			}
 
   | RExp '==' RExp 	{ 
-			$$ = ExpEqu $1 $3; 
+			$$ = ExpEq $1 $3; 
 			$1.envV = $$.envV;
 			$1.envF = $$.envF;
 			$3.envV = $$.envV;
@@ -868,7 +868,7 @@ RExp : RExp '+' RExp 	{
 			}
 
   | RExp '<' RExp 	{ 
-			$$ = ExpLes $1 $3; 
+			$$ = ExpLt $1 $3; 
 			$1.envV = $$.envV;
 			$1.envF = $$.envF;
 			$3.envV = $$.envV;
@@ -887,7 +887,7 @@ RExp : RExp '+' RExp 	{
 			}
 
   | RExp '<=' RExp 	{ 
-			$$ = ExpLeq $1 $3; 
+			$$ = ExpLtE $1 $3; 
 			$1.envV = $$.envV;
 			$1.envF = $$.envF;
 			$3.envV = $$.envV;
@@ -906,7 +906,7 @@ RExp : RExp '+' RExp 	{
 			}
 
   | RExp '>' RExp 	{ 
-			$$ = ExpGre $1 $3; 
+			$$ = ExpGt $1 $3; 
 			$1.envV = $$.envV;
 			$1.envF = $$.envF;
 			$3.envV = $$.envV;
@@ -925,7 +925,7 @@ RExp : RExp '+' RExp 	{
 			}
 
   | RExp '>=' RExp 	{ 
-			$$ = ExpGrq $1 $3; 
+			$$ = ExpGtE $1 $3; 
 			$1.envV = $$.envV;
 			$1.envF = $$.envF;
 			$3.envV = $$.envV;
@@ -1028,7 +1028,7 @@ RExp : RExp '+' RExp 	{
 			}
 
   | Value 		{ 
-			$$ = ExpValue $1; 
+			$$ = ExpVal $1; 
 			$1.envV = $$.envV;
 			$1.envF = $$.envF;
 			$$.typ = $1.typ;
@@ -1135,8 +1135,8 @@ Value : Integer {
 
 
 
-Boolean : 'true'	{ $$ = BoolTrue; } 
-  | 'false' 		{ $$ = BoolFalse; }
+Boolean : 'true'	{ $$ = Boolean_true; } 
+  | 'false' 		{ $$ = Boolean_false; }
 
 
 -- Lista di Id (uno o più)
@@ -1387,8 +1387,8 @@ showVal (Int i) = show i
 showVal (Float f) = show f
 showVal (Char c)= "'"++(c:"'")
 showVal (String s)= "\""++s++"\""
-showVal (Bool BoolTrue)= "true"
-showVal (Bool BoolFalse)= "false"
+showVal (Bool Boolean_true)= "true"
+showVal (Bool Boolean_false)= "false"
 
 
 

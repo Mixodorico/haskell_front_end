@@ -80,17 +80,17 @@ transRExp x = case x of
   ExpMul rexp1 rexp2 -> failure x
   ExpDiv rexp1 rexp2 -> failure x
   ExpMod rexp1 rexp2 -> failure x
-  ExpEqu rexp1 rexp2 -> failure x
+  ExpEq rexp1 rexp2 -> failure x
   ExpNeq rexp1 rexp2 -> failure x
-  ExpLes rexp1 rexp2 -> failure x
-  ExpLeq rexp1 rexp2 -> failure x
-  ExpGre rexp1 rexp2 -> failure x
-  ExpGrq rexp1 rexp2 -> failure x
+  ExpLt rexp1 rexp2 -> failure x
+  ExpLtE rexp1 rexp2 -> failure x
+  ExpGt rexp1 rexp2 -> failure x
+  ExpGtE rexp1 rexp2 -> failure x
   ExpAnd rexp1 rexp2 -> failure x
   ExpOr rexp1 rexp2 -> failure x
   ExpNot rexp -> failure x
   ExpNeg rexp -> failure x
-  ExpValue value -> failure x
+  ExpVal value -> failure x
   ExpLef lexp -> failure x
   ExpFuncEmpty id -> failure x
   ExpFunc id rexps -> failure x
@@ -105,6 +105,6 @@ transValue x = case x of
   Bool boolean -> failure x
 transBoolean :: Boolean -> Result
 transBoolean x = case x of
-  BoolTrue -> failure x
-  BoolFalse -> failure x
+  Boolean_true -> failure x
+  Boolean_false -> failure x
 
