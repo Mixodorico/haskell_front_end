@@ -13,11 +13,11 @@ func ciao ( a int , d int) void {
     arr [7] = arr[3]		
         
     e:=3
-    i := 3
-    for i>0{
+    i := 9
+    for i>0 {
       i:=6	
       if i<4 { 
-        break
+        //break
         e:=3 
         i:=6
       }else{
@@ -26,10 +26,9 @@ func ciao ( a int , d int) void {
       }
       
       e=5 + 6 * 6
-      
     }
+    
     u=2
-    return e
+    return 8
   }
-  
 }

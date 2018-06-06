@@ -530,15 +530,15 @@ Stmt : Block            {
                 $2.temp = $$.temp;
                 $3.temp = $2.tempMod;                   
                 $$.tempMod = ( (fst $3.tempMod) , ((snd $3.tempMod)+2) );
-                $$.tac = $2.tac ++ [Lbl ((snd $3.tempMod)+1)]
-                        ++ $2.tac 
-                        ++ [CondJ $2.address ((snd $3.tempMod)+2)] 
+                $$.tac = [Lbl ((snd $3.tempMod)+1)]
+                        ++ $2.tac
+                        ++ [CondJ $2.address ((snd $3.tempMod)+2)]
                         ++ $3.tac
-                        ++ [UnCondJ ((snd $3.tempMod)+1)] 
+                        ++ [UnCondJ ((snd $3.tempMod)+1)]
                         ++ [Lbl ((snd $3.tempMod)+2)];
-                where ( if ($2.err== "") 
+                where ( if ($2.err== "")
                     then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as for-condition" )
-                    else ( Bad $ $2.err) 
+                    else ( Bad $ $2.err)
                 );
                 }
 
@@ -1025,7 +1025,7 @@ RExp : RExp '+' RExp    {
                     )
                     else $2.err;
             $$.typ = TBool;
-            $1.temp = $$.temp;
+            $2.temp = $$.temp;
             $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
             $$.address = "t"++ (show  (fst $$.tempMod) );
             $$.tac = $2.tac ++ [(UnOp "!" $$.address $2.address)];
@@ -1048,7 +1048,7 @@ RExp : RExp '+' RExp    {
                     )
                     else $2.err;
             $$.typ = $2.typ;
-            $1.temp = $$.temp;
+            $2.temp = $$.temp;
             $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
             $$.address = "t"++ (show  (fst $$.tempMod) );
             $$.tac = $2.tac ++ [(UnOp "-" $$.address $2.address)];
