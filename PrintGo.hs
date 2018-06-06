@@ -113,7 +113,6 @@ instance Print Pass where
   prt i e = case e of
     PassValue -> prPrec i 0 (concatD [doc (showString "val")])
     PassRef -> prPrec i 0 (concatD [doc (showString "ref")])
-    PassValueRes -> prPrec i 0 (concatD [doc (showString "valres")])
 
 instance Print Type where
   prt i e = case e of

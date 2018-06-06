@@ -13,8 +13,8 @@ func ciao ( a int , d int) void {
     arr [7] = arr[3]		
         
     e:=3
-    
-    for i:=0 ; i>0; ciao(1,2) {
+    i := 3
+    for i>0{
       i:=6	
       if i<4 { 
         break
@@ -26,9 +26,10 @@ func ciao ( a int , d int) void {
       }
       
       e=5 + 6 * 6
+      
     }
-    
     u=2
-    return 8
+    return e
   }
+  
 }

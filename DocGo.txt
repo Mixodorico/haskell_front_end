@@ -44,8 +44,8 @@ The reserved words used in go are the following:
   | ``else`` | ``false`` | ``float`` | ``for``
   | ``func`` | ``if`` | ``int`` | ``package``
   | ``read`` | ``ref`` | ``return`` | ``string``
-  | ``true`` | ``val`` | ``valres`` | ``var``
-  | ``void`` | ``write`` |  | 
+  | ``true`` | ``val`` | ``var`` | ``void``
+  | ``write`` |  |  | 
 
 The symbols used in go are the following:
   | ( | ) | = | :=
@@ -76,7 +76,6 @@ All other symbols are terminals.
   |  |  **|**  | //Pass// //[Id]// //Type// 
   | //Pass// | -> | ``val`` 
   |  |  **|**  | ``ref`` 
-  |  |  **|**  | ``valres`` 
   | //Type// | -> | ``void`` 
   |  |  **|**  | ``int`` 
   |  |  **|**  | ``bool`` 

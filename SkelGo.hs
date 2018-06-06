@@ -33,7 +33,6 @@ transPass :: Pass -> Result
 transPass x = case x of
   PassValue -> failure x
   PassRef -> failure x
-  PassValueRes -> failure x
 transType :: Type -> Result
 transType x = case x of
   TVoid -> failure x

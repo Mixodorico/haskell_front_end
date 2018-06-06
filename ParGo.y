@@ -49,11 +49,6 @@ import Structures
 %attribute tempMod      { (Int, Int) }
 
 
-
-
-
-
-
 -----
 
 %name pStart Start
@@ -61,7 +56,6 @@ import Structures
 -- no lexer declaration
 %monad { Err } { thenM } { returnM }
 %tokentype { Token }
-
 
 %token
   '!' { PT _ (TS _ 1) }
@@ -104,14 +98,12 @@ import Structures
   'string' { PT _ (TS _ 38) }
   'true' { PT _ (TS _ 39) }
   'val' { PT _ (TS _ 40) }
-  'valres' { PT _ (TS _ 41) }
-  'var' { PT _ (TS _ 42) }
-  'void' { PT _ (TS _ 43) }
-  'write' { PT _ (TS _ 44) }
-  '{' { PT _ (TS _ 45) }
-  '||' { PT _ (TS _ 46) }
-  '}' { PT _ (TS _ 47) }
-
+  'var' { PT _ (TS _ 41) }
+  'void' { PT _ (TS _ 42) }
+  'write' { PT _ (TS _ 43) }
+  '{' { PT _ (TS _ 44) }
+  '||' { PT _ (TS _ 45) }
+  '}' { PT _ (TS _ 46) }
 
 
 L_integ  { PT _ (TI $$) }
@@ -298,7 +290,7 @@ Param : ListId Type                 {
 -- Tipo di passaggio
 Pass : 'val'                    { $$ = PassValue; } 
   | 'ref'                   { $$ = PassRef; }
-  | 'valres'                    { $$ = PassValueRes; }
+ -- | 'valres'                    { $$ = PassValueRes; }
 
 --Tipi di dato
 Type : 'int'            { $$ = TInt;} 

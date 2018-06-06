@@ -12,7 +12,7 @@ ParamL.     Param ::=  [Id] Type;       -- di default è passaggio per valore
 ParamLPassType. Param ::=  Pass [Id] Type;
 PassValue.  Pass  ::=  "val";
 PassRef.  Pass  ::=  "ref";
-PassValueRes.   Pass  ::=  "valres";
+--PassValueRes.   Pass  ::=  "valres";
 
 
 TVoid.    Type ::= "void";

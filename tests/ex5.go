@@ -1,16 +1,20 @@
 package main
 
 
-func prova (){
-	func sum (x int) int {
-	return x
-	}			
+func prova () void{
+		
 }
-func main (){
+func sum (x int) int {
+    var a,b,c,d bool = false , true , true, true 
+    booleano := a && b && c && d
+    
+	return x
+}	
+func main () void{
 	a:= sum (2)
 }
 	
-	
+
 
 
 

@@ -62,7 +62,6 @@ import Structures
 %monad { Err } { thenM } { returnM }
 %tokentype { Token }
 
-
 %token
   '!' { PT _ (TS _ 1) }
   '!=' { PT _ (TS _ 2) }
@@ -104,14 +103,12 @@ import Structures
   'string' { PT _ (TS _ 38) }
   'true' { PT _ (TS _ 39) }
   'val' { PT _ (TS _ 40) }
-  'valres' { PT _ (TS _ 41) }
-  'var' { PT _ (TS _ 42) }
-  'void' { PT _ (TS _ 43) }
-  'write' { PT _ (TS _ 44) }
-  '{' { PT _ (TS _ 45) }
-  '||' { PT _ (TS _ 46) }
-  '}' { PT _ (TS _ 47) }
-
+  'var' { PT _ (TS _ 41) }
+  'void' { PT _ (TS _ 42) }
+  'write' { PT _ (TS _ 43) }
+  '{' { PT _ (TS _ 44) }
+  '||' { PT _ (TS _ 45) }
+  '}' { PT _ (TS _ 46) }
 
 
 L_integ  { PT _ (TI $$) }
@@ -119,7 +116,7 @@ L_doubl  { PT _ (TD $$) }
 L_charac { PT _ (TC $$) }
 L_quoted { PT _ (TL $$) }
 L_Id { PT _ (T_Id $$) }
-L_err    { _ }
+--L_err    { _ }
 
 -- precedenze 
 
@@ -1223,6 +1220,7 @@ ListExpR : RExp     {
 
 
 -- Lista di comandi semplici (zero o uno)
+{-
 ListStmtSmpl : {- empty -}  { 
                     $$ = []; 
                     $$.envVMod = $$.envV;
@@ -1244,7 +1242,7 @@ ListStmtSmpl : {- empty -}  {
                     $$.tac = $1.tac;
                     }
 
-
+-}
 
 -- Lista di dichiarazioni di variabili, funzioni(procedure) (zero o più)
 ListDecl : {- empty -}      { 

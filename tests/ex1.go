@@ -10,7 +10,6 @@ func sum (x, y int) int {
   c := false
   
   var uiui,o int = 12, 54
-
   
   ert := uiui+o
 

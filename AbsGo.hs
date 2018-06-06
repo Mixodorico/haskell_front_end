@@ -25,7 +25,7 @@ data ShortVarDecl = DeclVarShort [Id] [RExp]
 data Param = ParamL [Id] Type | ParamLPassType Pass [Id] Type
   deriving (Eq, Ord, Show, Read)
 
-data Pass = PassValue | PassRef | PassValueRes
+data Pass = PassValue | PassRef
   deriving (Eq, Ord, Show, Read)
 
 data Type
