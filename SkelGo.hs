@@ -53,8 +53,6 @@ transStmt x = case x of
   StReturn rexp -> failure x
   StIf rexp block -> failure x
   StIfElse rexp block1 block2 -> failure x
-  StIfStm stmtsmpl rexp block -> failure x
-  StIfElseStm stmtsmpl rexp block1 block2 -> failure x
   StWhile rexp block -> failure x
   StDecl decl -> failure x
   StBreak -> failure x

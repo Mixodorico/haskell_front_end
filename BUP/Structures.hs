@@ -134,7 +134,7 @@ printTac (x:xs) = (case x of{
           UnOp op t1 t2 ->"\t" ++ t1 ++ " = " ++ op ++ " " ++ t2;
           BinOp op t1 t2 t3 ->"\t" ++ t1 ++ " = " ++ t2 ++ " " ++ op ++ " " ++ t3;
           UnCondJ lab -> "\t" ++ "goto label" ++ (show lab);
-          CondJ t1 lab -> "\t" ++"if " ++ t1  ++ " goto label" ++ (show lab);
+          CondJ t1 lab -> "\t" ++"if !" ++ t1  ++ " goto label" ++ (show lab);
           FunDecl str id int ->str ++ " " ++ (idToStr id) ++  "/" ++ (show int);
           FunCall str t id lt -> (case str of {
                   "function" ->"\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;

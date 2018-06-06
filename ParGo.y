@@ -71,39 +71,39 @@ import Structures
   '-' { PT _ (TS _ 11) }
   '/' { PT _ (TS _ 12) }
   ':=' { PT _ (TS _ 13) }
-  ';' { PT _ (TS _ 14) }
-  '<' { PT _ (TS _ 15) }
-  '<=' { PT _ (TS _ 16) }
-  '=' { PT _ (TS _ 17) }
-  '==' { PT _ (TS _ 18) }
-  '>' { PT _ (TS _ 19) }
-  '>=' { PT _ (TS _ 20) }
-  '[' { PT _ (TS _ 21) }
-  ']' { PT _ (TS _ 22) }
-  'bool' { PT _ (TS _ 23) }
-  'break' { PT _ (TS _ 24) }
-  'char' { PT _ (TS _ 25) }
-  'continue' { PT _ (TS _ 26) }
-  'else' { PT _ (TS _ 27) }
-  'false' { PT _ (TS _ 28) }
-  'float' { PT _ (TS _ 29) }
-  'for' { PT _ (TS _ 30) }
-  'func' { PT _ (TS _ 31) }
-  'if' { PT _ (TS _ 32) }
-  'int' { PT _ (TS _ 33) }
-  'package' { PT _ (TS _ 34) }
-  'read' { PT _ (TS _ 35) }
-  'ref' { PT _ (TS _ 36) }
-  'return' { PT _ (TS _ 37) }
-  'string' { PT _ (TS _ 38) }
-  'true' { PT _ (TS _ 39) }
-  'val' { PT _ (TS _ 40) }
-  'var' { PT _ (TS _ 41) }
-  'void' { PT _ (TS _ 42) }
-  'write' { PT _ (TS _ 43) }
-  '{' { PT _ (TS _ 44) }
-  '||' { PT _ (TS _ 45) }
-  '}' { PT _ (TS _ 46) }
+  '<' { PT _ (TS _ 14) }
+  '<=' { PT _ (TS _ 15) }
+  '=' { PT _ (TS _ 16) }
+  '==' { PT _ (TS _ 17) }
+  '>' { PT _ (TS _ 18) }
+  '>=' { PT _ (TS _ 19) }
+  '[' { PT _ (TS _ 20) }
+  ']' { PT _ (TS _ 21) }
+  'bool' { PT _ (TS _ 22) }
+  'break' { PT _ (TS _ 23) }
+  'char' { PT _ (TS _ 24) }
+  'continue' { PT _ (TS _ 25) }
+  'else' { PT _ (TS _ 26) }
+  'false' { PT _ (TS _ 27) }
+  'float' { PT _ (TS _ 28) }
+  'for' { PT _ (TS _ 29) }
+  'func' { PT _ (TS _ 30) }
+  'if' { PT _ (TS _ 31) }
+  'int' { PT _ (TS _ 32) }
+  'package' { PT _ (TS _ 33) }
+  'read' { PT _ (TS _ 34) }
+  'ref' { PT _ (TS _ 35) }
+  'return' { PT _ (TS _ 36) }
+  'string' { PT _ (TS _ 37) }
+  'true' { PT _ (TS _ 38) }
+  'val' { PT _ (TS _ 39) }
+  'var' { PT _ (TS _ 40) }
+  'void' { PT _ (TS _ 41) }
+  'write' { PT _ (TS _ 42) }
+  '{' { PT _ (TS _ 43) }
+  '||' { PT _ (TS _ 44) }
+  '}' { PT _ (TS _ 45) }
+
 
 
 L_integ  { PT _ (TI $$) }
@@ -415,7 +415,7 @@ Stmt : Block            {
                         else ( Bad $ $2.err) 
                     );
                     }
-
+{-
   | 'if' StmtSmpl ';' RExp Block    { 
                     $$ = StIfStm $2 $4 $5; 
                     $2.envV = (resetEnvV $$.envV);
@@ -475,7 +475,7 @@ Stmt : Block            {
                                 else ( Bad $ $4.err) 
                             );
                             }
-{-
+
   | 'for' ListStmtSmpl ';' RExp ';' ListStmtSmpl Block  { 
                                     $$ = StFor $2 $4 $6 $7; 
                                     $2.envV = (resetEnvV $$.envV);

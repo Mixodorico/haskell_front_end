@@ -49,11 +49,6 @@ import Structures
 %attribute tempMod      { (Int, Int) }
 
 
-
-
-
-
-
 -----
 
 %name pStart Start
@@ -76,39 +71,39 @@ import Structures
   '-' { PT _ (TS _ 11) }
   '/' { PT _ (TS _ 12) }
   ':=' { PT _ (TS _ 13) }
-  ';' { PT _ (TS _ 14) }
-  '<' { PT _ (TS _ 15) }
-  '<=' { PT _ (TS _ 16) }
-  '=' { PT _ (TS _ 17) }
-  '==' { PT _ (TS _ 18) }
-  '>' { PT _ (TS _ 19) }
-  '>=' { PT _ (TS _ 20) }
-  '[' { PT _ (TS _ 21) }
-  ']' { PT _ (TS _ 22) }
-  'bool' { PT _ (TS _ 23) }
-  'break' { PT _ (TS _ 24) }
-  'char' { PT _ (TS _ 25) }
-  'continue' { PT _ (TS _ 26) }
-  'else' { PT _ (TS _ 27) }
-  'false' { PT _ (TS _ 28) }
-  'float' { PT _ (TS _ 29) }
-  'for' { PT _ (TS _ 30) }
-  'func' { PT _ (TS _ 31) }
-  'if' { PT _ (TS _ 32) }
-  'int' { PT _ (TS _ 33) }
-  'package' { PT _ (TS _ 34) }
-  'read' { PT _ (TS _ 35) }
-  'ref' { PT _ (TS _ 36) }
-  'return' { PT _ (TS _ 37) }
-  'string' { PT _ (TS _ 38) }
-  'true' { PT _ (TS _ 39) }
-  'val' { PT _ (TS _ 40) }
-  'var' { PT _ (TS _ 41) }
-  'void' { PT _ (TS _ 42) }
-  'write' { PT _ (TS _ 43) }
-  '{' { PT _ (TS _ 44) }
-  '||' { PT _ (TS _ 45) }
-  '}' { PT _ (TS _ 46) }
+  '<' { PT _ (TS _ 14) }
+  '<=' { PT _ (TS _ 15) }
+  '=' { PT _ (TS _ 16) }
+  '==' { PT _ (TS _ 17) }
+  '>' { PT _ (TS _ 18) }
+  '>=' { PT _ (TS _ 19) }
+  '[' { PT _ (TS _ 20) }
+  ']' { PT _ (TS _ 21) }
+  'bool' { PT _ (TS _ 22) }
+  'break' { PT _ (TS _ 23) }
+  'char' { PT _ (TS _ 24) }
+  'continue' { PT _ (TS _ 25) }
+  'else' { PT _ (TS _ 26) }
+  'false' { PT _ (TS _ 27) }
+  'float' { PT _ (TS _ 28) }
+  'for' { PT _ (TS _ 29) }
+  'func' { PT _ (TS _ 30) }
+  'if' { PT _ (TS _ 31) }
+  'int' { PT _ (TS _ 32) }
+  'package' { PT _ (TS _ 33) }
+  'read' { PT _ (TS _ 34) }
+  'ref' { PT _ (TS _ 35) }
+  'return' { PT _ (TS _ 36) }
+  'string' { PT _ (TS _ 37) }
+  'true' { PT _ (TS _ 38) }
+  'val' { PT _ (TS _ 39) }
+  'var' { PT _ (TS _ 40) }
+  'void' { PT _ (TS _ 41) }
+  'write' { PT _ (TS _ 42) }
+  '{' { PT _ (TS _ 43) }
+  '||' { PT _ (TS _ 44) }
+  '}' { PT _ (TS _ 45) }
+
 
 
 L_integ  { PT _ (TI $$) }
@@ -295,7 +290,7 @@ Param : ListId Type                 {
 -- Tipo di passaggio
 Pass : 'val'                    { $$ = PassValue; } 
   | 'ref'                   { $$ = PassRef; }
-  | 'valres'                    { $$ = PassValueRes; }
+ -- | 'valres'                    { $$ = PassValueRes; }
 
 --Tipi di dato
 Type : 'int'            { $$ = TInt;} 
@@ -535,15 +530,15 @@ Stmt : Block            {
                 $2.temp = $$.temp;
                 $3.temp = $2.tempMod;                   
                 $$.tempMod = ( (fst $3.tempMod) , ((snd $3.tempMod)+2) );
-                $$.tac = $2.tac ++ [Lbl ((snd $3.tempMod)+1)]
-                        ++ $2.tac 
-                        ++ [CondJ $2.address ((snd $3.tempMod)+2)] 
+                $$.tac = [Lbl ((snd $3.tempMod)+1)]
+                        ++ $2.tac
+                        ++ [CondJ $2.address ((snd $3.tempMod)+2)]
                         ++ $3.tac
-                        ++ [UnCondJ ((snd $3.tempMod)+1)] 
+                        ++ [UnCondJ ((snd $3.tempMod)+1)]
                         ++ [Lbl ((snd $3.tempMod)+2)];
-                where ( if ($2.err== "") 
+                where ( if ($2.err== "")
                     then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as for-condition" )
-                    else ( Bad $ $2.err) 
+                    else ( Bad $ $2.err)
                 );
                 }
 
@@ -1030,7 +1025,7 @@ RExp : RExp '+' RExp    {
                     )
                     else $2.err;
             $$.typ = TBool;
-            $1.temp = $$.temp;
+            $2.temp = $$.temp;
             $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
             $$.address = "t"++ (show  (fst $$.tempMod) );
             $$.tac = $2.tac ++ [(UnOp "!" $$.address $2.address)];
@@ -1053,7 +1048,7 @@ RExp : RExp '+' RExp    {
                     )
                     else $2.err;
             $$.typ = $2.typ;
-            $1.temp = $$.temp;
+            $2.temp = $$.temp;
             $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
             $$.address = "t"++ (show  (fst $$.tempMod) );
             $$.tac = $2.tac ++ [(UnOp "-" $$.address $2.address)];

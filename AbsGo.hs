@@ -48,8 +48,6 @@ data Stmt
     | StReturn RExp
     | StIf RExp Block
     | StIfElse RExp Block Block
-    | StIfStm StmtSmpl RExp Block
-    | StIfElseStm StmtSmpl RExp Block Block
     | StWhile RExp Block
     | StDecl Decl
     | StBreak

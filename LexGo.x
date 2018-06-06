@@ -21,7 +21,7 @@ $i = [$l $d _ ']          -- identifier character
 $u = [\0-\255]          -- universal: any character
 
 @rsyms =    -- symbols and non-identifier-like reserved words
-   \( | \) | \= | \: \= | \[ | \] | \* | \{ | \} | \; | \+ | \- | \/ | \% | \= \= | \! \= | \< | \< \= | \> | \> \= | \& \& | \| \| | \! | \& | \,
+   \( | \) | \= | \: \= | \[ | \] | \* | \{ | \} | \+ | \- | \/ | \% | \= \= | \! \= | \< | \< \= | \> | \> \= | \& \& | \| \| | \! | \& | \,
 
 :-
 "//" [.]* ; -- Toss single line comments
@@ -101,7 +101,7 @@ eitherResIdent tv s = treeFind resWords
                               | s == a = t
 
 resWords :: BTree
-resWords = b "break" 24 (b "/" 12 (b "(" 6 (b "%" 3 (b "!=" 2 (b "!" 1 N N) N) (b "&&" 5 (b "&" 4 N N) N)) (b "+" 9 (b "*" 8 (b ")" 7 N N) N) (b "-" 11 (b "," 10 N N) N))) (b "==" 18 (b "<" 15 (b ";" 14 (b ":=" 13 N N) N) (b "=" 17 (b "<=" 16 N N) N)) (b "[" 21 (b ">=" 20 (b ">" 19 N N) N) (b "bool" 23 (b "]" 22 N N) N)))) (b "ref" 36 (b "for" 30 (b "else" 27 (b "continue" 26 (b "char" 25 N N) N) (b "float" 29 (b "false" 28 N N) N)) (b "int" 33 (b "if" 32 (b "func" 31 N N) N) (b "read" 35 (b "package" 34 N N) N))) (b "void" 42 (b "true" 39 (b "string" 38 (b "return" 37 N N) N) (b "var" 41 (b "val" 40 N N) N)) (b "||" 45 (b "{" 44 (b "write" 43 N N) N) (b "}" 46 N N))))
+resWords = b "break" 23 (b "/" 12 (b "(" 6 (b "%" 3 (b "!=" 2 (b "!" 1 N N) N) (b "&&" 5 (b "&" 4 N N) N)) (b "+" 9 (b "*" 8 (b ")" 7 N N) N) (b "-" 11 (b "," 10 N N) N))) (b ">" 18 (b "<=" 15 (b "<" 14 (b ":=" 13 N N) N) (b "==" 17 (b "=" 16 N N) N)) (b "]" 21 (b "[" 20 (b ">=" 19 N N) N) (b "bool" 22 N N)))) (b "ref" 35 (b "for" 29 (b "else" 26 (b "continue" 25 (b "char" 24 N N) N) (b "float" 28 (b "false" 27 N N) N)) (b "int" 32 (b "if" 31 (b "func" 30 N N) N) (b "read" 34 (b "package" 33 N N) N))) (b "void" 41 (b "true" 38 (b "string" 37 (b "return" 36 N N) N) (b "var" 40 (b "val" 39 N N) N)) (b "||" 44 (b "{" 43 (b "write" 42 N N) N) (b "}" 45 N N))))
    where b s n = let bs = id s
                   in B bs (TS bs n)
 

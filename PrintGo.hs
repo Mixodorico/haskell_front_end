@@ -136,8 +136,6 @@ instance Print Stmt where
     StReturn rexp -> prPrec i 0 (concatD [doc (showString "return"), prt 0 rexp])
     StIf rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block])
     StIfElse rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
-    StIfStm stmtsmpl rexp block -> prPrec i 0 (concatD [doc (showString "if"), prt 0 stmtsmpl, doc (showString ";"), prt 0 rexp, prt 0 block])
-    StIfElseStm stmtsmpl rexp block1 block2 -> prPrec i 0 (concatD [doc (showString "if"), prt 0 stmtsmpl, doc (showString ";"), prt 0 rexp, prt 0 block1, doc (showString "else"), prt 0 block2])
     StWhile rexp block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 rexp, prt 0 block])
     StDecl decl -> prPrec i 0 (concatD [prt 0 decl])
     StBreak -> prPrec i 0 (concatD [doc (showString "break")])
