@@ -23,12 +23,10 @@ var y bool = !x
 
 func f () void
 {
-  t := 9
-  h := -8
-  
-  if x && y {
-    y = true
-  } else {
-    x = !true
-  }
+  if x || y || !x {
+    o := false
+    o = true
+  } 
+    y = x && true
+
 }

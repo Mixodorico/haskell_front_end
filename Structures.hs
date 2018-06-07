@@ -8,7 +8,7 @@ import AbsGo
 ----------------------------------------------------------------------------------------------
 
 
-data ElmVar = Var Id Type Bool
+data ElmVar = Var Id Type Bool String
       deriving(Eq,Ord,Show)
       
 data ElmFun = Fun Id Type [Type]
@@ -17,16 +17,16 @@ data ElmFun = Fun Id Type [Type]
 
 -- determina se c'è una una variabile in una lista di variabili dato il suo id      
 searchVar id [] =   False
-searchVar id ((Var a _ _):xs)   | id==a =   True
+searchVar id ((Var a _ _ _):xs)   | id==a =   True
         | otherwise = searchVar id xs
 
 -- determina se c'è una funzione in una lista di funzioni dato il suo id  
 searchFun id [] =   False               
-searchFun id ((Fun a _ _ ):xs)   | id==a = True
+searchFun id ((Fun a _ _):xs)   | id==a = True
           | otherwise = searchFun id xs
 
 -- dato l'id se è presente una variabile nella lista la estrae                
-extrVar id (x@(Var a _ _):xs) | id==a =   x
+extrVar id (x@(Var a _ _ _):xs) | id==a =   x
         | otherwise = extrVar id xs
 
 -- dato l'id se è presente una funzione nella lista la estrae 
@@ -34,7 +34,7 @@ extrFun id (x@(Fun a _ _ ):xs)  | id==a =   x
         | otherwise = extrFun id xs
 
 -- inserisce una variabile nella lista e se c'è la sovrascrive          
-insVar x@(Var a _ _) xs   | (searchVar a xs) =   x:(deleteVar a xs)
+insVar x@(Var a _ _ _) xs   | (searchVar a xs) =   x:(deleteVar a xs)
       | otherwise = x:xs
 
 -- inserisce una funzione nella lista e se c'è la sovrascrive            
@@ -43,7 +43,7 @@ insFun x@(Fun a _ _ ) xs | (searchFun a xs) =   x:(deleteFun a xs)
 
 -- elimina se presente una variabile dalla lista dato l'id
 deleteVar  id [] = []
-deleteVar  id (x@(Var a _ _):xs)  |  id==a = xs
+deleteVar  id (x@(Var a _ _ _):xs)  |  id==a = xs
         |  otherwise = x:(deleteVar id xs)
 
 -- elimina se presente una funzione dalla lista dato l'id
@@ -52,19 +52,18 @@ deleteFun   id (x@(Fun a _ _ ):xs)    |  id==a = xs
           |  otherwise = x:(deleteFun id xs)
 
 -- data una lista (di ID) e un tipo crea una lista di variabili
-createList []  _ = []
-createList (x:xs) t = (Var x t True):(createList xs t)
+createList [] _ _= []
+createList (x:xs) t p = (Var x t True p):(createList xs t) p
 
 -- data una lista (di ID) ed una lista di tipi crea una lista di variabili
-createListMod []  _ = []
-createListMod (x:xs) (t:ts) = (Var x t True):(createListMod xs ts)
-
+createListMod [] _ _ = []
+createListMod (x:xs) (t:ts) p = (Var x t True p):(createListMod xs ts p)
 
 --verifica se la variabile è stata definita nello stesso blocco in caso affermativo la restituisce
 ctrlDeclVar id [] =   Nothing
-ctrlDeclVar id ((Var a _ True):xs) | id==a =  Just a
+ctrlDeclVar id ((Var a _ True _):xs) | id==a =  Just a
            | otherwise = ctrlDeclVar id xs
-ctrlDeclVar id ((Var a _ False):xs) = ctrlDeclVar id xs
+ctrlDeclVar id ((Var a _ False _):xs) = ctrlDeclVar id xs
 
 
 
@@ -77,7 +76,7 @@ ctrlDeclVarList (x:xs) ys = case (ctrlDeclVar x ys) of {
 
 --resetta l'attributo boleano delle variabili in modo che possano essere ridefinite in un nuovo blocco
 resetEnvV [] = []
-resetEnvV ((Var a t _ ):xs) =  (Var a t False ) : resetEnvV xs
+resetEnvV ((Var a t _ p):xs) =  (Var a t False p) : resetEnvV xs
 
 -- date due liste di variabili crea la lista unificata sovrascrivendo i doppioni
 unionVar [] ys = ys
@@ -86,7 +85,7 @@ unionVar (x:xs) ys = insVar x (unionVar xs ys)
 -- restituiscono il tipo
 getTypeFun (Fun _ t _ ) = t
 getTypeListFun (Fun _ _ tl ) = tl
-getTypeVar (Var _ t _) = t
+getTypeVar (Var _ t _ _) = t
 getTypePnt (TPointer t) = t
 getTypeArr (TArray _ t) = t
 
@@ -98,7 +97,6 @@ isTyipePnt t = case t of {
 
 -- Restiuisce l'id
 idToStr (Id str) = str
-
  
 ----------------------------------------------------------------------------------------------
 ------------------ THREE ADDRESS CODE DATA-TYPE e PRETTY PRINTER -----------------------------
@@ -111,6 +109,7 @@ data TacOp =
   | BinOp Op T T T  
   | UnCondJ Label
   | CondJ T Label
+  -- | CondJTrue T Label
   | FunDecl String Id Int
   | FunCall String T Id [T] 
   | Lbl Label 
@@ -135,6 +134,7 @@ printTac (x:xs) = (case x of{
           BinOp op t1 t2 t3 ->"\t" ++ t1 ++ " = " ++ t2 ++ " " ++ op ++ " " ++ t3;
           UnCondJ lab -> "\t" ++ "goto label" ++ (show lab);
           CondJ t1 lab -> "\t" ++"if !" ++ t1  ++ " goto label" ++ (show lab);
+          --CondJTrue t1 lab -> "\t" ++"if " ++ t1  ++ " goto label" ++ (show lab);
           FunDecl str id int ->str ++ " " ++ (idToStr id) ++  "/" ++ (show int);
           FunCall str t id lt -> (case str of {
                   "function" ->"\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;

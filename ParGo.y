@@ -40,6 +40,7 @@ import Structures
 -- usato nel controllo degli errori nel for-increment
 %attribute checkForIncr { Bool }
 
+
 -- three address code (lista di operazioni elementari)
 %attribute tac          { [TacOp] }
 -- attributi per la gestione e creazione del tac 
@@ -185,7 +186,7 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
 
      | 'var' ListId Type            { 
                         $$ = DeclVar $2 $3;
-                        $$.envVMod = (unionVar (createList $2 $3) $$.envV);
+                        $$.envVMod = (unionVar (createList $2 $3 (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $$.tempMod = $$.temp;
                         $$.tac = [] ;
@@ -199,7 +200,7 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
                         $$ = DeclVarInit $2 $4;
                         $4.envV = $$.envV;
                         $4.envF = $$.envF;                              
-                        $$.envVMod = (unionVar ( createListMod $2 $4.typList) $$.envV);
+                        $$.envVMod = (unionVar ( createListMod $2 $4.typList (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $4.temp = $$.temp;
                         $$.tempMod = $4.tempMod;
@@ -236,7 +237,7 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
                         $$ = DeclVarTypeInit $2 $3 $5;
                         $5.envV = $$.envV;
                         $5.envF = $$.envF;                              
-                        $$.envVMod = (unionVar ( createList $2 $3) $$.envV);
+                        $$.envVMod = (unionVar ( createList $2 $3 (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $5.temp = $$.temp;
                         $$.tempMod = $5.tempMod;
@@ -260,7 +261,7 @@ ShortVarDecl : ListId ':=' ListExpR         {
                         $$ = DeclVarShort $1 $3; 
                         $3.envV = $$.envV;
                         $3.envF = $$.envF;
-                        $$.envVMod = (unionVar ( createListMod $1 $3.typList) $$.envV);
+                        $$.envVMod = (unionVar ( createListMod $1 $3.typList (pos $2)) $$.envV);
                         $$.envFMod = $$.envF;
                         $3.temp = $$.temp;
                         $$.tempMod = $3.tempMod;
@@ -277,13 +278,13 @@ ShortVarDecl : ListId ':=' ListExpR         {
 -- Parametri di funzioni e procedure
 Param : ListId Type                 { 
                         $$ = ParamL $1 $2; 
-                        $$.envV = (createList $1 $2);
+                        $$.envV = (createList $1 $2 "0");
                         $$.typList = (replicate (length $1) $2);
                         } 
 
   | Pass ListId Type                { 
                         $$ = ParamLPassType $1 $2 $3; 
-                        $$.envV = (createList $2 $3);
+                        $$.envV = (createList $2 $3 "0");
                         $$.typList = (replicate (length $2) $3);
                         }
 
@@ -671,7 +672,7 @@ StmtSmpl : ShortVarDecl     {
                 $1.temp = $$.temp;
                 $3.temp = $1.tempMod;
                 $$.tempMod = $3.tempMod;
-                $$.tac = $1.tac ++ $3.tac ++ [NulOp $1.address $3.address ] ;
+                $$.tac = $1.tac ++ $3.tac ++ [NulOp $1.address $3.address] ;
                 where ( if ( ($1.err== "") && ($3.err== "" ) ) 
                         then (if (($1.typ == TFloat) && ($3.typ == TInt)) 
                             then (Ok ()) 
@@ -681,14 +682,13 @@ StmtSmpl : ShortVarDecl     {
                                 then Bad $ $1.err
                             else Bad $ $3.err
                             )
-                    );  
+                    ); 
                 }
 
 
 -- Left Expressions (per assegnamenti)
 LExp : Id       { 
             $$ = ExpId $1; 
-            
             $$.typ = getTypeVar (extrVar $1 $$.envV);
             $$.err = if (not(searchVar $1 $$.envV)) 
                     then  "Scope Error : Variable  "++(idToStr $1)++" not in scope"
@@ -975,6 +975,50 @@ RExp : RExp '+' RExp    {
                     x -> Bad $ x;               
                 });
             }
+            
+{------------------------- short-cut ------------------------------
+  | RExp '&&' RExp   { 
+                $$ = ExpAnd $1 $3; 
+                $1.envV = $$.envV; 
+                $1.envF = $$.envF; 
+                $3.envV = $$.envV;
+                $3.envF = $$.envF;
+                $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;
+                $$.typ = TBool;
+                $1.temp = $$.temp;
+                $3.temp = $1.tempMod;
+                $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+                $$.address = "t"++ (show  (fst $$.tempMod) );
+                $$.tac = $1.tac ++ [CondJ $1.address ((snd $3.tempMod)+1)]
+                    ++ $3.tac
+                    ++ [(BinOp "&&" $$.address $1.address $3.address)];
+               where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
+
+  | RExp '||' RExp  { 
+                $$ = ExpOr $1 $3; 
+                $1.envV = $$.envV; 
+                $1.envF = $$.envF; 
+                $3.envV = $$.envV;
+                $3.envF = $$.envF;
+                $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;
+                $$.typ = TBool;
+                $1.temp = $$.temp;
+                $3.temp = $1.tempMod;
+                $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+                $$.address = "t"++ (show  (fst $$.tempMod) );
+                $$.tac = $1.tac ++ [Lbl ((snd $3.tempMod)+1)] ++ [CondJTrue $1.address ((snd $3.tempMod)+1)]
+                    ++ $3.tac
+                    ++ [(BinOp "||" $$.address $1.address $3.address)];
+               where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
+----------------------------------------------------}
 
   | RExp '&&' RExp  { 
             $$ = ExpAnd $1 $3; 
@@ -1013,7 +1057,7 @@ RExp : RExp '+' RExp    {
                     x -> Bad $ x;               
                 });
             }
-
+                
   | '!' RExp             { 
             $$ = ExpNot $2; 
             $2.envV = $$.envV;
@@ -1280,7 +1324,7 @@ ListParam : {- empty -}         {
                     $$ = (:) $1 $3;
                     $$.envV = $1.envV ++ $3.envV;
                     $$.typList = ( $1.typList ++ $3.typList );
-                    where ( case (checkVarParamList $1.envV $3.envV ) of {
+                    where ( case (checkVarParamList $1.envV $3.envV) of {
                         Just a  -> ( Bad $ "Sintax Error at "++(pos $2)++": Duplicate identificator "++ idToStr a );
                         Nothing -> ( Ok () );
                         } );
@@ -1404,9 +1448,8 @@ mem typ = case typ of {
 
 -- controlla che non ci siano variabili doppie tra parametri differenti in una definizione di funzione(procedura)
 checkVarParamList [] ys = Nothing
-checkVarParamList (x@(Var a _ _):xs) ys | (searchVar a ys) =  Just a
+checkVarParamList (x@(Var a _ _ _):xs) ys | (searchVar a ys) =  Just a
                     | otherwise = (checkVarParamList xs ys)
-        
 
 -- posizione del token 
 pos tok = tokenPos [tok]
