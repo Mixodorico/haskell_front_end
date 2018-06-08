@@ -18,15 +18,23 @@ func sum (x, y int) int {
 }
 */
 
-var x bool = true && true
-var y bool = !x
-
-func f () void
+func di () void
 {
-  if x || y || !x {
-    o := false
-    o = true
-  } 
+
+  var x bool = true && true
+
+  func f () void
+  {
+    y := x
+    x:= false
+    if x || y || !x {
+      o := false
+      o = true
+    } 
     y = x && true
 
+  }
+
+  x = true
+  
 }

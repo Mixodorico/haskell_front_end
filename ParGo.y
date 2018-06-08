@@ -186,11 +186,12 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
 
      | 'var' ListId Type            { 
                         $$ = DeclVar $2 $3;
+                        $$.idList = setPos $2 (pos $1);
                         $$.envVMod = (unionVar (createList $2 $3 (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $$.tempMod = $$.temp;
                         $$.tac = [] ;
-                        where ( case (ctrlDeclVarList $2 $$.envV) of {
+                        where ( case (ctrlDeclVarList $$.idList $$.envV) of {
                                 Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block" ;
                                 Nothing -> Ok ();
                             });
@@ -198,13 +199,14 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
 
      | 'var' ListId '=' ListExpR        { 
                         $$ = DeclVarInit $2 $4;
+                        $$.idList = setPos $2 (pos $1);
                         $4.envV = $$.envV;
                         $4.envF = $$.envF;                              
                         $$.envVMod = (unionVar ( createListMod $2 $4.typList (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $4.temp = $$.temp;
                         $$.tempMod = $4.tempMod;
-                        $$.tac = $4.tac ++ ( tacAssign $2 $4.addressList );
+                        $$.tac = $4.tac ++ ( tacAssign $$.idList $4.addressList );
                         where ( case (ctrlDeclVarList $2 $$.envV) of {
                                 Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
                                 Nothing -> ( if (not(length $2 == length $4.typList)) 
@@ -235,13 +237,14 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
                         
      | 'var' ListId Type '=' ListExpR       { 
                         $$ = DeclVarTypeInit $2 $3 $5;
+                        $$.idList = setPos $2 (pos $1);
                         $5.envV = $$.envV;
                         $5.envF = $$.envF;                              
                         $$.envVMod = (unionVar ( createList $2 $3 (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $5.temp = $$.temp;
                         $$.tempMod = $5.tempMod;
-                        $$.tac = $5.tac ++ ( tacAssign $2 $5.addressList );
+                        $$.tac = $5.tac ++ ( tacAssign $$.idList $5.addressList );
                         where ( case (ctrlDeclVarList $2 $$.envV) of {
                                 Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
                                 Nothing -> ( if (not(length $2 == length $5.typList)) 
@@ -257,15 +260,16 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
                         }
 
 -- Dichiare di variabile breve 
-ShortVarDecl : ListId ':=' ListExpR         { 
-                        $$ = DeclVarShort $1 $3; 
+ShortVarDecl : ListId ':=' ListExpR         {
+                        $$ = DeclVarShort $1 $3;
+                        $$.idList = setPos $1 (pos $2);
                         $3.envV = $$.envV;
                         $3.envF = $$.envF;
                         $$.envVMod = (unionVar ( createListMod $1 $3.typList (pos $2)) $$.envV);
                         $$.envFMod = $$.envF;
                         $3.temp = $$.temp;
                         $$.tempMod = $3.tempMod;
-                        $$.tac = $3.tac ++ ( tacAssign $1 $3.addressList );
+                        $$.tac = $3.tac ++ ( tacAssign $$.idList $3.addressList );
                         where ( case (ctrlDeclVarList $1 $$.envV) of {
                                 Just a -> Bad $ "Scope Error at "++(pos $2)++": variable "++(idToStr a)++" already declared in this block";
                                 Nothing -> ( if (not(length $1 == length $3.typList)) 
@@ -694,7 +698,7 @@ LExp : Id       {
                     then  "Scope Error : Variable  "++(idToStr $1)++" not in scope"
                     else "";
             $$.tempMod = $$.temp;
-            $$.address = (idToStr $1);
+            $$.address = (idToStr $1) ++ (getPos $1 $$.envV);
             $$.tac = []; 
             where ( if (not(searchVar $1 $$.envV)) 
                 then ( Bad $ "Scope Error : Variable  "++(idToStr $1)++" not in scope")
@@ -1463,7 +1467,7 @@ showType (TVoid) = "void"
 showType (TArray n t) = "array["++(show n)++"] "++showType t
 showType (TPointer t) = "pointer -> "++showType t
 
- 
+
 showVal (Int i) = show i
 showVal (Float f) = show f
 showVal (Char c)= "'"++(c:"'")
@@ -1471,6 +1475,10 @@ showVal (String s)= "\""++s++"\""
 showVal (Bool Boolean_true)= "true"
 showVal (Bool Boolean_false)= "false"
 
+getPos id env = case (extrVar id env) of
+                     Var _ _ _ pos -> "_" ++ drop 5 pos
+
+setPos ids pos = map (\id -> Id $ (idToStr id) ++ "_" ++ drop 5 pos) ids
 
 
 

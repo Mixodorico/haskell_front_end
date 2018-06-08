@@ -7,7 +7,8 @@ module AbsGo where
 
 
 
-newtype Id = Id String deriving (Eq, Ord, Show, Read)
+newtype Id = Id String
+  deriving (Eq, Ord, Show, Read)
 data Start = Entry Id [Decl]
   deriving (Eq, Ord, Show, Read)
 
