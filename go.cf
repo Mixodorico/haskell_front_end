@@ -40,8 +40,12 @@ StDecl.           Stmt ::= Decl;
 StBreak.          Stmt ::= "break"; 
 StContinue.       Stmt ::= "continue";
 --StTryCatch.       Stmt ::= "try" Block "catch" Block;
-StWrite.          Stmt ::= "write" "(" RExp ")";
-StRead.           Stmt ::= "read" "(" RExp ")"; 
+--StWrite.          Stmt ::= "write" "(" RExp ")";
+StWrite.          Stmt ::= WriteT "(" RExp ")";
+--StRead.           Stmt ::= "read" "(" RExp ")";
+StRead.           RExp ::= ReadT "(" ")";
+rules     WriteT ::= "writeInt" | "writeFloat" | "writeChar" | "writeString" ;
+rules     ReadT  ::= "readInt" | "readFloat" | "readChar" | "readString" ;
 
 StShortVarDecl.   StmtSmpl ::= ShortVarDecl;
 StExp.            StmtSmpl ::= RExp;

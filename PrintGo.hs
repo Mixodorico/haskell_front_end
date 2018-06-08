@@ -140,24 +140,12 @@ instance Print Stmt where
     StDecl decl -> prPrec i 0 (concatD [prt 0 decl])
     StBreak -> prPrec i 0 (concatD [doc (showString "break")])
     StContinue -> prPrec i 0 (concatD [doc (showString "continue")])
-    StWrite rexp -> prPrec i 0 (concatD [doc (showString "write"), doc (showString "("), prt 0 rexp, doc (showString ")")])
-    StRead rexp -> prPrec i 0 (concatD [doc (showString "read"), doc (showString "("), prt 0 rexp, doc (showString ")")])
+    StWrite writet rexp -> prPrec i 0 (concatD [prt 0 writet, doc (showString "("), prt 0 rexp, doc (showString ")")])
   prtList _ [] = (concatD [])
   prtList _ (x:xs) = (concatD [prt 0 x, prt 0 xs])
-instance Print StmtSmpl where
-  prt i e = case e of
-    StShortVarDecl shortvardecl -> prPrec i 0 (concatD [prt 0 shortvardecl])
-    StExp rexp -> prPrec i 0 (concatD [prt 0 rexp])
-    StAsgn lexp rexp -> prPrec i 0 (concatD [prt 0 lexp, doc (showString "="), prt 0 rexp])
-
-instance Print LExp where
-  prt i e = case e of
-    ExpId id -> prPrec i 0 (concatD [prt 0 id])
-    ExpArr lexp rexp -> prPrec i 0 (concatD [prt 0 lexp, doc (showString "["), prt 0 rexp, doc (showString "]")])
-    ExpDeref rexp -> prPrec i 0 (concatD [doc (showString "*"), prt 0 rexp])
-
 instance Print RExp where
   prt i e = case e of
+    StRead readt -> prPrec i 0 (concatD [prt 0 readt, doc (showString "("), doc (showString ")")])
     ExpAdd rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "+"), prt 0 rexp2])
     ExpSub rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "-"), prt 0 rexp2])
     ExpMul rexp1 rexp2 -> prPrec i 0 (concatD [prt 0 rexp1, doc (showString "*"), prt 0 rexp2])
@@ -181,6 +169,32 @@ instance Print RExp where
     ExpPar rexp -> prPrec i 0 (concatD [doc (showString "("), prt 0 rexp, doc (showString ")")])
   prtList _ [x] = (concatD [prt 0 x])
   prtList _ (x:xs) = (concatD [prt 0 x, doc (showString ","), prt 0 xs])
+instance Print WriteT where
+  prt i e = case e of
+    WriteT_writeInt -> prPrec i 0 (concatD [doc (showString "writeInt")])
+    WriteT_writeFloat -> prPrec i 0 (concatD [doc (showString "writeFloat")])
+    WriteT_writeChar -> prPrec i 0 (concatD [doc (showString "writeChar")])
+    WriteT_writeString -> prPrec i 0 (concatD [doc (showString "writeString")])
+
+instance Print ReadT where
+  prt i e = case e of
+    ReadT_readInt -> prPrec i 0 (concatD [doc (showString "readInt")])
+    ReadT_readFloat -> prPrec i 0 (concatD [doc (showString "readFloat")])
+    ReadT_readChar -> prPrec i 0 (concatD [doc (showString "readChar")])
+    ReadT_readString -> prPrec i 0 (concatD [doc (showString "readString")])
+
+instance Print StmtSmpl where
+  prt i e = case e of
+    StShortVarDecl shortvardecl -> prPrec i 0 (concatD [prt 0 shortvardecl])
+    StExp rexp -> prPrec i 0 (concatD [prt 0 rexp])
+    StAsgn lexp rexp -> prPrec i 0 (concatD [prt 0 lexp, doc (showString "="), prt 0 rexp])
+
+instance Print LExp where
+  prt i e = case e of
+    ExpId id -> prPrec i 0 (concatD [prt 0 id])
+    ExpArr lexp rexp -> prPrec i 0 (concatD [prt 0 lexp, doc (showString "["), prt 0 rexp, doc (showString "]")])
+    ExpDeref rexp -> prPrec i 0 (concatD [doc (showString "*"), prt 0 rexp])
+
 instance Print Value where
   prt i e = case e of
     Int n -> prPrec i 0 (concatD [prt 0 n])

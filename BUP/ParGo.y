@@ -40,6 +40,7 @@ import Structures
 -- usato nel controllo degli errori nel for-increment
 %attribute checkForIncr { Bool }
 
+
 -- three address code (lista di operazioni elementari)
 %attribute tac          { [TacOp] }
 -- attributi per la gestione e creazione del tac 
@@ -91,18 +92,24 @@ import Structures
   'if' { PT _ (TS _ 31) }
   'int' { PT _ (TS _ 32) }
   'package' { PT _ (TS _ 33) }
-  'read' { PT _ (TS _ 34) }
-  'ref' { PT _ (TS _ 35) }
-  'return' { PT _ (TS _ 36) }
-  'string' { PT _ (TS _ 37) }
-  'true' { PT _ (TS _ 38) }
-  'val' { PT _ (TS _ 39) }
-  'var' { PT _ (TS _ 40) }
-  'void' { PT _ (TS _ 41) }
-  'write' { PT _ (TS _ 42) }
-  '{' { PT _ (TS _ 43) }
-  '||' { PT _ (TS _ 44) }
-  '}' { PT _ (TS _ 45) }
+  'readChar' { PT _ (TS _ 34) }
+  'readFloat' { PT _ (TS _ 35) }
+  'readInt' { PT _ (TS _ 36) }
+  'readString' { PT _ (TS _ 37) }
+  'ref' { PT _ (TS _ 38) }
+  'return' { PT _ (TS _ 39) }
+  'string' { PT _ (TS _ 40) }
+  'true' { PT _ (TS _ 41) }
+  'val' { PT _ (TS _ 42) }
+  'var' { PT _ (TS _ 43) }
+  'void' { PT _ (TS _ 44) }
+  'writeChar' { PT _ (TS _ 45) }
+  'writeFloat' { PT _ (TS _ 46) }
+  'writeInt' { PT _ (TS _ 47) }
+  'writeString' { PT _ (TS _ 48) }
+  '{' { PT _ (TS _ 49) }
+  '||' { PT _ (TS _ 50) }
+  '}' { PT _ (TS _ 51) }
 
 
 
@@ -153,15 +160,16 @@ Start : 'package' Id ListDecl       {
 -- Dichiarazione di funzioni, procedure e variabili (anche inizializzate)
 Decl : 'func' Id '(' ListParam ')' Type Block   { 
                         $$ = DeclFun $2 $4 $6 $7;
+                        $$.idList = setPos [$2] (pos $1);
                         $$.envVMod = $$.envV;
-                        $$.envFMod = ( insFun (Fun $2 $6 $4.typList) $$.envF );
+                        $$.envFMod = ( insFun (Fun $2 $6 $4.typList (pos $1)) $$.envF );
                         $7.envV = (unionVar $4.envV (resetEnvV $$.envV) );
                         $7.envF = $$.envFMod;
                         $7.typFun = $6;
                         $7.loopLabels = (-1,-1);
                         $7.temp = $$.temp;
                         $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
-                        $$.tac = [FunDecl "function" $2 (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
+                        $$.tac = [FunDecl "function" (Id $ idToStr $ head $$.idList) (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
                         where (if (searchFun $2 $$.envF) 
                             then Bad $ "Scope Error at "++(pos $1)++": function "++(idToStr $2)++" already declared"
                             else when (not($7.isReturn)) $ Bad $ "Sintax Error at "++(pos $1)++": missing return at end of function" );
@@ -169,15 +177,16 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
 
      | 'func' Id '(' ListParam ')' 'void' Block     { 
                         $$ = DeclProc $2 $4 $7;
+                        $$.idList = setPos [$2] (pos $1);
                         $$.envVMod = $$.envV;
-                        $$.envFMod = (insFun (Fun $2 TVoid $4.typList) $$.envF );
+                        $$.envFMod = (insFun (Fun $2 TVoid $4.typList (pos $1)) $$.envF);
                         $7.envV = (unionVar $4.envV (resetEnvV $$.envV) ); 
                         $7.envF = $$.envFMod;
                         $7.typFun = TVoid; 
                         $7.loopLabels = (-1,-1);
                         $7.temp = $$.temp;
                         $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
-                        $$.tac = [FunDecl "procedure" $2 (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
+                        $$.tac = [FunDecl "procedure" (Id $ idToStr $ head $$.idList) (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
                         where (if (searchFun $2 $$.envF) 
                             then Bad $ "Scope Error at "++(pos $1)++": procedure "++(idToStr $2)++" already declared"
                             else Ok () );
@@ -185,11 +194,12 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
 
      | 'var' ListId Type            { 
                         $$ = DeclVar $2 $3;
-                        $$.envVMod = (unionVar (createList $2 $3) $$.envV);
+                        $$.idList = setPos $2 (pos $1);
+                        $$.envVMod = (unionVar (createList $2 $3 (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $$.tempMod = $$.temp;
                         $$.tac = [] ;
-                        where ( case (ctrlDeclVarList $2 $$.envV) of {
+                        where ( case (ctrlDeclVarList $$.idList $$.envV) of {
                                 Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block" ;
                                 Nothing -> Ok ();
                             });
@@ -197,13 +207,14 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
 
      | 'var' ListId '=' ListExpR        { 
                         $$ = DeclVarInit $2 $4;
+                        $$.idList = setPos $2 (pos $1);
                         $4.envV = $$.envV;
                         $4.envF = $$.envF;                              
-                        $$.envVMod = (unionVar ( createListMod $2 $4.typList) $$.envV);
+                        $$.envVMod = (unionVar ( createListMod $2 $4.typList (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $4.temp = $$.temp;
                         $$.tempMod = $4.tempMod;
-                        $$.tac = $4.tac ++ ( tacAssign $2 $4.addressList );
+                        $$.tac = $4.tac ++ ( tacAssign $$.idList $4.addressList );
                         where ( case (ctrlDeclVarList $2 $$.envV) of {
                                 Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
                                 Nothing -> ( if (not(length $2 == length $4.typList)) 
@@ -234,13 +245,14 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
                         
      | 'var' ListId Type '=' ListExpR       { 
                         $$ = DeclVarTypeInit $2 $3 $5;
+                        $$.idList = setPos $2 (pos $1);
                         $5.envV = $$.envV;
                         $5.envF = $$.envF;                              
-                        $$.envVMod = (unionVar ( createList $2 $3) $$.envV);
+                        $$.envVMod = (unionVar ( createList $2 $3 (pos $1)) $$.envV);
                         $$.envFMod = $$.envF;
                         $5.temp = $$.temp;
                         $$.tempMod = $5.tempMod;
-                        $$.tac = $5.tac ++ ( tacAssign $2 $5.addressList );
+                        $$.tac = $5.tac ++ ( tacAssign $$.idList $5.addressList );
                         where ( case (ctrlDeclVarList $2 $$.envV) of {
                                 Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
                                 Nothing -> ( if (not(length $2 == length $5.typList)) 
@@ -256,15 +268,16 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
                         }
 
 -- Dichiare di variabile breve 
-ShortVarDecl : ListId ':=' ListExpR         { 
-                        $$ = DeclVarShort $1 $3; 
+ShortVarDecl : ListId ':=' ListExpR         {
+                        $$ = DeclVarShort $1 $3;
+                        $$.idList = setPos $1 (pos $2);
                         $3.envV = $$.envV;
                         $3.envF = $$.envF;
-                        $$.envVMod = (unionVar ( createListMod $1 $3.typList) $$.envV);
+                        $$.envVMod = (unionVar ( createListMod $1 $3.typList (pos $2)) $$.envV);
                         $$.envFMod = $$.envF;
                         $3.temp = $$.temp;
                         $$.tempMod = $3.tempMod;
-                        $$.tac = $3.tac ++ ( tacAssign $1 $3.addressList );
+                        $$.tac = $3.tac ++ ( tacAssign $$.idList $3.addressList );
                         where ( case (ctrlDeclVarList $1 $$.envV) of {
                                 Just a -> Bad $ "Scope Error at "++(pos $2)++": variable "++(idToStr a)++" already declared in this block";
                                 Nothing -> ( if (not(length $1 == length $3.typList)) 
@@ -277,13 +290,13 @@ ShortVarDecl : ListId ':=' ListExpR         {
 -- Parametri di funzioni e procedure
 Param : ListId Type                 { 
                         $$ = ParamL $1 $2; 
-                        $$.envV = (createList $1 $2);
+                        $$.envV = (createList $1 $2 "0");
                         $$.typList = (replicate (length $1) $2);
                         } 
 
   | Pass ListId Type                { 
                         $$ = ParamLPassType $1 $2 $3; 
-                        $$.envV = (createList $2 $3);
+                        $$.envV = (createList $2 $3 "0");
                         $$.typList = (replicate (length $2) $3);
                         }
 
@@ -415,7 +428,7 @@ Stmt : Block            {
                         else ( Bad $ $2.err) 
                     );
                     }
-
+{-
   | 'if' StmtSmpl ';' RExp Block    { 
                     $$ = StIfStm $2 $4 $5; 
                     $2.envV = (resetEnvV $$.envV);
@@ -475,7 +488,7 @@ Stmt : Block            {
                                 else ( Bad $ $4.err) 
                             );
                             }
-{-
+
   | 'for' ListStmtSmpl ';' RExp ';' ListStmtSmpl Block  { 
                                     $$ = StFor $2 $4 $6 $7; 
                                     $2.envV = (resetEnvV $$.envV);
@@ -596,7 +609,7 @@ Stmt : Block            {
                     ++ $4.tac 
                     ++ [Lbl ((snd $4.tempMod)+2)];
                 }
--}
+
   | 'write' '(' RExp ')'    { 
                 $$ = StWrite $3; 
                 $3.envV = $$.envV;
@@ -611,7 +624,67 @@ Stmt : Block            {
                     then when ( $3.typ == TBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as write-argument"
                     else Bad $ $3.err );
                 }
+-}
+  | 'writeInt' '(' RExp ')'    { 
+                    $$ = StWrite WriteT_writeInt $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeInt") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TInt ) $ Bad $ "Type Error at "++(pos $2)++": needed integer input when using writeInt"
+                        else Bad $ $3.err );
+                    }
 
+  | 'writeFloat' '(' RExp ')'    { 
+                    $$ = StWrite WriteT_writeFloat $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeFloat") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TFloat ) $ Bad $ "Type Error at "++(pos $2)++": needed float input when using writeFloat"
+                        else Bad $ $3.err );
+                    }
+
+  | 'writeChar' '(' RExp ')'    { 
+                    $$ = StWrite WriteT_writeChar $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeChar") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TChar ) $ Bad $ "Type Error at "++(pos $2)++": needed char input when using writeChar"
+                        else Bad $ $3.err );
+                    }
+
+  | 'writeString' '(' RExp ')'    { 
+                    $$ = StWrite WriteT_writeString $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeString") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TString ) $ Bad $ "Type Error at "++(pos $2)++": needed string input when using writeString"
+                        else Bad $ $3.err );
+                    }
+{-
   | 'read' '(' RExp ')'     { 
                 $$ = StRead $3;
                 $3.envV = $$.envV;
@@ -626,7 +699,7 @@ Stmt : Block            {
                     then when ( $3.typ == TBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as read-argument"
                     else Bad $ $3.err );
                 }
-
+-}
 
 -- Sotto insieme dei comandi utilizzato in alcune situazioni particolari (ad es: all'interno di if e for)
 StmtSmpl : ShortVarDecl     { 
@@ -671,7 +744,7 @@ StmtSmpl : ShortVarDecl     {
                 $1.temp = $$.temp;
                 $3.temp = $1.tempMod;
                 $$.tempMod = $3.tempMod;
-                $$.tac = $1.tac ++ $3.tac ++ [NulOp $1.address $3.address ] ;
+                $$.tac = $1.tac ++ $3.tac ++ [NulOp $1.address $3.address] ;
                 where ( if ( ($1.err== "") && ($3.err== "" ) ) 
                         then (if (($1.typ == TFloat) && ($3.typ == TInt)) 
                             then (Ok ()) 
@@ -681,20 +754,19 @@ StmtSmpl : ShortVarDecl     {
                                 then Bad $ $1.err
                             else Bad $ $3.err
                             )
-                    );  
+                    ); 
                 }
 
 
 -- Left Expressions (per assegnamenti)
 LExp : Id       { 
             $$ = ExpId $1; 
-            
             $$.typ = getTypeVar (extrVar $1 $$.envV);
             $$.err = if (not(searchVar $1 $$.envV)) 
                     then  "Scope Error : Variable  "++(idToStr $1)++" not in scope"
                     else "";
             $$.tempMod = $$.temp;
-            $$.address = (idToStr $1);
+            $$.address = (idToStr $1) ++ (getPos $1 $$.envV);
             $$.tac = []; 
             where ( if (not(searchVar $1 $$.envV)) 
                 then ( Bad $ "Scope Error : Variable  "++(idToStr $1)++" not in scope")
@@ -975,6 +1047,50 @@ RExp : RExp '+' RExp    {
                     x -> Bad $ x;               
                 });
             }
+            
+{------------------------- short-cut ------------------------------
+  | RExp '&&' RExp   { 
+                $$ = ExpAnd $1 $3; 
+                $1.envV = $$.envV; 
+                $1.envF = $$.envF; 
+                $3.envV = $$.envV;
+                $3.envF = $$.envF;
+                $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;
+                $$.typ = TBool;
+                $1.temp = $$.temp;
+                $3.temp = $1.tempMod;
+                $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+                $$.address = "t"++ (show  (fst $$.tempMod) );
+                $$.tac = $1.tac ++ [CondJ $1.address ((snd $3.tempMod)+1)]
+                    ++ $3.tac
+                    ++ [(BinOp "&&" $$.address $1.address $3.address)];
+               where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
+
+  | RExp '||' RExp  { 
+                $$ = ExpOr $1 $3; 
+                $1.envV = $$.envV; 
+                $1.envF = $$.envF; 
+                $3.envV = $$.envV;
+                $3.envF = $$.envF;
+                $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;
+                $$.typ = TBool;
+                $1.temp = $$.temp;
+                $3.temp = $1.tempMod;
+                $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+                $$.address = "t"++ (show  (fst $$.tempMod) );
+                $$.tac = $1.tac ++ [Lbl ((snd $3.tempMod)+1)] ++ [CondJTrue $1.address ((snd $3.tempMod)+1)]
+                    ++ $3.tac
+                    ++ [(BinOp "||" $$.address $1.address $3.address)];
+               where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
+----------------------------------------------------}
 
   | RExp '&&' RExp  { 
             $$ = ExpAnd $1 $3; 
@@ -1013,7 +1129,7 @@ RExp : RExp '+' RExp    {
                     x -> Bad $ x;               
                 });
             }
-
+                
   | '!' RExp             { 
             $$ = ExpNot $2; 
             $2.envV = $$.envV;
@@ -1088,8 +1204,9 @@ RExp : RExp '+' RExp    {
             $$.typ = getTypeFun (extrFun $1 $$.envF);   
             $$.err = checkErrProc $1 $$.envF [] $2;
             $$.tempMod = if ($$.typ==TVoid) then ( $$.temp ) else ( ((fst $$.temp) + 1), (snd $$.temp) );
-            $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
-            $$.tac = if ($$.typ==TVoid) then [FunCall "procedure" "" $1 []] else [FunCall "function" $$.address $1 []];
+            $1.address = (idToStr $1) ++ getPosF $1 $$.envF;
+            $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod)));
+            $$.tac = if ($$.typ==TVoid) then [FunCall "procedure" "" (Id $1.address) []] else [FunCall "function" $$.address(Id $1.address) []];
             where (case checkErrProc $1 $$.envF [] $2 of {
                     "" -> Ok ();
                     x -> Bad $ x;               
@@ -1103,11 +1220,12 @@ RExp : RExp '+' RExp    {
             $$.typ = getTypeFun (extrFun $1 $$.envF);
             $$.err = checkErrFun $3.err $1 $$.envF $3.typList $2;
             $3.temp = $$.temp;
-            $$.tempMod = if ($$.typ==TVoid) then ( $3.tempMod ) else ( ((fst $3.tempMod) + 1), (snd $3.tempMod) ); 
+            $$.tempMod = if ($$.typ==TVoid) then ( $3.tempMod ) else ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $1.address = (idToStr $1) ++ getPosF $1 $$.envF;
             $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
             $$.tac = if ($$.typ==TVoid) 
-                    then $3.tac ++ [FunCall "procedure" "" $1 $3.addressList] 
-                    else $3.tac ++ [FunCall "function" $$.address $1 $3.addressList];
+                    then $3.tac ++ [FunCall "procedure" "" (Id $1.address) $3.addressList] 
+                    else $3.tac ++ [FunCall "function" $$.address (Id $1.address) $3.addressList];
             where (case checkErrFun $3.err $1 $$.envF $3.typList $2 of {
                     "" -> Ok ();
                     x -> Bad $ x;               
@@ -1280,7 +1398,7 @@ ListParam : {- empty -}         {
                     $$ = (:) $1 $3;
                     $$.envV = $1.envV ++ $3.envV;
                     $$.typList = ( $1.typList ++ $3.typList );
-                    where ( case (checkVarParamList $1.envV $3.envV ) of {
+                    where ( case (checkVarParamList $1.envV $3.envV) of {
                         Just a  -> ( Bad $ "Sintax Error at "++(pos $2)++": Duplicate identificator "++ idToStr a );
                         Nothing -> ( Ok () );
                         } );
@@ -1404,9 +1522,8 @@ mem typ = case typ of {
 
 -- controlla che non ci siano variabili doppie tra parametri differenti in una definizione di funzione(procedura)
 checkVarParamList [] ys = Nothing
-checkVarParamList (x@(Var a _ _):xs) ys | (searchVar a ys) =  Just a
+checkVarParamList (x@(Var a _ _ _):xs) ys | (searchVar a ys) =  Just a
                     | otherwise = (checkVarParamList xs ys)
-        
 
 -- posizione del token 
 pos tok = tokenPos [tok]
@@ -1420,7 +1537,7 @@ showType (TVoid) = "void"
 showType (TArray n t) = "array["++(show n)++"] "++showType t
 showType (TPointer t) = "pointer -> "++showType t
 
- 
+
 showVal (Int i) = show i
 showVal (Float f) = show f
 showVal (Char c)= "'"++(c:"'")
@@ -1428,6 +1545,13 @@ showVal (String s)= "\""++s++"\""
 showVal (Bool Boolean_true)= "true"
 showVal (Bool Boolean_false)= "false"
 
+getPos id env = case (extrVar id env) of
+                     Var _ _ _ pos -> "_" ++ drop 5 pos
+
+getPosF id env = case (extrFun id env) of
+                     Fun _ _ _ pos -> "_" ++ drop 5 pos
+
+setPos ids pos = map (\id -> Id $ (idToStr id) ++ "_" ++ drop 5 pos) ids
 
 
 

@@ -92,18 +92,24 @@ import Structures
   'if' { PT _ (TS _ 31) }
   'int' { PT _ (TS _ 32) }
   'package' { PT _ (TS _ 33) }
-  'read' { PT _ (TS _ 34) }
-  'ref' { PT _ (TS _ 35) }
-  'return' { PT _ (TS _ 36) }
-  'string' { PT _ (TS _ 37) }
-  'true' { PT _ (TS _ 38) }
-  'val' { PT _ (TS _ 39) }
-  'var' { PT _ (TS _ 40) }
-  'void' { PT _ (TS _ 41) }
-  'write' { PT _ (TS _ 42) }
-  '{' { PT _ (TS _ 43) }
-  '||' { PT _ (TS _ 44) }
-  '}' { PT _ (TS _ 45) }
+  'readChar' { PT _ (TS _ 34) }
+  'readFloat' { PT _ (TS _ 35) }
+  'readInt' { PT _ (TS _ 36) }
+  'readString' { PT _ (TS _ 37) }
+  'ref' { PT _ (TS _ 38) }
+  'return' { PT _ (TS _ 39) }
+  'string' { PT _ (TS _ 40) }
+  'true' { PT _ (TS _ 41) }
+  'val' { PT _ (TS _ 42) }
+  'var' { PT _ (TS _ 43) }
+  'void' { PT _ (TS _ 44) }
+  'writeChar' { PT _ (TS _ 45) }
+  'writeFloat' { PT _ (TS _ 46) }
+  'writeInt' { PT _ (TS _ 47) }
+  'writeString' { PT _ (TS _ 48) }
+  '{' { PT _ (TS _ 49) }
+  '||' { PT _ (TS _ 50) }
+  '}' { PT _ (TS _ 51) }
 
 
 
@@ -576,7 +582,7 @@ Stmt : Block            {
                 $$.envVMod = $$.envV;
                 $$.envFMod = $$.envF;
                 $$.isReturn = False;
-                $$.tempMod = $$.temp;   
+                $$.tempMod = $$.temp;
                 $$.tac = [UnCondJ (fst $$.loopLabels)];             
                 where (when ( (fst $$.loopLabels) == (-1) ) $ Bad $ "Sintax Error at "++(pos $1)++": Continue is not in a loop" );
                 }
@@ -603,7 +609,7 @@ Stmt : Block            {
                     ++ $4.tac 
                     ++ [Lbl ((snd $4.tempMod)+2)];
                 }
--}
+
   | 'write' '(' RExp ')'    { 
                 $$ = StWrite $3; 
                 $3.envV = $$.envV;
@@ -618,7 +624,67 @@ Stmt : Block            {
                     then when ( $3.typ == TBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as write-argument"
                     else Bad $ $3.err );
                 }
+-}
+  | 'writeInt' '(' RExp ')'    { 
+                    $$ = StWrite WriteT_writeInt $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeInt") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TInt ) $ Bad $ "Type Error at "++(pos $2)++": needed integer input when using writeInt"
+                        else Bad $ $3.err );
+                    }
 
+  | 'writeFloat' '(' RExp ')'    { 
+                    $$ = StWrite WriteT_writeFloat $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeFloat") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TFloat ) $ Bad $ "Type Error at "++(pos $2)++": needed float input when using writeFloat"
+                        else Bad $ $3.err );
+                    }
+
+  | 'writeChar' '(' RExp ')'    { 
+                    $$ = StWrite WriteT_writeChar $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeChar") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TChar ) $ Bad $ "Type Error at "++(pos $2)++": needed char input when using writeChar"
+                        else Bad $ $3.err );
+                    }
+
+  | 'writeString' '(' RExp ')'    { 
+                    $$ = StWrite WriteT_writeString $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeString") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TString ) $ Bad $ "Type Error at "++(pos $2)++": needed string input when using writeString"
+                        else Bad $ $3.err );
+                    }
+{-
   | 'read' '(' RExp ')'     { 
                 $$ = StRead $3;
                 $3.envV = $$.envV;
@@ -633,7 +699,7 @@ Stmt : Block            {
                     then when ( $3.typ == TBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as read-argument"
                     else Bad $ $3.err );
                 }
-
+-}
 
 -- Sotto insieme dei comandi utilizzato in alcune situazioni particolari (ad es: all'interno di if e for)
 StmtSmpl : ShortVarDecl     { 
@@ -1166,6 +1232,42 @@ RExp : RExp '+' RExp    {
                 });
 
             }
+
+  | 'readInt' '(' ')'     { 
+                $$ = StRead ReadT_readInt;
+                $$.typ = TInt;
+                $$.isReturn = False;
+                $$.tempMod = $$.temp;
+                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
+                $$.tac = [FunCall "function" $$.address (Id "readInt") []];
+                }
+
+  | 'readFloat' '(' ')'     { 
+                $$ = StRead ReadT_readFloat;
+                $$.typ = TFloat;
+                $$.isReturn = False;
+                $$.tempMod = $$.temp;
+                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
+                $$.tac = [FunCall "function" $$.address (Id "readFloat") []];
+                }
+
+  | 'readChar' '(' ')'     { 
+                $$ = StRead ReadT_readChar;
+                $$.typ = TChar;
+                $$.isReturn = False;
+                $$.tempMod = $$.temp;
+                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
+                $$.tac = [FunCall "function" $$.address (Id "readChar") []];
+                }
+
+  | 'readString' '(' ')'     { 
+                $$ = StRead ReadT_readString;
+                $$.typ = TString;
+                $$.isReturn = False;
+                $$.tempMod = $$.temp;
+                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
+                $$.tac = [FunCall "function" $$.address (Id "readString") []];
+                }
 
   | '&' LExp        { 
             $$ = ExpRef $2;

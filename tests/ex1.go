@@ -17,9 +17,19 @@ func sum (x, y int) int {
   return 6
 }
 */
-/*
+
 func di () void
 {
+  
+  //writeFloat(9.8)
+  //c := 'o'
+  //writeChar(c)
+  
+  asd := 1+1+1+1
+  
+  a := readInt()
+  
+  a = 1
 
   var x bool
 
@@ -38,18 +48,4 @@ func di () void
 
   x = true
   
-}
-*/
-
-func f1 () void{}
-func f2 (i int) void {}
-func f3 () int {return 7}
-func f4 (i int) int {return 7}
-
-func prova () void
-{
-  f1()
-  f2(2)
-  a := f3()
-  b := f4(9)
 }

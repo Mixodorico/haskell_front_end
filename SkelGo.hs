@@ -57,20 +57,10 @@ transStmt x = case x of
   StDecl decl -> failure x
   StBreak -> failure x
   StContinue -> failure x
-  StWrite rexp -> failure x
-  StRead rexp -> failure x
-transStmtSmpl :: StmtSmpl -> Result
-transStmtSmpl x = case x of
-  StShortVarDecl shortvardecl -> failure x
-  StExp rexp -> failure x
-  StAsgn lexp rexp -> failure x
-transLExp :: LExp -> Result
-transLExp x = case x of
-  ExpId id -> failure x
-  ExpArr lexp rexp -> failure x
-  ExpDeref rexp -> failure x
+  StWrite writet rexp -> failure x
 transRExp :: RExp -> Result
 transRExp x = case x of
+  StRead readt -> failure x
   ExpAdd rexp1 rexp2 -> failure x
   ExpSub rexp1 rexp2 -> failure x
   ExpMul rexp1 rexp2 -> failure x
@@ -92,6 +82,28 @@ transRExp x = case x of
   ExpFunc id rexps -> failure x
   ExpRef lexp -> failure x
   ExpPar rexp -> failure x
+transWriteT :: WriteT -> Result
+transWriteT x = case x of
+  WriteT_writeInt -> failure x
+  WriteT_writeFloat -> failure x
+  WriteT_writeChar -> failure x
+  WriteT_writeString -> failure x
+transReadT :: ReadT -> Result
+transReadT x = case x of
+  ReadT_readInt -> failure x
+  ReadT_readFloat -> failure x
+  ReadT_readChar -> failure x
+  ReadT_readString -> failure x
+transStmtSmpl :: StmtSmpl -> Result
+transStmtSmpl x = case x of
+  StShortVarDecl shortvardecl -> failure x
+  StExp rexp -> failure x
+  StAsgn lexp rexp -> failure x
+transLExp :: LExp -> Result
+transLExp x = case x of
+  ExpId id -> failure x
+  ExpArr lexp rexp -> failure x
+  ExpDeref rexp -> failure x
 transValue :: Value -> Result
 transValue x = case x of
   Int integer -> failure x

@@ -7,8 +7,7 @@ module AbsGo where
 
 
 
-newtype Id = Id String
-  deriving (Eq, Ord, Show, Read)
+newtype Id = Id String deriving (Eq, Ord, Show, Read)
 data Start = Entry Id [Decl]
   deriving (Eq, Ord, Show, Read)
 
@@ -53,19 +52,12 @@ data Stmt
     | StDecl Decl
     | StBreak
     | StContinue
-    | StWrite RExp
-    | StRead RExp
-  deriving (Eq, Ord, Show, Read)
-
-data StmtSmpl
-    = StShortVarDecl ShortVarDecl | StExp RExp | StAsgn LExp RExp
-  deriving (Eq, Ord, Show, Read)
-
-data LExp = ExpId Id | ExpArr LExp RExp | ExpDeref RExp
+    | StWrite WriteT RExp
   deriving (Eq, Ord, Show, Read)
 
 data RExp
-    = ExpAdd RExp RExp
+    = StRead ReadT
+    | ExpAdd RExp RExp
     | ExpSub RExp RExp
     | ExpMul RExp RExp
     | ExpDiv RExp RExp
@@ -86,6 +78,27 @@ data RExp
     | ExpFunc Id [RExp]
     | ExpRef LExp
     | ExpPar RExp
+  deriving (Eq, Ord, Show, Read)
+
+data WriteT
+    = WriteT_writeInt
+    | WriteT_writeFloat
+    | WriteT_writeChar
+    | WriteT_writeString
+  deriving (Eq, Ord, Show, Read)
+
+data ReadT
+    = ReadT_readInt
+    | ReadT_readFloat
+    | ReadT_readChar
+    | ReadT_readString
+  deriving (Eq, Ord, Show, Read)
+
+data StmtSmpl
+    = StShortVarDecl ShortVarDecl | StExp RExp | StAsgn LExp RExp
+  deriving (Eq, Ord, Show, Read)
+
+data LExp = ExpId Id | ExpArr LExp RExp | ExpDeref RExp
   deriving (Eq, Ord, Show, Read)
 
 data Value
