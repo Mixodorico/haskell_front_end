@@ -154,15 +154,16 @@ Start : 'package' Id ListDecl       {
 -- Dichiarazione di funzioni, procedure e variabili (anche inizializzate)
 Decl : 'func' Id '(' ListParam ')' Type Block   { 
                         $$ = DeclFun $2 $4 $6 $7;
+                        $$.idList = setPos [$2] (pos $1);
                         $$.envVMod = $$.envV;
-                        $$.envFMod = ( insFun (Fun $2 $6 $4.typList) $$.envF );
+                        $$.envFMod = ( insFun (Fun $2 $6 $4.typList (pos $1)) $$.envF );
                         $7.envV = (unionVar $4.envV (resetEnvV $$.envV) );
                         $7.envF = $$.envFMod;
                         $7.typFun = $6;
                         $7.loopLabels = (-1,-1);
                         $7.temp = $$.temp;
                         $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
-                        $$.tac = [FunDecl "function" $2 (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
+                        $$.tac = [FunDecl "function" (Id $ idToStr $ head $$.idList) (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
                         where (if (searchFun $2 $$.envF) 
                             then Bad $ "Scope Error at "++(pos $1)++": function "++(idToStr $2)++" already declared"
                             else when (not($7.isReturn)) $ Bad $ "Sintax Error at "++(pos $1)++": missing return at end of function" );
@@ -170,15 +171,16 @@ Decl : 'func' Id '(' ListParam ')' Type Block   {
 
      | 'func' Id '(' ListParam ')' 'void' Block     { 
                         $$ = DeclProc $2 $4 $7;
+                        $$.idList = setPos [$2] (pos $1);
                         $$.envVMod = $$.envV;
-                        $$.envFMod = (insFun (Fun $2 TVoid $4.typList) $$.envF );
+                        $$.envFMod = (insFun (Fun $2 TVoid $4.typList (pos $1)) $$.envF);
                         $7.envV = (unionVar $4.envV (resetEnvV $$.envV) ); 
                         $7.envF = $$.envFMod;
                         $7.typFun = TVoid; 
                         $7.loopLabels = (-1,-1);
                         $7.temp = $$.temp;
                         $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
-                        $$.tac = [FunDecl "procedure" $2 (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
+                        $$.tac = [FunDecl "procedure" (Id $ idToStr $ head $$.idList) (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
                         where (if (searchFun $2 $$.envF) 
                             then Bad $ "Scope Error at "++(pos $1)++": procedure "++(idToStr $2)++" already declared"
                             else Ok () );
@@ -1136,8 +1138,9 @@ RExp : RExp '+' RExp    {
             $$.typ = getTypeFun (extrFun $1 $$.envF);   
             $$.err = checkErrProc $1 $$.envF [] $2;
             $$.tempMod = if ($$.typ==TVoid) then ( $$.temp ) else ( ((fst $$.temp) + 1), (snd $$.temp) );
-            $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
-            $$.tac = if ($$.typ==TVoid) then [FunCall "procedure" "" $1 []] else [FunCall "function" $$.address $1 []];
+            $1.address = (idToStr $1) ++ getPosF $1 $$.envF;
+            $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod)));
+            $$.tac = if ($$.typ==TVoid) then [FunCall "procedure" "" (Id $1.address) []] else [FunCall "function" $$.address(Id $1.address) []];
             where (case checkErrProc $1 $$.envF [] $2 of {
                     "" -> Ok ();
                     x -> Bad $ x;               
@@ -1151,11 +1154,12 @@ RExp : RExp '+' RExp    {
             $$.typ = getTypeFun (extrFun $1 $$.envF);
             $$.err = checkErrFun $3.err $1 $$.envF $3.typList $2;
             $3.temp = $$.temp;
-            $$.tempMod = if ($$.typ==TVoid) then ( $3.tempMod ) else ( ((fst $3.tempMod) + 1), (snd $3.tempMod) ); 
+            $$.tempMod = if ($$.typ==TVoid) then ( $3.tempMod ) else ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $1.address = (idToStr $1) ++ getPosF $1 $$.envF;
             $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
             $$.tac = if ($$.typ==TVoid) 
-                    then $3.tac ++ [FunCall "procedure" "" $1 $3.addressList] 
-                    else $3.tac ++ [FunCall "function" $$.address $1 $3.addressList];
+                    then $3.tac ++ [FunCall "procedure" "" (Id $1.address) $3.addressList] 
+                    else $3.tac ++ [FunCall "function" $$.address (Id $1.address) $3.addressList];
             where (case checkErrFun $3.err $1 $$.envF $3.typList $2 of {
                     "" -> Ok ();
                     x -> Bad $ x;               
@@ -1477,6 +1481,9 @@ showVal (Bool Boolean_false)= "false"
 
 getPos id env = case (extrVar id env) of
                      Var _ _ _ pos -> "_" ++ drop 5 pos
+
+getPosF id env = case (extrFun id env) of
+                     Fun _ _ _ pos -> "_" ++ drop 5 pos
 
 setPos ids pos = map (\id -> Id $ (idToStr id) ++ "_" ++ drop 5 pos) ids
 

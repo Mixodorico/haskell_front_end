@@ -11,7 +11,7 @@ import AbsGo
 data ElmVar = Var Id Type Bool String
       deriving(Eq,Ord,Show)
       
-data ElmFun = Fun Id Type [Type]
+data ElmFun = Fun Id Type [Type] String
       deriving(Eq,Ord,Show)
 
 
@@ -22,7 +22,7 @@ searchVar id ((Var a _ _ _):xs)   | id==a =   True
 
 -- determina se c'è una funzione in una lista di funzioni dato il suo id  
 searchFun id [] =   False               
-searchFun id ((Fun a _ _):xs)   | id==a = True
+searchFun id ((Fun a _ _ _):xs)   | id==a = True
           | otherwise = searchFun id xs
 
 -- dato l'id se è presente una variabile nella lista la estrae                
@@ -30,7 +30,7 @@ extrVar id (x@(Var a _ _ _):xs) | id==a =   x
         | otherwise = extrVar id xs
 
 -- dato l'id se è presente una funzione nella lista la estrae 
-extrFun id (x@(Fun a _ _ ):xs)  | id==a =   x
+extrFun id (x@(Fun a _ _ _):xs)  | id==a =   x
         | otherwise = extrFun id xs
 
 -- inserisce una variabile nella lista e se c'è la sovrascrive          
@@ -38,7 +38,7 @@ insVar x@(Var a _ _ _) xs   | (searchVar a xs) =   x:(deleteVar a xs)
       | otherwise = x:xs
 
 -- inserisce una funzione nella lista e se c'è la sovrascrive            
-insFun x@(Fun a _ _ ) xs | (searchFun a xs) =   x:(deleteFun a xs)
+insFun x@(Fun a _ _ _) xs | (searchFun a xs) =   x:(deleteFun a xs)
       | otherwise = x:xs  
 
 -- elimina se presente una variabile dalla lista dato l'id
@@ -48,7 +48,7 @@ deleteVar  id (x@(Var a _ _ _):xs)  |  id==a = xs
 
 -- elimina se presente una funzione dalla lista dato l'id
 deleteFun   id [] = []                 
-deleteFun   id (x@(Fun a _ _ ):xs)    |  id==a = xs
+deleteFun   id (x@(Fun a _ _ _):xs)    |  id==a = xs
           |  otherwise = x:(deleteFun id xs)
 
 -- data una lista (di ID) e un tipo crea una lista di variabili
@@ -83,8 +83,8 @@ unionVar [] ys = ys
 unionVar (x:xs) ys = insVar x (unionVar xs ys) 
 
 -- restituiscono il tipo
-getTypeFun (Fun _ t _ ) = t
-getTypeListFun (Fun _ _ tl ) = tl
+getTypeFun (Fun _ t _ _) = t
+getTypeListFun (Fun _ _ tl _) = tl
 getTypeVar (Var _ t _ _) = t
 getTypePnt (TPointer t) = t
 getTypeArr (TArray _ t) = t
