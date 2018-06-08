@@ -526,7 +526,7 @@ happyReduction_28 happy_x_3
 	case happyOut19 happy_x_2 of { happy_var_2 -> 
 	case happyOut15 happy_x_3 of { happy_var_3 -> 
 	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_3) )+1)] ++ (tac happySubAttrs_3) ++ [Lbl ((snd (tempMod happySubAttrs_3) )+1)] , tempMod = ( (fst (tempMod happySubAttrs_3) ) , ((snd (tempMod happySubAttrs_3) )+1) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StIf (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as if-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_3) )+2)] ++ [Lbl ((snd (tempMod happySubAttrs_3) )+1)] ++ (tac happySubAttrs_3) ++ [Lbl ((snd (tempMod happySubAttrs_3) )+2)] , tempMod = ( (fst (tempMod happySubAttrs_3) ) , ((snd (tempMod happySubAttrs_3) )+2) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StIf (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as if-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_29 = happyReduce 5# 12# happyReduction_29
@@ -541,7 +541,7 @@ happyReduction_29 (happy_x_5 `HappyStk`
 	case happyOut15 happy_x_3 of { happy_var_3 -> 
 	case happyOut15 happy_x_5 of { happy_var_5 -> 
 	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_5) )+1)] ++ (tac happySubAttrs_3) ++ [UnCondJ ((snd (tempMod happySubAttrs_5) )+2)] ++ [Lbl ((snd (tempMod happySubAttrs_5) )+1)] ++ (tac happySubAttrs_5) ++ [Lbl ((snd (tempMod happySubAttrs_5) )+2)] , tempMod = ( (fst (tempMod happySubAttrs_5) ) , ((snd (tempMod happySubAttrs_5) )+2) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StIfElse (value happySubAttrs_2) (value happySubAttrs_3) (value happySubAttrs_5)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; (happyConditions_5,happySubAttrs_5) = happy_var_5 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_3)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as if-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3++happyConditions_5 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_5) )+2)] ++ [Lbl ((snd (tempMod happySubAttrs_5) )+1)] ++ (tac happySubAttrs_3) ++ [UnCondJ ((snd (tempMod happySubAttrs_5) )+3)] ++ [Lbl ((snd (tempMod happySubAttrs_5) )+2)] ++ (tac happySubAttrs_5) ++ [Lbl ((snd (tempMod happySubAttrs_5) )+3)] , tempMod = ( (fst (tempMod happySubAttrs_5) ) , ((snd (tempMod happySubAttrs_5) )+3) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StIfElse (value happySubAttrs_2) (value happySubAttrs_3) (value happySubAttrs_5)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; (happyConditions_5,happySubAttrs_5) = happy_var_5 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_3)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as if-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3++happyConditions_5 } in (happyConditions,happySelfAttrs)
 	) `HappyStk` happyRest}}}}
 
 happyReduce_30 = happySpecReduce_3  12# happyReduction_30
@@ -653,7 +653,7 @@ happyReduce_41 = happySpecReduce_1  14# happyReduction_41
 happyReduction_41 happy_x_1
 	 =  case happyOut8 happy_x_1 of { happy_var_1 -> 
 	happyIn18
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , address = (idToStr (value happySubAttrs_1) ) ++ (getPos (value happySubAttrs_1) (envV happySelfAttrs) ) , tempMod = (temp happySelfAttrs) , err = if (not(searchVar (value happySubAttrs_1) (envV happySelfAttrs) )) then "Scope Error : Variable "++(idToStr (value happySubAttrs_1) )++" not in scope" else "" , typ = getTypeVar (extrVar (value happySubAttrs_1) (envV happySelfAttrs) ) , value = ExpId (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = [( if (not(searchVar (value happySubAttrs_1) (envV happySelfAttrs) )) then ( Bad $ "Scope Error : Variable "++(idToStr (value happySubAttrs_1) )++" not in scope") else ( Ok ()) ) ]++happyConditions_1 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , address = (idToStr (value happySubAttrs_1) ) ++ (getPosV (value happySubAttrs_1) (envV happySelfAttrs) ) , tempMod = (temp happySelfAttrs) , err = if (not(searchVar (value happySubAttrs_1) (envV happySelfAttrs) )) then "Scope Error : Variable "++(idToStr (value happySubAttrs_1) )++" not in scope" else "" , typ = getTypeVar (extrVar (value happySubAttrs_1) (envV happySelfAttrs) ) , value = ExpId (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = [( if (not(searchVar (value happySubAttrs_1) (envV happySelfAttrs) )) then ( Bad $ "Scope Error : Variable "++(idToStr (value happySubAttrs_1) )++" not in scope") else ( Ok ()) ) ]++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
 happyReduce_42 = happyReduce 4# 14# happyReduction_42
@@ -807,7 +807,7 @@ happyReduction_55 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "&&" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpAnd (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ [(CondJ (address happySubAttrs_1) ( (true happySubAttrs_1) +2))] ++ (tac happySubAttrs_3) ++ [(BinOp "&&" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpAnd (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ true = snd (tempMod happySubAttrs_1) , temp = (temp happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , false = (false happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ true = (true happySelfAttrs) , temp = (tempMod happySubAttrs_1) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , false = (false happySelfAttrs)  }; happyConditions = [(case checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_56 = happySpecReduce_3  15# happyReduction_56
@@ -818,7 +818,7 @@ happyReduction_56 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "||" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpOr (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ [(CondJTrue (address happySubAttrs_1) ( (true happySubAttrs_1) +1))] ++ (tac happySubAttrs_3) ++ [(BinOp "||" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpOr (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ true = snd (tempMod happySubAttrs_1) , temp = (temp happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , false = (false happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ true = (true happySelfAttrs) , temp = (tempMod happySubAttrs_1) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , false = (false happySelfAttrs)  }; happyConditions = [(case checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_57 = happySpecReduce_2  15# happyReduction_57
@@ -1143,8 +1143,8 @@ pStart toks = do { f <- do_pStart toks; let { (conds,attrs) = f happyEmptyAttrs 
 
 happySeq = happyDontSeq
 
-data MyAttributes a = HappyAttributes {value :: a, envV :: [ElmVar], envF :: [ElmFun], envVMod :: [ElmVar], envFMod :: [ElmFun], idList :: [Id], typ :: Type, typList :: [Type], typFun :: Type, isReturn :: Bool, err :: String, loopLabels :: (Int, Int), checkForIncr :: Bool, tac :: [TacOp], address :: String, addressList :: [String], temp :: (Int, Int), tempMod :: (Int, Int)}
-happyEmptyAttrs = HappyAttributes {value = error "invalid reference to attribute 'value'", envV = error "invalid reference to attribute 'envV'", envF = error "invalid reference to attribute 'envF'", envVMod = error "invalid reference to attribute 'envVMod'", envFMod = error "invalid reference to attribute 'envFMod'", idList = error "invalid reference to attribute 'idList'", typ = error "invalid reference to attribute 'typ'", typList = error "invalid reference to attribute 'typList'", typFun = error "invalid reference to attribute 'typFun'", isReturn = error "invalid reference to attribute 'isReturn'", err = error "invalid reference to attribute 'err'", loopLabels = error "invalid reference to attribute 'loopLabels'", checkForIncr = error "invalid reference to attribute 'checkForIncr'", tac = error "invalid reference to attribute 'tac'", address = error "invalid reference to attribute 'address'", addressList = error "invalid reference to attribute 'addressList'", temp = error "invalid reference to attribute 'temp'", tempMod = error "invalid reference to attribute 'tempMod'"}
+data MyAttributes a = HappyAttributes {value :: a, envV :: [ElmVar], envF :: [ElmFun], envVMod :: [ElmVar], envFMod :: [ElmFun], idList :: [Id], typ :: Type, typList :: [Type], typFun :: Type, isReturn :: Bool, err :: String, loopLabels :: (Int, Int), checkForIncr :: Bool, tac :: [TacOp], address :: String, addressList :: [String], temp :: (Int, Int), tempMod :: (Int, Int), true :: Int, false :: Int}
+happyEmptyAttrs = HappyAttributes {value = error "invalid reference to attribute 'value'", envV = error "invalid reference to attribute 'envV'", envF = error "invalid reference to attribute 'envF'", envVMod = error "invalid reference to attribute 'envVMod'", envFMod = error "invalid reference to attribute 'envFMod'", idList = error "invalid reference to attribute 'idList'", typ = error "invalid reference to attribute 'typ'", typList = error "invalid reference to attribute 'typList'", typFun = error "invalid reference to attribute 'typFun'", isReturn = error "invalid reference to attribute 'isReturn'", err = error "invalid reference to attribute 'err'", loopLabels = error "invalid reference to attribute 'loopLabels'", checkForIncr = error "invalid reference to attribute 'checkForIncr'", tac = error "invalid reference to attribute 'tac'", address = error "invalid reference to attribute 'address'", addressList = error "invalid reference to attribute 'addressList'", temp = error "invalid reference to attribute 'temp'", tempMod = error "invalid reference to attribute 'tempMod'", true = error "invalid reference to attribute 'true'", false = error "invalid reference to attribute 'false'"}
 
 -------------------------------------------------------------------------------------------------------------------------------
 ---------------------------- FUNZIONI AUSILIARIE PER INDIVIDUAZIONE E STAMPA DEGLI ERRORI -------------------------------------
@@ -1242,8 +1242,8 @@ showType (TChar) =  "char"
 showType (TString) = "string"
 showType (TBool) =  "boolean"
 showType (TVoid) = "void"
-showType (TArray n t) = "array["++(show n)++"] "++showType t
-showType (TPointer t) = "pointer -> "++showType t
+showType (TArray n t) = "array["++(show n)++"] " ++ showType t
+showType (TPointer t) = "pointer -> " ++ showType t
 
 
 showVal (Int i) = show i
@@ -1253,7 +1253,7 @@ showVal (String s)= "\""++s++"\""
 showVal (Bool Boolean_true)= "true"
 showVal (Bool Boolean_false)= "false"
 
-getPos id env = case (extrVar id env) of
+getPosV id env = case (extrVar id env) of
                      Var _ _ _ pos -> "_" ++ drop 5 pos
 
 getPosF id env = case (extrFun id env) of
@@ -1261,6 +1261,21 @@ getPosF id env = case (extrFun id env) of
 
 setPos ids pos = map (\id -> Id $ (idToStr id) ++ "_" ++ drop 5 pos) ids
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+removeJumpCode l1 l2 l3 temp =  show l1 ++ 
+                                show temp ++ " = true\n" ++ 
+                                "goto " ++ show l3 ++
+                                show l2 ++ 
+                                show temp ++ " = false\n" ++ 
+                                show l3
+{-jumpDelData statIn = (l1,l2,l3,temp,stat4) where
+                            (temp, stat1) = nextTemp statIn
+                            (l1, stat2) = nextLabel stat1
+                            (l2, stat3) = nextLabel stat2
+                            (l3, stat4) = nextLabel stat3-}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 returnM :: a -> Err a

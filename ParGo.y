@@ -50,6 +50,15 @@ import Structures
 %attribute tempMod      { (Int, Int) }
 
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- per le espressioni booleane
+%attribute true {Int}
+%attribute false {Int}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 -----
 
 %name pStart Start
@@ -388,10 +397,11 @@ Stmt : Block            {
                     $3.loopLabels = $$.loopLabels;
                     $2.temp = $$.temp;
                     $3.temp = $2.tempMod;
-                    $$.tempMod = ( (fst $3.tempMod) , ((snd $3.tempMod)+1) );
-                    $$.tac = $2.tac ++ [CondJ $2.address ((snd $3.tempMod)+1)] 
+                    $$.tempMod = ( (fst $3.tempMod) , ((snd $3.tempMod)+2) );
+                    $$.tac = $2.tac ++ [CondJ $2.address ((snd $3.tempMod)+2)]
+                            ++ [Lbl ((snd $3.tempMod)+1)]
                             ++ $3.tac
-                            ++ [Lbl ((snd $3.tempMod)+1)];
+                            ++ [Lbl ((snd $3.tempMod)+2)];
                     where ( if ($2.err== "") 
                         then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
                         else ( Bad $ $2.err) 
@@ -416,13 +426,14 @@ Stmt : Block            {
                     $2.temp = $$.temp;
                     $3.temp = $2.tempMod;
                     $5.temp = $3.tempMod;
-                    $$.tempMod = ( (fst $5.tempMod) , ((snd $5.tempMod)+2) );
-                    $$.tac = $2.tac ++ [CondJ $2.address ((snd $5.tempMod)+1)] 
-                            ++ $3.tac
-                            ++ [UnCondJ ((snd $5.tempMod)+2)] 
+                    $$.tempMod = ( (fst $5.tempMod) , ((snd $5.tempMod)+3) );
+                    $$.tac = $2.tac ++ [CondJ $2.address ((snd $5.tempMod)+2)]
                             ++ [Lbl ((snd $5.tempMod)+1)]
+                            ++ $3.tac
+                            ++ [UnCondJ ((snd $5.tempMod)+3)]
+                            ++ [Lbl ((snd $5.tempMod)+2)]
                             ++ $5.tac
-                            ++ [Lbl ((snd $5.tempMod)+2)];
+                            ++ [Lbl ((snd $5.tempMod)+3)];
                     where ( if ($2.err== "") 
                         then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
                         else ( Bad $ $2.err) 
@@ -766,7 +777,7 @@ LExp : Id       {
                     then  "Scope Error : Variable  "++(idToStr $1)++" not in scope"
                     else "";
             $$.tempMod = $$.temp;
-            $$.address = (idToStr $1) ++ (getPos $1 $$.envV);
+            $$.address = (idToStr $1) ++ (getPosV $1 $$.envV);
             $$.tac = []; 
             where ( if (not(searchVar $1 $$.envV)) 
                 then ( Bad $ "Scope Error : Variable  "++(idToStr $1)++" not in scope")
@@ -1104,7 +1115,13 @@ RExp : RExp '+' RExp    {
             $3.temp = $1.tempMod;
             $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
             $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "&&" $$.address $1.address $3.address)];
+            
+            $1.true = snd $1.tempMod;
+            $1.false = $$.false;
+            $3.true = $$.true;
+            $3.false = $$.false;
+            
+            $$.tac = $1.tac ++ [(CondJ $1.address ($1.true+2))] ++ $3.tac ++ [(BinOp "&&" $$.address $1.address $3.address)];
             where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
                     "" -> Ok ();
                     x -> Bad $ x;               
@@ -1123,7 +1140,13 @@ RExp : RExp '+' RExp    {
             $3.temp = $1.tempMod;
             $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
             $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "||" $$.address $1.address $3.address)];
+            
+            $1.true = snd $1.tempMod;
+            $1.false = $$.false;
+            $3.true = $$.true;
+            $3.false = $$.false;
+            
+            $$.tac = $1.tac ++ [(CondJTrue $1.address ($1.true+1))] ++ $3.tac ++ [(BinOp "||" $$.address $1.address $3.address)];
             where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
                     "" -> Ok ();
                     x -> Bad $ x;               
@@ -1570,8 +1593,8 @@ showType (TChar) =  "char"
 showType (TString) = "string"
 showType (TBool) =  "boolean"
 showType (TVoid) = "void"
-showType (TArray n t) = "array["++(show n)++"] "++showType t
-showType (TPointer t) = "pointer -> "++showType t
+showType (TArray n t) = "array["++(show n)++"] " ++ showType t
+showType (TPointer t) = "pointer -> " ++ showType t
 
 
 showVal (Int i) = show i
@@ -1581,7 +1604,7 @@ showVal (String s)= "\""++s++"\""
 showVal (Bool Boolean_true)= "true"
 showVal (Bool Boolean_false)= "false"
 
-getPos id env = case (extrVar id env) of
+getPosV id env = case (extrVar id env) of
                      Var _ _ _ pos -> "_" ++ drop 5 pos
 
 getPosF id env = case (extrFun id env) of
@@ -1589,6 +1612,21 @@ getPosF id env = case (extrFun id env) of
 
 setPos ids pos = map (\id -> Id $ (idToStr id) ++ "_" ++ drop 5 pos) ids
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+removeJumpCode l1 l2 l3 temp =  show l1 ++ 
+                                show temp ++ " = true\n" ++ 
+                                "goto " ++ show l3 ++
+                                show l2 ++ 
+                                show temp ++ " = false\n" ++ 
+                                show l3
+{-jumpDelData statIn = (l1,l2,l3,temp,stat4) where
+                            (temp, stat1) = nextTemp statIn
+                            (l1, stat2) = nextLabel stat1
+                            (l2, stat3) = nextLabel stat2
+                            (l3, stat4) = nextLabel stat3-}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 returnM :: a -> Err a

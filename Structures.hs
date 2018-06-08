@@ -109,7 +109,7 @@ data TacOp =
   | BinOp Op T T T  
   | UnCondJ Label
   | CondJ T Label
-  -- | CondJTrue T Label
+  | CondJTrue T Label
   | FunDecl String Id Int
   | FunCall String T Id [T] 
   | Lbl Label 
@@ -134,7 +134,7 @@ printTac (x:xs) = (case x of{
           BinOp op t1 t2 t3 ->"\t" ++ t1 ++ " = " ++ t2 ++ " " ++ op ++ " " ++ t3;
           UnCondJ lab -> "\t" ++ "goto label" ++ (show lab);
           CondJ t1 lab -> "\t" ++"if !" ++ t1  ++ " goto label" ++ (show lab);
-          --CondJTrue t1 lab -> "\t" ++"if " ++ t1  ++ " goto label" ++ (show lab);
+          CondJTrue t1 lab -> "\t" ++"if " ++ t1  ++ " goto label" ++ (show lab);
           FunDecl str id int ->str ++ " " ++ (idToStr id) ++  "/" ++ (show int);
           FunCall str t id lt -> (case str of {
                   "function" ->"\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;

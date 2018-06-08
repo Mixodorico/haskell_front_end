@@ -24,7 +24,7 @@ func di () void
   //writeFloat(9.8)
   //c := 'o'
   //writeChar(c)
-  
+  /*
   asd := 1+1+1+1
   
   a := readInt()
@@ -46,6 +46,15 @@ func di () void
     f()
   }
 
-  x = true
+  x = true*/
+  
+  if(true&&true&&true){
+    y:=99
+    if(true&&true&&true){
+    y:=99
+  }
+  }
+  
+  //fg := true && true && false
   
 }
