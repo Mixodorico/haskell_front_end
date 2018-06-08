@@ -1,0 +1,32 @@
+-------------------
+cose da modificare:
+-------------------
+postinc/dec
+Va assegnato quello che viene restituito dalle funzoni (niente side-effect)
+*=, /= ....
+ordine codice
+errori TC
+output principale
+labels sfasate nelle funzioni (messe dopo la funzione)
+
+------------
+Cose da fare
+------------
+valutazione short-cut guardie
+
+----------------------
+scelte implementative
+----------------------
+aggiunto il not nell'if per far veicolare bene i salti
+non possiamo dichiarare variabili al di fuori delle funzioni
+non si possono inizializzare direttamente gli array, ma prima dichiarazione e poi inizializzazione
+la funzione write è una LExp e prende come argomento una RExp (scrive sullo stout il valore) interpretandolo 
+con il giusto tipo mentre la funzione read non prende argomenti e si occupa della lettura da stdin facendo un casting sul tipo.
+casting int a float.
+
+--------------------------
+Se c'é tempo se c'é voglia
+--------------------------
+??(modificare TC in maniera da prendere ridefinizione di funzioni)??
+inizializzare direttamente gli array
+togliere l'ultima etichetta stampata
