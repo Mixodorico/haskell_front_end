@@ -12,27 +12,65 @@ failure x = Bad $ "Undefined case: " ++ show x
 transId :: Id -> Result
 transId x = case x of
   Id string -> failure x
+transBoolean :: Boolean -> Result
+transBoolean x = case x of
+  Boolean_true -> failure x
+  Boolean_false -> failure x
+transRExp :: RExp -> Result
+transRExp x = case x of
+  ExpAnd rexp1 rexp2 -> failure x
+  ExpOr rexp1 rexp2 -> failure x
+  ExpNot rexp -> failure x
+  ExpEq rexp1 rexp2 -> failure x
+  ExpNeq rexp1 rexp2 -> failure x
+  ExpLt rexp1 rexp2 -> failure x
+  ExpLtE rexp1 rexp2 -> failure x
+  ExpGt rexp1 rexp2 -> failure x
+  ExpGtE rexp1 rexp2 -> failure x
+  ExpAdd rexp1 rexp2 -> failure x
+  ExpSub rexp1 rexp2 -> failure x
+  ExpMul rexp1 rexp2 -> failure x
+  ExpDiv rexp1 rexp2 -> failure x
+  ExpMod rexp1 rexp2 -> failure x
+  ExpNeg rexp -> failure x
+  ExpRef lexp -> failure x
+  ExpFuncEmpty id -> failure x
+  ExpFunc id rexps -> failure x
+  ExpVal val -> failure x
+  ExpLExp lexp -> failure x
+  ExpPar rexp -> failure x
+  StRead readt -> failure x
+transVal :: Val -> Result
+transVal x = case x of
+  Int integer -> failure x
+  Float double -> failure x
+  Char char -> failure x
+  String string -> failure x
+  Bool boolean -> failure x
+transReadT :: ReadT -> Result
+transReadT x = case x of
+  ReadT_readInt -> failure x
+  ReadT_readFloat -> failure x
+  ReadT_readChar -> failure x
+  ReadT_readString -> failure x
+transLExp :: LExp -> Result
+transLExp x = case x of
+  ExpId id -> failure x
+  ExpArr lexp rexp -> failure x
+  ExpDeref rexp -> failure x
 transStart :: Start -> Result
 transStart x = case x of
   Entry id decls -> failure x
 transDecl :: Decl -> Result
 transDecl x = case x of
-  DeclFun id params type_ block -> failure x
-  DeclProc id params block -> failure x
   DeclVar ids type_ -> failure x
   DeclVarInit ids rexps -> failure x
   DeclVarTypeInit ids type_ rexps -> failure x
+  DeclFun id params type_ block -> failure x
+  DeclProc id params block -> failure x
 transShortVarDecl :: ShortVarDecl -> Result
 transShortVarDecl x = case x of
   DeclVarShort ids rexps -> failure x
-transParam :: Param -> Result
-transParam x = case x of
-  ParamL ids type_ -> failure x
-  ParamLPassType pass ids type_ -> failure x
-transPass :: Pass -> Result
-transPass x = case x of
-  PassValue -> failure x
-  PassRef -> failure x
 transType :: Type -> Result
 transType x = case x of
   TVoid -> failure x
@@ -43,76 +81,38 @@ transType x = case x of
   TString -> failure x
   TArray integer type_ -> failure x
   TPointer type_ -> failure x
+transParam :: Param -> Result
+transParam x = case x of
+  Parameter ids type_ -> failure x
+  ParameterPass pass ids type_ -> failure x
+transPass :: Pass -> Result
+transPass x = case x of
+  PassVal -> failure x
+  PassRef -> failure x
 transBlock :: Block -> Result
 transBlock x = case x of
   BodyBlock stmts -> failure x
 transStmt :: Stmt -> Result
 transStmt x = case x of
+  StDecl decl -> failure x
   StBlock block -> failure x
   StSmpl stmtsmpl -> failure x
-  StReturn rexp -> failure x
   StIf rexp block -> failure x
   StIfElse rexp block1 block2 -> failure x
   StWhile rexp block -> failure x
-  StDecl decl -> failure x
   StBreak -> failure x
   StContinue -> failure x
+  StReturn rexp -> failure x
   StWrite writet rexp -> failure x
-transRExp :: RExp -> Result
-transRExp x = case x of
-  StRead readt -> failure x
-  ExpAdd rexp1 rexp2 -> failure x
-  ExpSub rexp1 rexp2 -> failure x
-  ExpMul rexp1 rexp2 -> failure x
-  ExpDiv rexp1 rexp2 -> failure x
-  ExpMod rexp1 rexp2 -> failure x
-  ExpEq rexp1 rexp2 -> failure x
-  ExpNeq rexp1 rexp2 -> failure x
-  ExpLt rexp1 rexp2 -> failure x
-  ExpLtE rexp1 rexp2 -> failure x
-  ExpGt rexp1 rexp2 -> failure x
-  ExpGtE rexp1 rexp2 -> failure x
-  ExpAnd rexp1 rexp2 -> failure x
-  ExpOr rexp1 rexp2 -> failure x
-  ExpNot rexp -> failure x
-  ExpNeg rexp -> failure x
-  ExpVal value -> failure x
-  ExpLef lexp -> failure x
-  ExpFuncEmpty id -> failure x
-  ExpFunc id rexps -> failure x
-  ExpRef lexp -> failure x
-  ExpPar rexp -> failure x
 transWriteT :: WriteT -> Result
 transWriteT x = case x of
   WriteT_writeInt -> failure x
   WriteT_writeFloat -> failure x
   WriteT_writeChar -> failure x
   WriteT_writeString -> failure x
-transReadT :: ReadT -> Result
-transReadT x = case x of
-  ReadT_readInt -> failure x
-  ReadT_readFloat -> failure x
-  ReadT_readChar -> failure x
-  ReadT_readString -> failure x
 transStmtSmpl :: StmtSmpl -> Result
 transStmtSmpl x = case x of
   StShortVarDecl shortvardecl -> failure x
   StExp rexp -> failure x
   StAsgn lexp rexp -> failure x
-transLExp :: LExp -> Result
-transLExp x = case x of
-  ExpId id -> failure x
-  ExpArr lexp rexp -> failure x
-  ExpDeref rexp -> failure x
-transValue :: Value -> Result
-transValue x = case x of
-  Int integer -> failure x
-  Float double -> failure x
-  Char char -> failure x
-  String string -> failure x
-  Bool boolean -> failure x
-transBoolean :: Boolean -> Result
-transBoolean x = case x of
-  Boolean_true -> failure x
-  Boolean_false -> failure x
 

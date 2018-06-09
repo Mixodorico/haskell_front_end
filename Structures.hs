@@ -113,7 +113,7 @@ data TacOp =
   | FunDecl String Id Int
   | FunCall String T Id [T] 
   | Lbl Label 
-  | OneExcpJ Label
+  -- | OneExcpJ Label
   | Return T
     deriving (Eq,Ord,Show)
 
@@ -142,7 +142,7 @@ printTac (x:xs) = (case x of{
                    _ -> "error";
                 });
           Lbl lab -> "label" ++  (show lab) ++ " :";
-          OneExcpJ lab -> "\tonexceptiongoto "  ++  "label" ++  (show lab);
+          --OneExcpJ lab -> "\tonexceptiongoto "  ++  "label" ++  (show lab);
           Return t -> "\treturn " ++ t;
         }) ++ "\n" ++ (printTac xs) 
 

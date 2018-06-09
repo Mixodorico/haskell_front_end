@@ -27,3 +27,4 @@ Se c'é tempo se c'é voglia
 ??(modificare TC in maniera da prendere ridefinizione di funzioni)??
 inizializzare direttamente gli array
 togliere l'ultima etichetta stampata
+dare a "&&" priorità maggiore di "||"

@@ -1,8 +1,5 @@
 {-# OPTIONS_GHC -w #-}
-{-# OPTIONS -XMagicHash -XBangPatterns -XTypeSynonymInstances -XFlexibleInstances -cpp #-}
-#if __GLASGOW_HASKELL__ >= 710
-{-# OPTIONS_GHC -XPartialTypeSignatures #-}
-#endif
+{-# OPTIONS -fglasgow-exts -cpp #-}
 {-# OPTIONS -fno-warn-incomplete-patterns -fno-warn-overlapping-patterns #-}
 module ParGo where
 import AbsGo
@@ -11,12 +8,11 @@ import ErrM
 import Control.Monad
 import Structures
 import qualified Data.Array as Happy_Data_Array
-import qualified Data.Bits as Bits
 import qualified GHC.Exts as Happy_GHC_Exts
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
--- parser produced by Happy Version 1.19.8
+-- parser produced by Happy Version 1.19.5
 
 newtype HappyAbsSyn t4 t5 t6 t7 t8 t9 t10 t11 t12 t13 t14 t15 t16 t17 t18 t19 t20 t21 t22 t23 t24 t25 t26 = HappyAbsSyn HappyAny
 #if __GLASGOW_HASKELL__ >= 607
@@ -170,41 +166,22 @@ happyOutTok x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOutTok #-}
 
 
-happyExpList :: HappyAddr
-happyExpList = HappyA# "\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x20\x2a\x22\x20\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x22\x00\x08\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\xa0\x22\x02\x02\x00\x00\x00\x00\x20\x95\x00\x80\xc0\x23\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc0\x62\xed\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x52\x09\x00\x08\x3c\x02\xf0\x01\x00\x00\x00\x08\x00\x00\x00\x00\x00\x08\x00\x00\x80\x54\x02\x00\x02\x8f\x00\x7c\x00\x00\x00\xa4\x12\x00\x10\x78\x04\xe0\x03\x00\x00\x20\x95\x00\x80\xc0\x23\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\x2a\x01\x00\x81\x47\x00\x3e\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x40\x00\x54\x44\x40\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\x40\x45\x04\x44\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x50\x11\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x22\x00\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\x11\x00\x00\x00\x00\x00\x00\x00\x00\x60\xdd\x76\x00\x00\x00\x20\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x00\x00\x00\x00\x80\xb0\x01\x00\x00\x00\x00\x00\x00\x00\x00\xa9\x04\x00\x04\x1e\x01\xf8\x00\x00\x00\x48\x25\x00\x20\xf0\x08\xc0\x07\x00\x00\x40\x2a\x01\x00\x81\x47\x00\x3e\x00\x00\x00\x52\x09\x00\x08\x3c\x02\xf0\x01\x00\x00\x90\x4a\x00\x40\xe0\x11\x80\x0f\x00\x00\x80\x54\x02\x00\x02\x8f\x00\x7c\x00\x00\x00\xa4\x12\x00\x10\x78\x04\xe0\x03\x00\x00\x20\x95\x00\x80\xc0\x23\x00\x1f\x00\x00\x00\xa9\x04\x00\x04\x1e\x01\xf8\x00\x00\x00\x48\x25\x00\x20\xf0\x08\xc0\x07\x00\x00\x40\x2a\x01\x00\x81\x47\x00\x3e\x00\x00\x00\x52\x09\x00\x08\x3c\x02\xf0\x01\x00\x00\x90\x4a\x00\x40\xe0\x11\x80\x0f\x00\x00\x80\x54\x02\x00\x02\x8f\x00\x7c\x00\x00\x00\xa4\x12\x00\x10\x78\x04\xe0\x03\x00\x00\x20\x9d\x00\x80\xc0\x23\x00\x1f\x00\x00\x00\x80\x00\xa8\x88\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x60\xd9\x76\x01\x00\x00\x20\x00\x00\x00\x00\xc3\xb6\x03\x00\x00\x00\x00\x00\x00\x00\x10\x36\x00\x00\x00\x00\x00\x00\x00\x00\x80\xb0\x01\x00\x00\x00\x00\x00\x00\x00\x00\x84\x0d\x00\x00\x00\x00\x00\x00\x00\x00\x20\x6c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x61\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\x88\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x22\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x86\x6d\x07\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x61\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x48\x25\x00\xaa\xf3\xaa\xef\x07\x00\x00\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x08\x00\x00\x00\x00\x00\x00\x00\xb0\x48\x3b\x00\x00\x00\x10\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x54\x02\x00\x02\x8f\x00\x7c\x00\x00\x00\xa4\x12\x00\x10\x78\x04\xe0\x03\x00\x00\x20\x95\x00\x80\xc0\x23\x00\x1f\x00\x00\x00\x20\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x54\x02\x00\x02\x8f\x00\x7c\x00\x00\x00\xa4\x12\x00\x10\x78\x04\xe0\x03\x00\x00\x20\x95\x00\x80\xc0\x23\x00\x1f\x00\x00\x00\xa9\x04\x00\x04\x1e\x01\xf8\x00\x00\x00\xb0\x48\x3b\x00\x00\x00\x10\x00\x00\x00\x80\x65\xdb\x01\x00\x00\xc0\x00\x00\x00\x00\x2c\xdb\x0e\x00\x00\x00\x06\x00\x00\x00\x90\x4a\x00\x40\xe0\x11\x80\x0f\x00\x00\x80\x54\x02\x00\x02\x8f\x00\x7c\x00\x00\x00\x58\xa4\x1d\x00\x00\x00\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x80\x75\xdb\x01\x00\x00\x80\x00\x00\x00\x00\xac\xdb\x0e\x00\x00\x00\x04\x00\x00\x00\x60\xdd\x76\x00\x00\x00\x20\x00\x00\x00\x00\xeb\xb6\x03\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"#
-
-{-# NOINLINE happyExpListPerState #-}
-happyExpListPerState st =
-    token_strs_expected
-  where token_strs = ["error","%dummy","%start_pStart","Integer","Double","Char","String","Id","Start","Decl","ShortVarDecl","Param","Pass","Type","Block","Stmt","StmtSmpl","LExp","RExp","Value","Boolean","ListId","ListExpR","ListDecl","ListParam","ListStmt","'!'","'!='","'%'","'&'","'&&'","'('","')'","'*'","'+'","','","'-'","'/'","':='","'<'","'<='","'='","'=='","'>'","'>='","'['","']'","'bool'","'break'","'char'","'continue'","'else'","'false'","'float'","'for'","'func'","'if'","'int'","'package'","'readChar'","'readFloat'","'readInt'","'readString'","'ref'","'return'","'string'","'true'","'val'","'var'","'void'","'writeChar'","'writeFloat'","'writeInt'","'writeString'","'{'","'||'","'}'","L_integ","L_doubl","L_charac","L_quoted","L_Id","%eof"]
-        bit_start = st * 83
-        bit_end = (st + 1) * 83
-        read_bit = readArrayBit happyExpList
-        bits = map read_bit [bit_start..bit_end - 1]
-        bits_indexed = zip bits [0..82]
-        token_strs_expected = concatMap f bits_indexed
-        f (False, _) = []
-        f (True, nr) = [token_strs !! nr]
-
 happyActOffsets :: HappyAddr
-happyActOffsets = HappyA# "\xef\xff\xdf\xff\x00\x00\xe9\xff\x06\x00\x00\x00\x00\x00\x2f\x00\x00\x00\x06\x00\x06\x00\x1d\x00\x49\x01\x41\x00\xde\xff\x46\x00\xf9\xff\x5f\x00\x23\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x4a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x5b\x00\x52\x00\x40\x00\x00\x00\x00\x00\x00\x00\x5f\x00\xfb\xff\x5f\x00\x5f\x00\x5f\x00\x00\x00\x63\x00\x66\x00\x6d\x00\x6e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x5f\x00\x6b\x00\x3e\x00\xf9\xff\x70\x00\x00\x00\x00\x00\x3e\x01\x00\x00\xf9\xff\xde\xff\x00\x00\x71\x00\x72\x00\x79\x00\x7e\x00\x00\x00\x4d\x00\x96\x00\x00\x00\x73\x00\xb7\x01\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x39\x00\xf9\xff\x00\x00\x7f\x00\x00\x00\xa8\x00\xc9\x01\xdb\x01\xdb\x01\xdb\x01\xdb\x01\xdb\x01\x00\x00\x4d\x00\x00\x00\x4d\x00\x00\x00\xed\x01\x00\x00\xff\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x5c\x00\x5c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x5e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xfe\xff\x29\x01\x82\x00\x00\x00\x00\x00\x5f\x00\x5f\x00\x5f\x00\x8a\x00\x8b\x00\x8c\x00\x94\x00\x00\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x29\x01\xbe\x00\xbe\x00\x5f\x00\x5f\x00\x3c\x01\x00\x00\x00\x00\x86\x00\xd0\x00\xf2\x00\x04\x01\x17\x01\x00\x00\x00\x00\x00\x00\x00\x00\x75\x00\x00\x00\x00\x00"#
+happyActOffsets = HappyA# "\xaa\x00\x91\x00\x00\x00\x83\x00\x89\x00\x00\x00\x00\x00\xe3\xff\x00\x00\x89\x00\x89\x00\xae\x00\x3e\x01\xaf\x00\xde\xff\x9e\x00\x5d\x01\x5f\x00\x7e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x64\x00\x00\x00\x97\x00\x00\x00\x00\x00\x00\x00\x00\x00\xa0\x00\x00\x00\x11\x01\x00\x00\x8f\x00\x00\x00\x5f\x00\xfb\xff\x5f\x00\x5f\x00\x5f\x00\x00\x00\x9a\x00\x94\x00\x8b\x00\x8a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x5f\x00\x57\x00\x88\x00\x5d\x01\x87\x00\x00\x00\x00\x00\x58\x01\x00\x00\xde\xff\x43\x01\x00\x00\x86\x00\x85\x00\x84\x00\x80\x00\x00\x00\x03\x00\xfe\x00\x00\x00\x76\x00\x13\x02\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x39\x00\x43\x01\x00\x00\x7f\x00\x00\x00\x01\x02\xef\x01\xef\x01\xef\x01\xef\x01\xef\x01\x00\x00\x03\x00\x00\x00\x03\x00\x00\x00\xdd\x01\x00\x00\xcb\x01\xe0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x58\x00\x58\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x5e\x00\x23\x01\x36\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x6c\x00\x00\x00\x00\x00\x5f\x00\x5f\x00\x5f\x00\x7a\x00\x79\x00\x78\x00\x66\x00\x00\x00\x5f\x00\x5f\x00\x5f\x00\x5f\x00\x23\x01\xcd\x00\xcd\x00\x5f\x00\x5f\x00\x36\x01\x00\x00\x00\x00\x4f\x00\xbb\x00\xa8\x00\x96\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x30\x00\x00\x00\x00\x00"#
 
 happyGotoOffsets :: HappyAddr
-happyGotoOffsets = HappyA# "\x97\x00\x00\x00\x00\x00\x00\x00\x9f\x00\x98\x00\x00\x00\xa9\x00\x00\x00\xaa\x00\x17\x00\x00\x00\xab\x00\x00\x00\x02\x00\x00\x00\xae\x00\x7b\x00\xb2\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x19\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x13\x02\x38\x00\x18\x02\x2a\x02\x2f\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x72\x01\x00\x00\x29\x00\xb4\x00\x00\x00\x00\x00\x00\x00\xb5\x00\x00\x00\xb8\x00\xdc\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x41\x02\x46\x02\x58\x02\x5d\x02\x6f\x02\x78\x01\x74\x02\x86\x02\x8b\x02\x9d\x02\xa2\x02\xb4\x02\xb9\x02\xcb\x02\xd0\x02\x8c\x01\xba\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xb1\x00\xc0\x00\x00\x00\xaf\x00\x00\x00\x00\x00\x00\x00\xa6\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe2\x02\xe7\x02\xf9\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xfe\x02\x10\x03\x15\x03\x27\x03\x00\x00\xc3\x00\xc9\x00\x92\x01\x2c\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xcb\x00\x00\x00\x00\x00"#
-
-happyAdjustOffset :: Happy_GHC_Exts.Int# -> Happy_GHC_Exts.Int#
-happyAdjustOffset off = off
+happyGotoOffsets = HappyA# "\x5b\x00\x00\x00\x00\x00\x00\x00\x56\x00\x4c\x00\x00\x00\x4d\x00\x00\x00\x54\x00\x15\x00\x00\x00\x51\x00\x00\x00\x73\x01\x00\x00\x50\x00\xc0\x01\x55\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x13\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3a\x03\x06\x00\x2f\x03\x24\x03\x19\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xb5\x01\x09\x00\x00\x00\x4a\x00\x00\x00\x00\x00\x00\x00\x47\x00\x00\x00\x0d\x00\x38\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0e\x03\x03\x03\xf8\x02\xed\x02\xe2\x02\xd7\x02\xaa\x01\xcc\x02\xc1\x02\xb6\x02\xab\x02\xa0\x02\x95\x02\x8a\x02\x7f\x02\x9f\x01\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x2d\x00\x2c\x00\x00\x00\xfc\xff\x00\x00\x00\x00\x00\x00\x8a\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x74\x02\x69\x02\x5e\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x53\x02\x48\x02\x3d\x02\x32\x02\x00\x00\x1e\x00\x1c\x00\x73\x00\x27\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00"#
 
 happyDefActions :: HappyAddr
-happyDefActions = HappyA# "\x00\x00\x00\x00\xfe\xff\x00\x00\x00\x00\xaf\xff\xfa\xff\xf9\xff\xae\xff\x00\x00\x00\x00\xb3\xff\x00\x00\x00\x00\xad\xff\xf6\xff\x00\x00\x00\x00\x00\x00\xed\xff\xeb\xff\xec\xff\xee\xff\xea\xff\x00\x00\xb2\xff\x00\x00\xba\xff\xb9\xff\xb8\xff\xb7\xff\xd6\xff\xc3\xff\xb1\xff\xc4\xff\xb6\xff\xf5\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xb4\xff\x00\x00\x00\x00\x00\x00\x00\x00\xb5\xff\xfd\xff\xfc\xff\xfb\xff\xe8\xff\x00\x00\xac\xff\x00\x00\x00\x00\x00\x00\xef\xff\xf0\xff\x00\x00\xf2\xff\x00\x00\xad\xff\xf4\xff\x00\x00\x00\x00\x00\x00\x00\x00\xc5\xff\xd4\xff\x00\x00\xd6\xff\xbc\xff\xc6\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe9\xff\x00\x00\xc2\xff\x00\x00\xc7\xff\xc9\xff\xca\xff\xce\xff\xcb\xff\xcc\xff\xd0\xff\xd2\xff\xb0\xff\xd3\xff\xd1\xff\xc8\xff\xcf\xff\xcd\xff\xbb\xff\xbe\xff\xbf\xff\xc0\xff\xbd\xff\xab\xff\xf1\xff\x00\x00\x00\x00\xf7\xff\xaa\xff\xf8\xff\xd5\xff\xc1\xff\x00\x00\xd6\xff\xe0\xff\xd9\xff\xe6\xff\xa9\xff\xe5\xff\xc3\xff\xd8\xff\x00\x00\xdf\xff\xde\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe7\xff\x00\x00\x00\x00\x00\x00\x00\x00\xe4\xff\x00\x00\x00\x00\x00\x00\x00\x00\xd7\xff\xf3\xff\xe1\xff\xe3\xff\x00\x00\x00\x00\x00\x00\x00\x00\xda\xff\xdd\xff\xdc\xff\xdb\xff\x00\x00\xe2\xff"#
+happyDefActions = HappyA# "\x00\x00\x00\x00\xfe\xff\x00\x00\x00\x00\xb0\xff\xfa\xff\xcc\xff\xaf\xff\x00\x00\x00\x00\xae\xff\x00\x00\x00\x00\xac\xff\xcb\xff\x00\x00\x00\x00\x00\x00\xf5\xff\xf3\xff\xf4\xff\xf6\xff\xf2\xff\xf7\xff\x00\x00\xad\xff\x00\x00\xd4\xff\xd3\xff\xd2\xff\xd1\xff\xcf\xff\xd0\xff\xb2\xff\xdb\xff\xda\xff\xca\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xf8\xff\x00\x00\x00\x00\x00\x00\x00\x00\xf9\xff\xfd\xff\xfc\xff\xfb\xff\xf0\xff\x00\x00\x00\x00\xab\xff\x00\x00\x00\x00\xee\xff\xef\xff\x00\x00\xc5\xff\xac\xff\x00\x00\xc9\xff\x00\x00\x00\x00\x00\x00\x00\x00\xdf\xff\xcd\xff\x00\x00\xcf\xff\xde\xff\xeb\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xf1\xff\x00\x00\xdd\xff\xec\xff\xe5\xff\xe6\xff\xea\xff\xe7\xff\xe8\xff\xe1\xff\xe3\xff\xb1\xff\xe4\xff\xe2\xff\xed\xff\xe0\xff\xe9\xff\x00\x00\xd9\xff\xd6\xff\xd7\xff\xd8\xff\xd5\xff\xc4\xff\xaa\xff\x00\x00\x00\x00\xc7\xff\xa9\xff\xc8\xff\xce\xff\xdc\xff\x00\x00\xcf\xff\xb4\xff\xda\xff\xc2\xff\xb5\xff\xc1\xff\xa8\xff\xc0\xff\x00\x00\xbc\xff\xbb\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc3\xff\x00\x00\x00\x00\x00\x00\x00\x00\xba\xff\x00\x00\x00\x00\x00\x00\x00\x00\xb3\xff\xc6\xff\xbd\xff\xbf\xff\x00\x00\x00\x00\x00\x00\x00\x00\xb6\xff\xb9\xff\xb8\xff\xb7\xff\x00\x00\xbe\xff"#
 
 happyCheck :: HappyAddr
-happyCheck = HappyA# "\xff\xff\x08\x00\x01\x00\x08\x00\x26\x00\x04\x00\x04\x00\x06\x00\x2a\x00\x08\x00\x08\x00\x09\x00\x0b\x00\x14\x00\x10\x00\x16\x00\x21\x00\x18\x00\x14\x00\x34\x00\x12\x00\x1c\x00\x38\x00\x15\x00\x17\x00\x20\x00\x19\x00\x04\x00\x1b\x00\x04\x00\x1d\x00\x1e\x00\x1f\x00\x28\x00\x39\x00\x22\x00\x23\x00\x24\x00\x25\x00\x0a\x00\x27\x00\x12\x00\x29\x00\x12\x00\x2b\x00\x04\x00\x2d\x00\x2e\x00\x2f\x00\x30\x00\x31\x00\x38\x00\x33\x00\x34\x00\x35\x00\x36\x00\x37\x00\x38\x00\x01\x00\x12\x00\x04\x00\x04\x00\x38\x00\x06\x00\x07\x00\x08\x00\x02\x00\x03\x00\x0b\x00\x05\x00\x0e\x00\x06\x00\x08\x00\x09\x00\x0a\x00\x0b\x00\x0c\x00\x1e\x00\x0e\x00\x0f\x00\x03\x00\x11\x00\x12\x00\x13\x00\x1b\x00\x08\x00\x10\x00\x34\x00\x38\x00\x0c\x00\x2b\x00\x22\x00\x23\x00\x24\x00\x25\x00\x15\x00\x01\x00\x06\x00\x29\x00\x04\x00\x06\x00\x06\x00\x14\x00\x08\x00\x0a\x00\x06\x00\x0b\x00\x0d\x00\x06\x00\x34\x00\x35\x00\x36\x00\x37\x00\x38\x00\x32\x00\x06\x00\x06\x00\x0a\x00\x38\x00\x07\x00\x07\x00\x07\x00\x1b\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x07\x00\x22\x00\x23\x00\x24\x00\x25\x00\x07\x00\x07\x00\x14\x00\x29\x00\x0e\x00\x0f\x00\x10\x00\x11\x00\x31\x00\x13\x00\x0d\x00\x06\x00\x06\x00\x06\x00\x34\x00\x35\x00\x36\x00\x37\x00\x38\x00\x02\x00\x03\x00\x06\x00\x05\x00\x05\x00\x07\x00\x08\x00\x09\x00\x1a\x00\x0b\x00\x0c\x00\x04\x00\x0e\x00\x0f\x00\x31\x00\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\x14\x00\x05\x00\x04\x00\x06\x00\x08\x00\x09\x00\x00\x00\x0b\x00\x0c\x00\x0a\x00\x0e\x00\x0f\x00\x0a\x00\x11\x00\x12\x00\x13\x00\x0b\x00\x15\x00\x0a\x00\x0a\x00\x02\x00\x03\x00\x0a\x00\x05\x00\x0a\x00\x16\x00\x08\x00\x09\x00\x32\x00\x0b\x00\x0c\x00\x0b\x00\x0e\x00\x0f\x00\x0b\x00\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\x0b\x00\x05\x00\x0b\x00\x07\x00\x08\x00\x09\x00\x32\x00\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\x04\x00\x11\x00\x12\x00\x13\x00\x08\x00\x09\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x12\x00\x31\x00\x32\x00\x15\x00\xff\xff\xff\xff\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\x07\x00\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\x32\x00\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\x07\x00\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\xff\xff\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\x07\x00\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\x32\x00\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\x32\x00\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\xff\xff\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\xff\xff\xff\xff\x09\x00\x08\x00\xff\xff\x0c\x00\x32\x00\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\xff\xff\x08\x00\x14\x00\xff\xff\x16\x00\xff\xff\x18\x00\xff\xff\xff\xff\x10\x00\x1c\x00\x32\x00\xff\xff\x14\x00\x20\x00\x16\x00\xff\xff\x18\x00\xff\xff\xff\xff\xff\xff\x1c\x00\x28\x00\xff\xff\xff\xff\x20\x00\x2c\x00\xff\xff\xff\xff\xff\xff\x32\x00\xff\xff\xff\xff\x28\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x13\x00\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x13\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x13\x00\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x13\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\x06\x00\x07\x00\xff\xff\xff\xff\xff\xff\x0b\x00\x0c\x00\x0d\x00\x0e\x00\x0f\x00\x10\x00\x11\x00\x12\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\xff\xff\xff\xff\xff\xff\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\x0e\x00\x0f\x00\x10\x00\x11\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"#
+happyCheck = HappyA# "\xff\xff\x1e\x00\x01\x00\x08\x00\x26\x00\x04\x00\x03\x00\x06\x00\x2a\x00\x08\x00\x04\x00\x08\x00\x0b\x00\x04\x00\x2b\x00\x0c\x00\x0a\x00\x04\x00\x16\x00\x0f\x00\x07\x00\x06\x00\x38\x00\x04\x00\x17\x00\x04\x00\x19\x00\x0e\x00\x1b\x00\x14\x00\x1d\x00\x1e\x00\x1f\x00\x14\x00\x15\x00\x22\x00\x23\x00\x24\x00\x25\x00\x14\x00\x27\x00\x14\x00\x29\x00\x0f\x00\x2b\x00\x0f\x00\x2d\x00\x2e\x00\x2f\x00\x30\x00\x31\x00\x38\x00\x33\x00\x34\x00\x35\x00\x36\x00\x37\x00\x38\x00\x01\x00\x0f\x00\x0f\x00\x04\x00\x06\x00\x06\x00\x07\x00\x08\x00\x02\x00\x03\x00\x0b\x00\x05\x00\x10\x00\x07\x00\x08\x00\x09\x00\x14\x00\x0b\x00\x0c\x00\x06\x00\x0e\x00\x0f\x00\x06\x00\x11\x00\x12\x00\x13\x00\x1b\x00\x00\x00\x06\x00\x06\x00\x04\x00\x0c\x00\x04\x00\x22\x00\x23\x00\x24\x00\x25\x00\x13\x00\x01\x00\x31\x00\x29\x00\x04\x00\x06\x00\x06\x00\x0b\x00\x08\x00\x0a\x00\x1a\x00\x0b\x00\x0d\x00\x06\x00\x34\x00\x35\x00\x36\x00\x37\x00\x38\x00\x32\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\x0d\x00\x1b\x00\x08\x00\x09\x00\x0a\x00\x06\x00\x06\x00\x06\x00\x22\x00\x23\x00\x24\x00\x25\x00\x12\x00\x07\x00\x07\x00\x29\x00\x31\x00\x14\x00\x07\x00\x07\x00\x07\x00\x07\x00\x38\x00\x06\x00\x06\x00\x0a\x00\x34\x00\x35\x00\x36\x00\x37\x00\x38\x00\x02\x00\x03\x00\x06\x00\x05\x00\x38\x00\x07\x00\x08\x00\x09\x00\x06\x00\x0b\x00\x0c\x00\x14\x00\x0e\x00\x0f\x00\x06\x00\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\x15\x00\x05\x00\x10\x00\x07\x00\x08\x00\x09\x00\x34\x00\x0b\x00\x0c\x00\x06\x00\x0e\x00\x0f\x00\x0a\x00\x11\x00\x12\x00\x13\x00\x39\x00\x02\x00\x03\x00\xff\xff\x05\x00\x38\x00\x07\x00\x08\x00\x09\x00\x34\x00\x0b\x00\x0c\x00\x32\x00\x0e\x00\x0f\x00\x21\x00\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\x32\x00\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\xff\xff\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\x32\x00\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\xff\xff\x15\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x31\x00\x32\x00\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\x07\x00\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x32\x00\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\x32\x00\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\xff\xff\x02\x00\x03\x00\xff\xff\x05\x00\xff\xff\xff\xff\xff\xff\x09\x00\xff\xff\xff\xff\x0c\x00\x32\x00\x0e\x00\x0f\x00\x08\x00\x11\x00\x12\x00\x13\x00\xff\xff\x08\x00\xff\xff\xff\xff\x10\x00\xff\xff\xff\xff\xff\xff\x14\x00\xff\xff\x16\x00\x32\x00\x18\x00\x14\x00\xff\xff\x16\x00\x1c\x00\x18\x00\xff\xff\xff\xff\x20\x00\x1c\x00\x08\x00\xff\xff\xff\xff\x20\x00\xff\xff\x08\x00\x28\x00\xff\xff\x32\x00\xff\xff\x2c\x00\x28\x00\x14\x00\xff\xff\x16\x00\x2c\x00\x18\x00\x14\x00\xff\xff\x16\x00\x1c\x00\x18\x00\xff\xff\x04\x00\x20\x00\x1c\x00\x07\x00\xff\xff\xff\xff\x20\x00\xff\xff\xff\xff\x28\x00\x0e\x00\xff\xff\xff\xff\x2c\x00\x28\x00\xff\xff\x14\x00\x15\x00\x2c\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\xff\xff\x0c\x00\x0d\x00\xff\xff\x0f\x00\x10\x00\x11\x00\xff\xff\xff\xff\x14\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\x12\x00\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\x12\x00\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\x12\x00\x08\x00\x09\x00\x0a\x00\xff\xff\xff\xff\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\x12\x00\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x02\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\x08\x00\x09\x00\xff\xff\x0b\x00\x0c\x00\xff\xff\x0e\x00\x0f\x00\xff\xff\x11\x00\x12\x00\x13\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\x00\x00\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\xff\xff\xff\xff\x08\x00\x09\x00\x0a\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"#
 
 happyTable :: HappyAddr
-happyTable = HappyA# "\x00\x00\x11\x00\x26\x00\x29\x00\x3a\x00\x27\x00\x0b\x00\x28\x00\x3b\x00\x29\x00\x35\x00\x36\x00\x2a\x00\x13\x00\x98\x00\x14\x00\x05\x00\x15\x00\x59\x00\x03\x00\x37\x00\x16\x00\x07\x00\x38\x00\x86\x00\x17\x00\x87\x00\x0b\x00\x2b\x00\x0b\x00\x88\x00\x0a\x00\x89\x00\x18\x00\xff\xff\x2c\x00\x2d\x00\x2e\x00\x2f\x00\x19\x00\x8a\x00\x0c\x00\x30\x00\x19\x00\x0b\x00\x0b\x00\x8b\x00\x8c\x00\x8d\x00\x8e\x00\x78\x00\x07\x00\x8f\x00\x03\x00\x31\x00\x32\x00\x33\x00\x07\x00\x26\x00\x3d\x00\x47\x00\x27\x00\x07\x00\x28\x00\x5e\x00\x29\x00\x4b\x00\x4c\x00\x2a\x00\x4d\x00\x48\x00\x0f\x00\x4e\x00\x4f\x00\x50\x00\x51\x00\x52\x00\x0a\x00\x53\x00\x54\x00\x4c\x00\x55\x00\x56\x00\x57\x00\x2b\x00\x4e\x00\x35\x00\x03\x00\x07\x00\x52\x00\x0b\x00\x2c\x00\x2d\x00\x2e\x00\x2f\x00\x5b\x00\x26\x00\x5a\x00\x30\x00\x27\x00\x5a\x00\x28\x00\x59\x00\x29\x00\x19\x00\x44\x00\x2a\x00\xb3\xff\x43\x00\x03\x00\x31\x00\x32\x00\x33\x00\x07\x00\x58\x00\x42\x00\x41\x00\x3f\x00\x07\x00\x3c\x00\x72\x00\x71\x00\x2b\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x70\x00\x2c\x00\x2d\x00\x2e\x00\x2f\x00\x6f\x00\x7b\x00\x59\x00\x30\x00\x20\x00\x21\x00\x22\x00\x23\x00\x78\x00\x24\x00\x97\x00\x93\x00\x92\x00\x91\x00\x03\x00\x31\x00\x32\x00\x33\x00\x07\x00\x4b\x00\x4c\x00\x90\x00\x4d\x00\x03\x00\x6e\x00\x4e\x00\x4f\x00\xa5\x00\x51\x00\x52\x00\x05\x00\x53\x00\x54\x00\x78\x00\x55\x00\x56\x00\x57\x00\x4b\x00\x4c\x00\x07\x00\x4d\x00\x0d\x00\x08\x00\x4e\x00\x4f\x00\x1a\x00\x51\x00\x52\x00\x0f\x00\x53\x00\x54\x00\x33\x00\x55\x00\x56\x00\x57\x00\x78\x00\x7a\x00\x3c\x00\x74\x00\x4b\x00\x4c\x00\x73\x00\x4d\x00\x5b\x00\x7b\x00\x4e\x00\x4f\x00\x58\x00\x51\x00\x52\x00\x76\x00\x53\x00\x54\x00\x9b\x00\x55\x00\x56\x00\x57\x00\x4b\x00\x4c\x00\x9a\x00\x4d\x00\xa5\x00\xa4\x00\x4e\x00\x4f\x00\x58\x00\x51\x00\x52\x00\x00\x00\x53\x00\x54\x00\x0b\x00\x55\x00\x56\x00\x57\x00\x35\x00\x36\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x37\x00\x78\x00\x58\x00\x72\x00\x00\x00\x00\x00\x4b\x00\x4c\x00\x00\x00\x4d\x00\x00\x00\xa3\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x00\x00\x53\x00\x54\x00\x58\x00\x55\x00\x56\x00\x57\x00\x4b\x00\x4c\x00\x00\x00\x4d\x00\x00\x00\xa2\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x00\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x57\x00\x00\x00\x4b\x00\x4c\x00\x00\x00\x4d\x00\x00\x00\xa1\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x58\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x57\x00\x4b\x00\x4c\x00\x00\x00\x4d\x00\x00\x00\x00\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x58\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x57\x00\x00\x00\x4b\x00\x4c\x00\x00\x00\x4d\x00\x00\x00\x00\x00\x00\x00\x4f\x00\x11\x00\x00\x00\x52\x00\x58\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x57\x00\x00\x00\x11\x00\x13\x00\x00\x00\x14\x00\x00\x00\x15\x00\x00\x00\x00\x00\x12\x00\x16\x00\x58\x00\x00\x00\x13\x00\x17\x00\x14\x00\x00\x00\x15\x00\x00\x00\x00\x00\x00\x00\x16\x00\x18\x00\x00\x00\x00\x00\x17\x00\x76\x00\x00\x00\x00\x00\x00\x00\x58\x00\x00\x00\x00\x00\x18\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x20\x00\x21\x00\x22\x00\x23\x00\x00\x00\x3f\x00\x20\x00\x21\x00\x22\x00\x23\x00\x00\x00\x67\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x20\x00\x21\x00\x22\x00\x23\x00\x00\x00\x5c\x00\x20\x00\x21\x00\x22\x00\x23\x00\x00\x00\x99\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x7c\x00\x00\x00\x7d\x00\x7e\x00\x00\x00\x00\x00\x00\x00\x7f\x00\x80\x00\x81\x00\x82\x00\x83\x00\x22\x00\x23\x00\x84\x00\x00\x00\x4c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4b\x00\x4c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x00\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x57\x00\x00\x00\x4c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4b\x00\x4c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x00\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x57\x00\x00\x00\x4c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4e\x00\x4f\x00\x00\x00\x51\x00\x52\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x49\x00\x22\x00\x23\x00\x00\x00\x20\x00\x46\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x45\x00\x22\x00\x23\x00\x00\x00\x20\x00\x44\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x6c\x00\x22\x00\x23\x00\x00\x00\x20\x00\x6b\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x6a\x00\x22\x00\x23\x00\x00\x00\x20\x00\x69\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x68\x00\x22\x00\x23\x00\x00\x00\x20\x00\x66\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x65\x00\x22\x00\x23\x00\x00\x00\x20\x00\x64\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x63\x00\x22\x00\x23\x00\x00\x00\x20\x00\x62\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x61\x00\x22\x00\x23\x00\x00\x00\x20\x00\x60\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x5f\x00\x22\x00\x23\x00\x00\x00\x20\x00\x5e\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x95\x00\x22\x00\x23\x00\x00\x00\x20\x00\x94\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x93\x00\x22\x00\x23\x00\x00\x00\x20\x00\x9f\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x9e\x00\x22\x00\x23\x00\x00\x00\x20\x00\x9d\x00\x22\x00\x23\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x1b\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20\x00\x9c\x00\x22\x00\x23\x00\x00\x00\x20\x00\x98\x00\x22\x00\x23\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"#
+happyTable = HappyA# "\x00\x00\x0a\x00\x27\x00\x2a\x00\x3b\x00\x28\x00\x4e\x00\x29\x00\x3c\x00\x2a\x00\x48\x00\x50\x00\x2b\x00\x0b\x00\x0b\x00\x54\x00\x49\x00\x0b\x00\x7c\x00\xa6\x00\x36\x00\x5c\x00\x07\x00\x0b\x00\x87\x00\x0b\x00\x88\x00\x37\x00\x2c\x00\x3f\x00\x89\x00\x0a\x00\x8a\x00\x38\x00\x74\x00\x2d\x00\x2e\x00\x2f\x00\x30\x00\x1a\x00\x8b\x00\x0c\x00\x31\x00\x9b\x00\x0b\x00\x9c\x00\x8c\x00\x8d\x00\x8e\x00\x8f\x00\x79\x00\x07\x00\x90\x00\x03\x00\x32\x00\x33\x00\x34\x00\x07\x00\x27\x00\x77\x00\x79\x00\x28\x00\x73\x00\x29\x00\x5f\x00\x2a\x00\x4d\x00\x4e\x00\x2b\x00\x4f\x00\x99\x00\xa2\x00\x50\x00\x51\x00\x4c\x00\x53\x00\x54\x00\x75\x00\x55\x00\x56\x00\x3d\x00\x57\x00\x58\x00\x59\x00\x2c\x00\x1b\x00\x34\x00\x0f\x00\x0d\x00\x08\x00\x05\x00\x2d\x00\x2e\x00\x2f\x00\x30\x00\x07\x00\x27\x00\x79\x00\x31\x00\x28\x00\x5b\x00\x29\x00\x03\x00\x2a\x00\x1a\x00\xa6\x00\x2b\x00\xae\xff\x91\x00\x03\x00\x32\x00\x33\x00\x34\x00\x07\x00\x5a\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x98\x00\x2c\x00\x22\x00\x23\x00\x24\x00\x92\x00\x93\x00\x94\x00\x2d\x00\x2e\x00\x2f\x00\x30\x00\x9a\x00\x7c\x00\x70\x00\x31\x00\x79\x00\x4c\x00\x71\x00\x72\x00\x73\x00\x3d\x00\x07\x00\x42\x00\x43\x00\x3f\x00\x03\x00\x32\x00\x33\x00\x34\x00\x07\x00\x4d\x00\x4e\x00\x44\x00\x4f\x00\x07\x00\xa3\x00\x50\x00\x51\x00\x45\x00\x53\x00\x54\x00\x4c\x00\x55\x00\x56\x00\x5b\x00\x57\x00\x58\x00\x59\x00\x4d\x00\x4e\x00\x5c\x00\x4f\x00\x36\x00\xa4\x00\x50\x00\x51\x00\x03\x00\x53\x00\x54\x00\x0f\x00\x55\x00\x56\x00\x1a\x00\x57\x00\x58\x00\x59\x00\xff\xff\x4d\x00\x4e\x00\x00\x00\x4f\x00\x07\x00\xa5\x00\x50\x00\x51\x00\x03\x00\x53\x00\x54\x00\x5a\x00\x55\x00\x56\x00\x05\x00\x57\x00\x58\x00\x59\x00\x4d\x00\x4e\x00\x00\x00\x4f\x00\x00\x00\x00\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x5a\x00\x55\x00\x56\x00\x00\x00\x57\x00\x58\x00\x59\x00\x00\x00\x4d\x00\x4e\x00\x00\x00\x4f\x00\x00\x00\x00\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x5a\x00\x55\x00\x56\x00\x00\x00\x57\x00\x58\x00\x59\x00\x00\x00\x7b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x79\x00\x5a\x00\x4d\x00\x4e\x00\x00\x00\x4f\x00\x00\x00\x6f\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x00\x00\x57\x00\x58\x00\x59\x00\x5a\x00\x4d\x00\x4e\x00\x00\x00\x4f\x00\x00\x00\x00\x00\x50\x00\x51\x00\x52\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x00\x00\x57\x00\x58\x00\x59\x00\x4d\x00\x4e\x00\x00\x00\x4f\x00\x00\x00\x00\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x5a\x00\x55\x00\x56\x00\x00\x00\x57\x00\x58\x00\x59\x00\x00\x00\x4d\x00\x4e\x00\x00\x00\x4f\x00\x00\x00\x00\x00\x00\x00\x51\x00\x00\x00\x00\x00\x54\x00\x5a\x00\x55\x00\x56\x00\x11\x00\x57\x00\x58\x00\x59\x00\x00\x00\x11\x00\x00\x00\x00\x00\x12\x00\x00\x00\x00\x00\x00\x00\x13\x00\x00\x00\x14\x00\x5a\x00\x15\x00\x13\x00\x00\x00\x14\x00\x16\x00\x15\x00\x00\x00\x00\x00\x17\x00\x16\x00\x11\x00\x00\x00\x00\x00\x17\x00\x00\x00\x11\x00\x18\x00\x00\x00\x5a\x00\x00\x00\x19\x00\x18\x00\x13\x00\x00\x00\x14\x00\x19\x00\x15\x00\x13\x00\x00\x00\x14\x00\x16\x00\x15\x00\x00\x00\x0b\x00\x17\x00\x16\x00\x36\x00\x00\x00\x00\x00\x17\x00\x00\x00\x00\x00\x18\x00\x37\x00\x00\x00\x00\x00\x77\x00\x18\x00\x00\x00\x38\x00\x39\x00\x19\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x7d\x00\x21\x00\x00\x00\x00\x00\x7e\x00\x23\x00\x7f\x00\x00\x00\x80\x00\x81\x00\x00\x00\x82\x00\x83\x00\x84\x00\x00\x00\x00\x00\x85\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x22\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x5d\x00\x22\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x67\x00\x22\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x40\x00\x22\x00\x23\x00\x24\x00\x00\x00\x00\x00\x00\x00\x4e\x00\x00\x00\x00\x00\x00\x00\x25\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4d\x00\x4e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x00\x00\x57\x00\x58\x00\x59\x00\x00\x00\x4e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x4d\x00\x4e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x00\x00\x55\x00\x56\x00\x00\x00\x57\x00\x58\x00\x59\x00\x00\x00\x4e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x50\x00\x51\x00\x00\x00\x53\x00\x54\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x99\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x9d\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x9e\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x9f\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\xa0\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x94\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x95\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x96\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x5f\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x60\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x61\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x62\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x63\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x64\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x65\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x66\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x68\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x69\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x6a\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x6b\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x6c\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x6d\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x45\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x46\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x47\x00\x23\x00\x24\x00\x1c\x00\x1d\x00\x1e\x00\x1f\x00\x20\x00\x21\x00\x00\x00\x00\x00\x4a\x00\x23\x00\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"#
 
-happyReduceArr = Happy_Data_Array.array (1, 86) [
+happyReduceArr = Happy_Data_Array.array (1, 87) [
 	(1 , happyReduce_1),
 	(2 , happyReduce_2),
 	(3 , happyReduce_3),
@@ -290,14 +267,13 @@ happyReduceArr = Happy_Data_Array.array (1, 86) [
 	(83 , happyReduce_83),
 	(84 , happyReduce_84),
 	(85 , happyReduce_85),
-	(86 , happyReduce_86)
+	(86 , happyReduce_86),
+	(87 , happyReduce_87)
 	]
 
 happy_n_terms = 58 :: Int
 happy_n_nonterms = 23 :: Int
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
 happyReduce_1 = happySpecReduce_1  0# happyReduction_1
 happyReduction_1 happy_x_1
 	 =  case happyOutTok happy_x_1 of { (PT _ (TI happy_var_1)) -> 
@@ -305,8 +281,6 @@ happyReduction_1 happy_x_1
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = (read ( happy_var_1 )) :: Integer  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
 happyReduce_2 = happySpecReduce_1  1# happyReduction_2
 happyReduction_2 happy_x_1
 	 =  case happyOutTok happy_x_1 of { (PT _ (TD happy_var_1)) -> 
@@ -314,8 +288,6 @@ happyReduction_2 happy_x_1
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = (read ( happy_var_1 )) :: Double  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
 happyReduce_3 = happySpecReduce_1  2# happyReduction_3
 happyReduction_3 happy_x_1
 	 =  case happyOutTok happy_x_1 of { (PT _ (TC happy_var_1)) -> 
@@ -323,8 +295,6 @@ happyReduction_3 happy_x_1
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = (read ( happy_var_1 )) :: Char  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
 happyReduce_4 = happySpecReduce_1  3# happyReduction_4
 happyReduction_4 happy_x_1
 	 =  case happyOutTok happy_x_1 of { (PT _ (TL happy_var_1)) -> 
@@ -332,8 +302,6 @@ happyReduction_4 happy_x_1
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = happy_var_1  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
 happyReduce_5 = happySpecReduce_1  4# happyReduction_5
 happyReduction_5 happy_x_1
 	 =  case happyOutTok happy_x_1 of { (PT _ (T_Id happy_var_1)) -> 
@@ -341,914 +309,758 @@ happyReduction_5 happy_x_1
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = Id ( happy_var_1 )  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_6 = happySpecReduce_3  5# happyReduction_6
-happyReduction_6 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut8 happy_x_2 of { happy_var_2 -> 
-	case happyOut24 happy_x_3 of { happy_var_3 -> 
-	happyIn9
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) , envF = [] , envV = [] , typ = TInt , value = (Entry (value happySubAttrs_2) (reverse (value happySubAttrs_3) ), (tac happySelfAttrs) )  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (0,0)  }; happyConditions = []++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_7 = happyReduce 7# 6# happyReduction_7
-happyReduction_7 (happy_x_7 `HappyStk`
-	happy_x_6 `HappyStk`
-	happy_x_5 `HappyStk`
-	happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut8 happy_x_2 of { happy_var_2 -> 
-	case happyOut25 happy_x_4 of { happy_var_4 -> 
-	case happyOut14 happy_x_6 of { happy_var_6 -> 
-	case happyOut15 happy_x_7 of { happy_var_7 -> 
-	happyIn10
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunDecl "function" (Id $ idToStr $ head (idList happySelfAttrs) ) (length (typList happySubAttrs_4) )]++ (tac happySubAttrs_7) ++[Lbl ((snd (tempMod happySubAttrs_7) )+1)] , tempMod = ( (fst (tempMod happySubAttrs_7) ) , ((snd (tempMod happySubAttrs_7) )+1) ) , envFMod = ( insFun (Fun (value happySubAttrs_2) (value happySubAttrs_6) (typList happySubAttrs_4) (pos happy_var_1 )) (envF happySelfAttrs) ) , envVMod = (envV happySelfAttrs) , idList = setPos [ (value happySubAttrs_2) ] (pos happy_var_1 ) , value = DeclFun (value happySubAttrs_2) (value happySubAttrs_4) (value happySubAttrs_6) (value happySubAttrs_7)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs; (happyConditions_6,happySubAttrs_6) = happy_var_6 happyEmptyAttrs; (happyConditions_7,happySubAttrs_7) = happy_var_7 happyEmptyAttrs{ loopLabels = (-1,-1) , typFun = (value happySubAttrs_6) , envF = (envFMod happySelfAttrs) , envV = (unionVar (envV happySubAttrs_4) (resetEnvV (envV happySelfAttrs) ) ) , temp = (temp happySelfAttrs)  }; happyConditions = [(if (searchFun (value happySubAttrs_2) (envF happySelfAttrs) ) then Bad $ "Scope Error at "++(pos happy_var_1 )++": function "++(idToStr (value happySubAttrs_2) )++" already declared" else when (not( (isReturn happySubAttrs_7) )) $ Bad $ "Sintax Error at "++(pos happy_var_1 )++": missing return at end of function" ) ]++happyConditions_2++happyConditions_4++happyConditions_6++happyConditions_7 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_8 = happyReduce 7# 6# happyReduction_8
-happyReduction_8 (happy_x_7 `HappyStk`
-	happy_x_6 `HappyStk`
-	happy_x_5 `HappyStk`
-	happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut8 happy_x_2 of { happy_var_2 -> 
-	case happyOut25 happy_x_4 of { happy_var_4 -> 
-	case happyOut15 happy_x_7 of { happy_var_7 -> 
-	happyIn10
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunDecl "procedure" (Id $ idToStr $ head (idList happySelfAttrs) ) (length (typList happySubAttrs_4) )]++ (tac happySubAttrs_7) ++[Lbl ((snd (tempMod happySubAttrs_7) )+1)] , tempMod = ( (fst (tempMod happySubAttrs_7) ) , ((snd (tempMod happySubAttrs_7) )+1) ) , envFMod = (insFun (Fun (value happySubAttrs_2) TVoid (typList happySubAttrs_4) (pos happy_var_1 )) (envF happySelfAttrs) ) , envVMod = (envV happySelfAttrs) , idList = setPos [ (value happySubAttrs_2) ] (pos happy_var_1 ) , value = DeclProc (value happySubAttrs_2) (value happySubAttrs_4) (value happySubAttrs_7)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs; (happyConditions_7,happySubAttrs_7) = happy_var_7 happyEmptyAttrs{ loopLabels = (-1,-1) , typFun = TVoid , envF = (envFMod happySelfAttrs) , envV = (unionVar (envV happySubAttrs_4) (resetEnvV (envV happySelfAttrs) ) ) , temp = (temp happySelfAttrs)  }; happyConditions = [(if (searchFun (value happySubAttrs_2) (envF happySelfAttrs) ) then Bad $ "Scope Error at "++(pos happy_var_1 )++": procedure "++(idToStr (value happySubAttrs_2) )++" already declared" else Ok () ) ]++happyConditions_2++happyConditions_4++happyConditions_7 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_9 = happySpecReduce_3  6# happyReduction_9
-happyReduction_9 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut22 happy_x_2 of { happy_var_2 -> 
-	case happyOut14 happy_x_3 of { happy_var_3 -> 
-	happyIn10
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , tempMod = (temp happySelfAttrs) , envFMod = (envF happySelfAttrs) , envVMod = (unionVar (createList (value happySubAttrs_2) (value happySubAttrs_3) (pos happy_var_1 )) (envV happySelfAttrs) ) , idList = setPos (value happySubAttrs_2) (pos happy_var_1 ) , value = DeclVar (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = [( case (ctrlDeclVarList (idList happySelfAttrs) (envV happySelfAttrs) ) of { Just a -> Bad $ "Scope Error at "++(pos happy_var_1 )++": variable "++(idToStr a)++" already declared in this block" ; Nothing -> Ok () ; } ) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_10 = happyReduce 4# 6# happyReduction_10
-happyReduction_10 (happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut22 happy_x_2 of { happy_var_2 -> 
-	case happyOut23 happy_x_4 of { happy_var_4 -> 
-	happyIn10
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_4) ++ ( tacAssign (idList happySelfAttrs) (addressList happySubAttrs_4) ) , tempMod = (tempMod happySubAttrs_4) , envFMod = (envF happySelfAttrs) , envVMod = (unionVar ( createListMod (value happySubAttrs_2) (typList happySubAttrs_4) (pos happy_var_1 )) (envV happySelfAttrs) ) , idList = setPos (value happySubAttrs_2) (pos happy_var_1 ) , value = DeclVarInit (value happySubAttrs_2) (value happySubAttrs_4)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( case (ctrlDeclVarList (value happySubAttrs_2) (envV happySelfAttrs) ) of { Just a -> Bad $ "Scope Error at "++(pos happy_var_1 )++": variable "++(idToStr a)++" already declared in this block" ; Nothing -> ( if (not(length (value happySubAttrs_2) ==length (typList happySubAttrs_4) )) then Bad $ "Sintax Error at "++(pos happy_var_1 )++": n.of id and expression not matching" else Ok () ) ; } ) ]++happyConditions_2++happyConditions_4 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_11 = happyReduce 5# 6# happyReduction_11
-happyReduction_11 (happy_x_5 `HappyStk`
-	happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut22 happy_x_2 of { happy_var_2 -> 
-	case happyOut14 happy_x_3 of { happy_var_3 -> 
-	case happyOutTok happy_x_4 of { happy_var_4 -> 
-	case happyOut23 happy_x_5 of { happy_var_5 -> 
-	happyIn10
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_5) ++ ( tacAssign (idList happySelfAttrs) (addressList happySubAttrs_5) ) , tempMod = (tempMod happySubAttrs_5) , envFMod = (envF happySelfAttrs) , envVMod = (unionVar ( createList (value happySubAttrs_2) (value happySubAttrs_3) (pos happy_var_1 )) (envV happySelfAttrs) ) , idList = setPos (value happySubAttrs_2) (pos happy_var_1 ) , value = DeclVarTypeInit (value happySubAttrs_2) (value happySubAttrs_3) (value happySubAttrs_5)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; (happyConditions_5,happySubAttrs_5) = happy_var_5 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( case (ctrlDeclVarList (value happySubAttrs_2) (envV happySelfAttrs) ) of { Just a -> Bad $ "Scope Error at "++(pos happy_var_1 )++": variable "++(idToStr a)++" already declared in this block" ; Nothing -> ( if (not(length (value happySubAttrs_2) ==length (typList happySubAttrs_5) )) then Bad $ "Sintax Error at "++(pos happy_var_1 )++": n.of id and expression not matching" else ( case ( matchType (value happySubAttrs_3) ( (typList happySubAttrs_5) )) of { Just a -> Bad $ "Type Error at: "++(pos happy_var_4 )++" Cannot use "++(showType (fst a))++" as type "++(showType (snd a))++" in assignment" ; Nothing -> Ok () ; } ) ) ; } ) ]++happyConditions_2++happyConditions_3++happyConditions_5 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_12 = happySpecReduce_3  7# happyReduction_12
-happyReduction_12 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut22 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut23 happy_x_3 of { happy_var_3 -> 
-	happyIn11
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ ( tacAssign (idList happySelfAttrs) (addressList happySubAttrs_3) ) , tempMod = (tempMod happySubAttrs_3) , envFMod = (envF happySelfAttrs) , envVMod = (unionVar ( createListMod (value happySubAttrs_1) (typList happySubAttrs_3) (pos happy_var_2 )) (envV happySelfAttrs) ) , idList = setPos (value happySubAttrs_1) (pos happy_var_2 ) , value = DeclVarShort (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( case (ctrlDeclVarList (value happySubAttrs_1) (envV happySelfAttrs) ) of { Just a -> Bad $ "Scope Error at "++(pos happy_var_2 )++": variable "++(idToStr a)++" already declared in this block" ; Nothing -> ( if (not(length (value happySubAttrs_1) ==length (typList happySubAttrs_3) )) then Bad $ "Sintax Error at "++(pos happy_var_2 )++": n.of id and expression not matching" else Ok () ) ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_13 = happySpecReduce_2  8# happyReduction_13
-happyReduction_13 happy_x_2
-	happy_x_1
-	 =  case happyOut22 happy_x_1 of { happy_var_1 -> 
-	case happyOut14 happy_x_2 of { happy_var_2 -> 
-	happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typList = (replicate (length (value happySubAttrs_1) ) (value happySubAttrs_2) ) , envV = (createList (value happySubAttrs_1) (value happySubAttrs_2) "0") , value = ParamL (value happySubAttrs_1) (value happySubAttrs_2)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; happyConditions = []++happyConditions_1++happyConditions_2 } in (happyConditions,happySelfAttrs)
-	)}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_14 = happySpecReduce_3  8# happyReduction_14
-happyReduction_14 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut13 happy_x_1 of { happy_var_1 -> 
-	case happyOut22 happy_x_2 of { happy_var_2 -> 
-	case happyOut14 happy_x_3 of { happy_var_3 -> 
-	happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typList = (replicate (length (value happySubAttrs_2) ) (value happySubAttrs_3) ) , envV = (createList (value happySubAttrs_2) (value happySubAttrs_3) "0") , value = ParamLPassType (value happySubAttrs_1) (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = []++happyConditions_1++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_15 = happySpecReduce_1  9# happyReduction_15
-happyReduction_15 happy_x_1
-	 =  happyIn13
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = PassValue  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+happyReduce_6 = happySpecReduce_1  5# happyReduction_6
+happyReduction_6 happy_x_1
+	 =  happyIn9
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = Boolean_true  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_16 = happySpecReduce_1  9# happyReduction_16
-happyReduction_16 happy_x_1
-	 =  happyIn13
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = PassRef  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+happyReduce_7 = happySpecReduce_1  5# happyReduction_7
+happyReduction_7 happy_x_1
+	 =  happyIn9
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = Boolean_false  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_17 = happySpecReduce_1  10# happyReduction_17
-happyReduction_17 happy_x_1
-	 =  happyIn14
+happyReduce_8 = happySpecReduce_1  6# happyReduction_8
+happyReduction_8 happy_x_1
+	 =  happyIn10
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = TVoid  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+	)
+
+happyReduce_9 = happySpecReduce_1  6# happyReduction_9
+happyReduction_9 happy_x_1
+	 =  happyIn10
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = TInt  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_18 = happySpecReduce_1  10# happyReduction_18
-happyReduction_18 happy_x_1
-	 =  happyIn14
+happyReduce_10 = happySpecReduce_1  6# happyReduction_10
+happyReduction_10 happy_x_1
+	 =  happyIn10
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = TBool  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_19 = happySpecReduce_1  10# happyReduction_19
-happyReduction_19 happy_x_1
-	 =  happyIn14
+happyReduce_11 = happySpecReduce_1  6# happyReduction_11
+happyReduction_11 happy_x_1
+	 =  happyIn10
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = TFloat  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_20 = happySpecReduce_1  10# happyReduction_20
-happyReduction_20 happy_x_1
-	 =  happyIn14
+happyReduce_12 = happySpecReduce_1  6# happyReduction_12
+happyReduction_12 happy_x_1
+	 =  happyIn10
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = TChar  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_21 = happySpecReduce_1  10# happyReduction_21
-happyReduction_21 happy_x_1
-	 =  happyIn14
+happyReduce_13 = happySpecReduce_1  6# happyReduction_13
+happyReduction_13 happy_x_1
+	 =  happyIn10
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = TString  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_22 = happyReduce 4# 10# happyReduction_22
-happyReduction_22 (happy_x_4 `HappyStk`
+happyReduce_14 = happyReduce 4# 6# happyReduction_14
+happyReduction_14 (happy_x_4 `HappyStk`
 	happy_x_3 `HappyStk`
 	happy_x_2 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
 	 = case happyOut4 happy_x_2 of { happy_var_2 -> 
-	case happyOut14 happy_x_4 of { happy_var_4 -> 
-	happyIn14
+	case happyOut10 happy_x_4 of { happy_var_4 -> 
+	happyIn10
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = TArray (value happySubAttrs_2) (value happySubAttrs_4)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs; happyConditions = []++happyConditions_2++happyConditions_4 } in (happyConditions,happySelfAttrs)
 	) `HappyStk` happyRest}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_23 = happySpecReduce_2  10# happyReduction_23
-happyReduction_23 happy_x_2
+happyReduce_15 = happySpecReduce_2  6# happyReduction_15
+happyReduction_15 happy_x_2
 	happy_x_1
-	 =  case happyOut14 happy_x_2 of { happy_var_2 -> 
-	happyIn14
+	 =  case happyOut10 happy_x_2 of { happy_var_2 -> 
+	happyIn10
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = TPointer (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; happyConditions = []++happyConditions_2 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_24 = happySpecReduce_3  11# happyReduction_24
-happyReduction_24 happy_x_3
+happyReduce_16 = happySpecReduce_1  7# happyReduction_16
+happyReduction_16 happy_x_1
+	 =  happyIn11
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = PassVal  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+	)
+
+happyReduce_17 = happySpecReduce_1  7# happyReduction_17
+happyReduction_17 happy_x_1
+	 =  happyIn11
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = PassRef  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+	)
+
+happyReduce_18 = happySpecReduce_3  8# happyReduction_18
+happyReduction_18 happy_x_3
 	happy_x_2
 	happy_x_1
-	 =  case happyOut26 happy_x_2 of { happy_var_2 -> 
-	happyIn15
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) , tempMod = (tempMod happySubAttrs_2) , isReturn = (isReturn happySubAttrs_2) , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = (BodyBlock (reverse (value happySubAttrs_2) ))  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_2 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_25 = happySpecReduce_1  12# happyReduction_25
-happyReduction_25 happy_x_1
-	 =  case happyOut15 happy_x_1 of { happy_var_1 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StBlock (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_26 = happySpecReduce_1  12# happyReduction_26
-happyReduction_26 happy_x_1
-	 =  case happyOut17 happy_x_1 of { happy_var_1 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , isReturn = False , envFMod = (envFMod happySubAttrs_1) , envVMod = (envVMod happySubAttrs_1) , value = StSmpl (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_27 = happySpecReduce_2  12# happyReduction_27
-happyReduction_27 happy_x_2
-	happy_x_1
-	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut19 happy_x_2 of { happy_var_2 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [ Return (address happySubAttrs_2) ] , tempMod = (tempMod happySubAttrs_2) , isReturn = True , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StReturn (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then ( case (typFun happySelfAttrs) of { TVoid -> ( Bad $ "Sintax Error at "++(pos happy_var_1 )++": Cannot return any value" ) ; _ -> ( when (not( (typ happySubAttrs_2) ==(typFun happySelfAttrs) )) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Cannot use type "++(showType (typ happySubAttrs_2) )++" as type "++(showType (typFun happySelfAttrs) )++" in return argument" ) ; } ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
-	)}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_28 = happySpecReduce_3  12# happyReduction_28
-happyReduction_28 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut19 happy_x_2 of { happy_var_2 -> 
-	case happyOut15 happy_x_3 of { happy_var_3 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_3) )+2)] ++ [Lbl ((snd (tempMod happySubAttrs_3) )+1)] ++ (tac happySubAttrs_3) ++ [Lbl ((snd (tempMod happySubAttrs_3) )+2)] , tempMod = ( (fst (tempMod happySubAttrs_3) ) , ((snd (tempMod happySubAttrs_3) )+2) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StIf (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as if-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_29 = happyReduce 5# 12# happyReduction_29
-happyReduction_29 (happy_x_5 `HappyStk`
-	happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut19 happy_x_2 of { happy_var_2 -> 
-	case happyOut15 happy_x_3 of { happy_var_3 -> 
-	case happyOut15 happy_x_5 of { happy_var_5 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tacJ happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_5) )+2)] ++ [Lbl ((snd (tempMod happySubAttrs_5) )+1)] ++ (tac happySubAttrs_3) ++ [UnCondJ ((snd (tempMod happySubAttrs_5) )+3)] ++ [Lbl ((snd (tempMod happySubAttrs_5) )+2)] ++ (tac happySubAttrs_5) ++ [Lbl ((snd (tempMod happySubAttrs_5) )+3)] , tempMod = ( (fst (tempMod happySubAttrs_5) ) , ((snd (tempMod happySubAttrs_5) )+3) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StIfElse (value happySubAttrs_2) (value happySubAttrs_3) (value happySubAttrs_5)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; (happyConditions_5,happySubAttrs_5) = happy_var_5 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_3)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as if-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3++happyConditions_5 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_30 = happySpecReduce_3  12# happyReduction_30
-happyReduction_30 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut19 happy_x_2 of { happy_var_2 -> 
-	case happyOut15 happy_x_3 of { happy_var_3 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [Lbl ((snd (tempMod happySubAttrs_3) )+1)] ++ (tac happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_3) )+2)] ++ (tac happySubAttrs_3) ++ [UnCondJ ((snd (tempMod happySubAttrs_3) )+1)] ++ [Lbl ((snd (tempMod happySubAttrs_3) )+2)] , tempMod = ( (fst (tempMod happySubAttrs_3) ) , ((snd (tempMod happySubAttrs_3) )+2) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWhile (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = ( ((snd (tempMod happySubAttrs_3) )+1) , ((snd (tempMod happySubAttrs_3) )+2) ) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as for-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_31 = happySpecReduce_1  12# happyReduction_31
-happyReduction_31 happy_x_1
-	 =  case happyOut10 happy_x_1 of { happy_var_1 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , isReturn = False , envFMod = (envFMod happySubAttrs_1) , envVMod = (envVMod happySubAttrs_1) , value = StDecl (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_32 = happySpecReduce_1  12# happyReduction_32
-happyReduction_32 happy_x_1
-	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [UnCondJ (snd (loopLabels happySelfAttrs) )] , tempMod = (temp happySelfAttrs) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StBreak  }; happyConditions = [(when ( (fst (loopLabels happySelfAttrs) ) ==(-1) ) $ Bad $ "Sintax Error at "++(pos happy_var_1 )++": Break is not in a loop" ) ] } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_33 = happySpecReduce_1  12# happyReduction_33
-happyReduction_33 happy_x_1
-	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [UnCondJ (fst (loopLabels happySelfAttrs) )] , tempMod = (temp happySelfAttrs) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StContinue  }; happyConditions = [(when ( (fst (loopLabels happySelfAttrs) ) ==(-1) ) $ Bad $ "Sintax Error at "++(pos happy_var_1 )++": Continue is not in a loop" ) ] } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_34 = happyReduce 4# 12# happyReduction_34
-happyReduction_34 (happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id "writeInt") [ (address happySubAttrs_3) ]] , tempMod = (tempMod happySubAttrs_3) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWrite WriteT_writeInt (value happySubAttrs_3)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_3) =="" then when ( not $ (typ happySubAttrs_3) ==TInt ) $ Bad $ "Type Error at "++(pos happy_var_2 )++": needed integer input when using writeInt" else Bad $ (err happySubAttrs_3) ) ]++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_35 = happyReduce 4# 12# happyReduction_35
-happyReduction_35 (happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id "writeFloat") [ (address happySubAttrs_3) ]] , tempMod = (tempMod happySubAttrs_3) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWrite WriteT_writeFloat (value happySubAttrs_3)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_3) =="" then when ( not $ (typ happySubAttrs_3) ==TFloat ) $ Bad $ "Type Error at "++(pos happy_var_2 )++": needed float input when using writeFloat" else Bad $ (err happySubAttrs_3) ) ]++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_36 = happyReduce 4# 12# happyReduction_36
-happyReduction_36 (happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id "writeChar") [ (address happySubAttrs_3) ]] , tempMod = (tempMod happySubAttrs_3) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWrite WriteT_writeChar (value happySubAttrs_3)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_3) =="" then when ( not $ (typ happySubAttrs_3) ==TChar ) $ Bad $ "Type Error at "++(pos happy_var_2 )++": needed char input when using writeChar" else Bad $ (err happySubAttrs_3) ) ]++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_37 = happyReduce 4# 12# happyReduction_37
-happyReduction_37 (happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn16
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id "writeString") [ (address happySubAttrs_3) ]] , tempMod = (tempMod happySubAttrs_3) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWrite WriteT_writeString (value happySubAttrs_3)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_3) =="" then when ( not $ (typ happySubAttrs_3) ==TString ) $ Bad $ "Type Error at "++(pos happy_var_2 )++": needed string input when using writeString" else Bad $ (err happySubAttrs_3) ) ]++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_38 = happySpecReduce_1  13# happyReduction_38
-happyReduction_38 happy_x_1
-	 =  case happyOut11 happy_x_1 of { happy_var_1 -> 
-	happyIn17
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , checkForIncr = False , envFMod = (envFMod happySubAttrs_1) , envVMod = (envVMod happySubAttrs_1) , value = StShortVarDecl (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_39 = happySpecReduce_1  13# happyReduction_39
-happyReduction_39 happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	happyIn17
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , checkForIncr = True , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StExp (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if ( (err happySubAttrs_1) =="") then ( if ( (address happySubAttrs_1) =="") then Ok () else Bad $ "Sintax Error : Right expression not assigned") else ( Bad $ (err happySubAttrs_1) ) ) ]++happyConditions_1 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_40 = happySpecReduce_3  13# happyReduction_40
-happyReduction_40 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut18 happy_x_1 of { happy_var_1 -> 
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn17
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [NulOp (address happySubAttrs_1) (address happySubAttrs_3) ] , tempMod = (tempMod happySubAttrs_3) , checkForIncr = True , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StAsgn (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [( if ( ( (err happySubAttrs_1) =="") && ( (err happySubAttrs_3) =="" ) ) then (if (( (typ happySubAttrs_1) ==TFloat) && ( (typ happySubAttrs_3) ==TInt)) then (Ok ()) else when (not( (typ happySubAttrs_1) ==(typ happySubAttrs_3) )) $ Bad $ "Type Error at "++(pos happy_var_2 )++": Cannot use "++(showType (typ happySubAttrs_3) )++" as type "++(showType (typ happySubAttrs_1) )++" in assignment" ) else (if not( (err happySubAttrs_1) =="") then Bad $ (err happySubAttrs_1) else Bad $ (err happySubAttrs_3) ) ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_41 = happySpecReduce_1  14# happyReduction_41
-happyReduction_41 happy_x_1
-	 =  case happyOut8 happy_x_1 of { happy_var_1 -> 
-	happyIn18
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , address = (idToStr (value happySubAttrs_1) ) ++ (getPosV (value happySubAttrs_1) (envV happySelfAttrs) ) , tempMod = (temp happySelfAttrs) , err = if (not(searchVar (value happySubAttrs_1) (envV happySelfAttrs) )) then "Scope Error : Variable "++(idToStr (value happySubAttrs_1) )++" not in scope" else "" , typ = getTypeVar (extrVar (value happySubAttrs_1) (envV happySelfAttrs) ) , value = ExpId (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = [( if (not(searchVar (value happySubAttrs_1) (envV happySelfAttrs) )) then ( Bad $ "Scope Error : Variable "++(idToStr (value happySubAttrs_1) )++" not in scope") else ( Ok ()) ) ]++happyConditions_1 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_42 = happyReduce 4# 14# happyReduction_42
-happyReduction_42 (happy_x_4 `HappyStk`
-	happy_x_3 `HappyStk`
-	happy_x_2 `HappyStk`
-	happy_x_1 `HappyStk`
-	happyRest)
-	 = case happyOut18 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn18
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [ BinOp "*" ("t"++(show ((fst (tempMod happySubAttrs_3) ) +1))) (address happySubAttrs_3) ( show (mem (typ happySelfAttrs) ) ) ] , address = (address happySubAttrs_1) ++"[t"++(show ((fst (tempMod happySubAttrs_3) ) +1))++"]" , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 2), (snd (tempMod happySubAttrs_3) ) ) , err = if ( ( (err happySubAttrs_1) =="") && ( (err happySubAttrs_3) =="") ) then (case (typ happySubAttrs_1) of { (TArray _ _ ) -> (if (not( (typ happySubAttrs_3) ==TInt)) then "Type Error at "++(pos happy_var_2 )++": Type int expected, founded " ++ showType ( (typ happySubAttrs_3) ) else "" ) ; otherwise -> "Type Error at "++(pos happy_var_2 )++": Type array expected, founded " ++ showType ( (typ happySubAttrs_1) ) ; } ) else (if (err happySubAttrs_1) =="" then (err happySubAttrs_3) else (err happySubAttrs_1) ) , typ = getTypeArr (typ happySubAttrs_1) , value = ExpArr (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if ( ( (err happySubAttrs_1) =="") && ( (err happySubAttrs_3) =="") ) then case (typ happySubAttrs_1) of { (TArray _ _ ) -> (if (not( (typ happySubAttrs_3) ==TInt)) then Bad $ "Type Error at "++(pos happy_var_2 )++": Type int expected, founded " ++ showType ( (typ happySubAttrs_3) ) else Ok () ) ; otherwise -> ( Bad $ "Type Error at "++(pos happy_var_2 )++": Type array expected, founded " ++ showType ( (typ happySubAttrs_1) ) ) ; } else (if (err happySubAttrs_1) =="" then Bad $ (err happySubAttrs_3) else Bad $ (err happySubAttrs_1) )) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	) `HappyStk` happyRest}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_43 = happySpecReduce_2  14# happyReduction_43
-happyReduction_43 happy_x_2
-	happy_x_1
-	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut19 happy_x_2 of { happy_var_2 -> 
-	happyIn18
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) , address = "*"++(show (address happySubAttrs_2) ) , tempMod = ( ((fst (tempMod happySubAttrs_2) ) + 1), (snd (tempMod happySubAttrs_2) ) ) , err = ( if (err happySubAttrs_2) =="" then if (not(isTyipePnt (typ happySubAttrs_2) )) then "Type Error at "++(pos happy_var_1 )++": Type pointer expected, founded " ++ showType ( (typ happySubAttrs_2) ) else "" else (err happySubAttrs_2) ) , typ = getTypePnt (typ happySubAttrs_2) , value = ExpDeref (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_2) =="" then if not(isTyipePnt (typ happySubAttrs_2) ) then Bad $ "Type Error at "++(pos happy_var_1 )++": Type pointer expected, founded " ++ showType ( (typ happySubAttrs_2) ) else Ok () else Bad $ (err happySubAttrs_2) ) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
-	)}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_44 = happySpecReduce_3  15# happyReduction_44
-happyReduction_44 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "+" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpAdd (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_45 = happySpecReduce_3  15# happyReduction_45
-happyReduction_45 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "-" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpSub (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_46 = happySpecReduce_3  15# happyReduction_46
-happyReduction_46 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "*" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpMul (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_47 = happySpecReduce_3  15# happyReduction_47
-happyReduction_47 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "/" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpDiv (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_48 = happySpecReduce_3  15# happyReduction_48
-happyReduction_48 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "%" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpMod (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_49 = happySpecReduce_3  15# happyReduction_49
-happyReduction_49 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp " ==" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpEq (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_50 = happySpecReduce_3  15# happyReduction_50
-happyReduction_50 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "! =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpNeq (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_51 = happySpecReduce_3  15# happyReduction_51
-happyReduction_51 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "<" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpLt (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_52 = happySpecReduce_3  15# happyReduction_52
-happyReduction_52 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "< =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpLtE (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_53 = happySpecReduce_3  15# happyReduction_53
-happyReduction_53 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp ">" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpGt (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_54 = happySpecReduce_3  15# happyReduction_54
-happyReduction_54 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "> =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpGtE (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_55 = happySpecReduce_3  15# happyReduction_55
-happyReduction_55 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tacJ happySubAttrs_1) ++ [(CondJ (address happySubAttrs_1) ( (true happySubAttrs_1) +2))] ++ (tacJ happySubAttrs_3) ++ [(BinOp "&&" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "&&" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpAnd (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ true = snd (tempMod happySubAttrs_1) , temp = (temp happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , false = (false happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ true = (true happySelfAttrs) , temp = (tempMod happySubAttrs_1) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , false = (false happySelfAttrs)  }; happyConditions = [(case checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_56 = happySpecReduce_3  15# happyReduction_56
-happyReduction_56 happy_x_3
+happyReduce_19 = happySpecReduce_3  8# happyReduction_19
+happyReduction_19 happy_x_3
 	happy_x_2
 	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut19 happy_x_3 of { happy_var_3 -> 
-	happyIn19
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tacJ happySubAttrs_1) ++ [(CondJTrue (address happySubAttrs_1) ( (true happySubAttrs_1) +1))] ++ (tacJ happySubAttrs_3) ++ [(BinOp "||" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "||" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpOr (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ true = snd (tempMod happySubAttrs_1) , temp = (temp happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , false = (false happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ true = (true happySelfAttrs) , temp = (tempMod happySubAttrs_1) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , false = (false happySelfAttrs)  }; happyConditions = [(case checkBoolOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_57 = happySpecReduce_2  15# happyReduction_57
-happyReduction_57 happy_x_2
+happyReduce_20 = happySpecReduce_2  8# happyReduction_20
+happyReduction_20 happy_x_2
 	happy_x_1
 	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut19 happy_x_2 of { happy_var_2 -> 
-	happyIn19
+	case happyOut12 happy_x_2 of { happy_var_2 -> 
+	happyIn12
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [(UnOp "!" (address happySelfAttrs) (address happySubAttrs_2) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_2) ) + 1), (snd (tempMod happySubAttrs_2) ) ) , typ = TBool , err = if ( (err happySubAttrs_2) =="") then (if (not( (typ happySubAttrs_2) ==TBool)) then "Type Error at "++(pos happy_var_1 )++": Expected boolean type" else "" ) else (err happySubAttrs_2) , value = ExpNot (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (if (not( (typ happySubAttrs_2) ==TBool)) then Bad $ "Type Error at "++(pos happy_var_1 )++": Expected boolean type" else Ok () ) else Bad $ (err happySubAttrs_2) ) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
 	)}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_58 = happySpecReduce_2  15# happyReduction_58
-happyReduction_58 happy_x_2
+happyReduce_21 = happySpecReduce_3  8# happyReduction_21
+happyReduction_21 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp " ==" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpEq (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_22 = happySpecReduce_3  8# happyReduction_22
+happyReduction_22 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "! =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpNeq (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_23 = happySpecReduce_3  8# happyReduction_23
+happyReduction_23 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "<" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpLt (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_24 = happySpecReduce_3  8# happyReduction_24
+happyReduction_24 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "< =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpLtE (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_25 = happySpecReduce_3  8# happyReduction_25
+happyReduction_25 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp ">" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpGt (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_26 = happySpecReduce_3  8# happyReduction_26
+happyReduction_26 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "> =" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = TBool , err = checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , value = ExpGtE (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkRelOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_27 = happySpecReduce_3  8# happyReduction_27
+happyReduction_27 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "+" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpAdd (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_28 = happySpecReduce_3  8# happyReduction_28
+happyReduction_28 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "-" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpSub (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_29 = happySpecReduce_3  8# happyReduction_29
+happyReduction_29 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "*" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpMul (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_30 = happySpecReduce_3  8# happyReduction_30
+happyReduction_30 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "/" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpDiv (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_31 = happySpecReduce_3  8# happyReduction_31
+happyReduction_31 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [(BinOp "%" (address happySelfAttrs) (address happySubAttrs_1) (address happySubAttrs_3) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , typ = if (( (typ happySubAttrs_1) ==TInt) && ( (typ happySubAttrs_3) ==TInt)) then TInt else TFloat , err = (checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , value = ExpMod (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [(case checkMathOp (typ happySubAttrs_1) (typ happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_32 = happySpecReduce_2  8# happyReduction_32
+happyReduction_32 happy_x_2
 	happy_x_1
 	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
-	case happyOut19 happy_x_2 of { happy_var_2 -> 
-	happyIn19
+	case happyOut12 happy_x_2 of { happy_var_2 -> 
+	happyIn12
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [(UnOp "-" (address happySelfAttrs) (address happySubAttrs_2) )] , address = "t"++ (show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_2) ) + 1), (snd (tempMod happySubAttrs_2) ) ) , typ = (typ happySubAttrs_2) , err = if ( (err happySubAttrs_2) =="") then (if (not( (typ happySubAttrs_2) ==TInt || (typ happySubAttrs_2) ==TFloat)) then "Type Error at "++(pos happy_var_1 )++": Expected numeric type (int or float)" else "" ) else (err happySubAttrs_2) , value = ExpNeg (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (if (not( (typ happySubAttrs_2) ==TInt || (typ happySubAttrs_2) ==TFloat)) then Bad $ "Type Error at "++(pos happy_var_1 )++": Expected numeric type (int or float)" else Ok () ) else Bad $ (err happySubAttrs_2) ) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
 	)}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_59 = happySpecReduce_1  15# happyReduction_59
-happyReduction_59 happy_x_1
-	 =  case happyOut20 happy_x_1 of { happy_var_1 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = [] , tac = [] , address = (showVal (value happySubAttrs_1) ) , tempMod = (temp happySelfAttrs) , err = "" , typ = (typ happySubAttrs_1) , value = ExpVal (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envV = (envV happySelfAttrs) , envF = (envF happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+happyReduce_33 = happySpecReduce_2  8# happyReduction_33
+happyReduction_33 happy_x_2
+	happy_x_1
+	 =  case happyOut14 happy_x_2 of { happy_var_2 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [(NulOp (address happySelfAttrs) ("&"++ (address happySubAttrs_2) ))] , address = "t"++(show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_2) ) + 1), (snd (tempMod happySubAttrs_2) ) ) , typ = TPointer (typ happySubAttrs_2) , err = (err happySubAttrs_2) , value = ExpRef (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_2 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_60 = happySpecReduce_1  15# happyReduction_60
-happyReduction_60 happy_x_1
-	 =  case happyOut18 happy_x_1 of { happy_var_1 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) , address = (address happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , err = (err happySubAttrs_1) , typ = (typ happySubAttrs_1) , value = ExpLef (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_61 = happySpecReduce_3  15# happyReduction_61
-happyReduction_61 happy_x_3
+happyReduce_34 = happySpecReduce_3  8# happyReduction_34
+happyReduction_34 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut8 happy_x_1 of { happy_var_1 -> 
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	happyIn19
+	happyIn12
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = if ( (typ happySelfAttrs) ==TVoid) then [FunCall "procedure" "" (Id (address happySubAttrs_1) ) []] else [FunCall "function" (address happySelfAttrs) (Id (address happySubAttrs_1) ) []] , address = if ( (typ happySelfAttrs) ==TVoid) then ("") else ("t"++(show (fst (tempMod happySelfAttrs) ))) , tempMod = if ( (typ happySelfAttrs) ==TVoid) then ( (temp happySelfAttrs) ) else ( ((fst (temp happySelfAttrs) ) + 1), (snd (temp happySelfAttrs) ) ) , err = checkErrProc (value happySubAttrs_1) (envF happySelfAttrs) [] happy_var_2 , typ = getTypeFun (extrFun (value happySubAttrs_1) (envF happySelfAttrs) ) , value = ExpFuncEmpty (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ address = (idToStr (value happySubAttrs_1) ) ++ getPosF (value happySubAttrs_1) (envF happySelfAttrs)  }; happyConditions = [(case checkErrProc (value happySubAttrs_1) (envF happySelfAttrs) [] happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_62 = happyReduce 4# 15# happyReduction_62
-happyReduction_62 (happy_x_4 `HappyStk`
+happyReduce_35 = happyReduce 4# 8# happyReduction_35
+happyReduction_35 (happy_x_4 `HappyStk`
 	happy_x_3 `HappyStk`
 	happy_x_2 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
 	 = case happyOut8 happy_x_1 of { happy_var_1 -> 
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut23 happy_x_3 of { happy_var_3 -> 
-	happyIn19
+	case happyOut22 happy_x_3 of { happy_var_3 -> 
+	happyIn12
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = if ( (typ happySelfAttrs) ==TVoid) then (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id (address happySubAttrs_1) ) (addressList happySubAttrs_3) ] else (tac happySubAttrs_3) ++ [FunCall "function" (address happySelfAttrs) (Id (address happySubAttrs_1) ) (addressList happySubAttrs_3) ] , address = if ( (typ happySelfAttrs) ==TVoid) then ("") else ("t"++(show (fst (tempMod happySelfAttrs) ) )) , tempMod = if ( (typ happySelfAttrs) ==TVoid) then ( (tempMod happySubAttrs_3) ) else ( ((fst (tempMod happySubAttrs_3) ) + 1), (snd (tempMod happySubAttrs_3) ) ) , err = checkErrFun (err happySubAttrs_3) (value happySubAttrs_1) (envF happySelfAttrs) (typList happySubAttrs_3) happy_var_2 , typ = getTypeFun (extrFun (value happySubAttrs_1) (envF happySelfAttrs) ) , value = ExpFunc (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ address = (idToStr (value happySubAttrs_1) ) ++ getPosF (value happySubAttrs_1) (envF happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [(case checkErrFun (err happySubAttrs_3) (value happySubAttrs_1) (envF happySelfAttrs) (typList happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad $ x ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	) `HappyStk` happyRest}}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_63 = happySpecReduce_3  15# happyReduction_63
-happyReduction_63 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunCall "function" (address happySelfAttrs) (Id "readInt") []] , address = "t"++(show ((fst (tempMod happySelfAttrs) ) + 1) ) , tempMod = (temp happySelfAttrs) , isReturn = False , typ = TInt , value = StRead ReadT_readInt  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
-	)
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_64 = happySpecReduce_3  15# happyReduction_64
-happyReduction_64 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunCall "function" (address happySelfAttrs) (Id "readFloat") []] , address = "t"++(show ((fst (tempMod happySelfAttrs) ) + 1) ) , tempMod = (temp happySelfAttrs) , isReturn = False , typ = TFloat , value = StRead ReadT_readFloat  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
-	)
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_65 = happySpecReduce_3  15# happyReduction_65
-happyReduction_65 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunCall "function" (address happySelfAttrs) (Id "readChar") []] , address = "t"++(show ((fst (tempMod happySelfAttrs) ) + 1) ) , tempMod = (temp happySelfAttrs) , isReturn = False , typ = TChar , value = StRead ReadT_readChar  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
-	)
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_66 = happySpecReduce_3  15# happyReduction_66
-happyReduction_66 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunCall "function" (address happySelfAttrs) (Id "readString") []] , address = "t"++(show ((fst (tempMod happySelfAttrs) ) + 1) ) , tempMod = (temp happySelfAttrs) , isReturn = False , typ = TString , value = StRead ReadT_readString  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
-	)
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_67 = happySpecReduce_2  15# happyReduction_67
-happyReduction_67 happy_x_2
-	happy_x_1
-	 =  case happyOut18 happy_x_2 of { happy_var_2 -> 
-	happyIn19
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [(NulOp (address happySelfAttrs) ("&"++ (address happySubAttrs_2) ))] , address = "t"++(show (fst (tempMod happySelfAttrs) ) ) , tempMod = ( ((fst (tempMod happySubAttrs_2) ) + 1), (snd (tempMod happySubAttrs_2) ) ) , typ = TPointer (typ happySubAttrs_2) , err = (err happySubAttrs_2) , value = ExpRef (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_2 } in (happyConditions,happySelfAttrs)
+happyReduce_36 = happySpecReduce_1  8# happyReduction_36
+happyReduction_36 happy_x_1
+	 =  case happyOut13 happy_x_1 of { happy_var_1 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = [] , tac = [] , address = (showVal (value happySubAttrs_1) ) , tempMod = (temp happySelfAttrs) , err = "" , typ = (typ happySubAttrs_1) , value = ExpVal (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envV = (envV happySelfAttrs) , envF = (envF happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_68 = happySpecReduce_3  15# happyReduction_68
-happyReduction_68 happy_x_3
+happyReduce_37 = happySpecReduce_1  8# happyReduction_37
+happyReduction_37 happy_x_1
+	 =  case happyOut14 happy_x_1 of { happy_var_1 -> 
+	happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) , address = (address happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , err = (err happySubAttrs_1) , typ = (typ happySubAttrs_1) , value = ExpLExp (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_38 = happySpecReduce_3  8# happyReduction_38
+happyReduction_38 happy_x_3
 	happy_x_2
 	happy_x_1
-	 =  case happyOut19 happy_x_2 of { happy_var_2 -> 
-	happyIn19
+	 =  case happyOut12 happy_x_2 of { happy_var_2 -> 
+	happyIn12
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) , address = (address happySubAttrs_2) , tempMod = (tempMod happySubAttrs_2) , err = (err happySubAttrs_2) , typ = (typ happySubAttrs_2) , value = ExpPar (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_2 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_69 = happySpecReduce_1  16# happyReduction_69
-happyReduction_69 happy_x_1
+happyReduce_39 = happySpecReduce_3  8# happyReduction_39
+happyReduction_39 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunCall "function" (address happySelfAttrs) (Id "readInt") []] , address = "t"++(show ((fst (tempMod happySelfAttrs) ) + 1) ) , tempMod = (temp happySelfAttrs) , isReturn = False , typ = TInt , value = StRead ReadT_readInt  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+	)
+
+happyReduce_40 = happySpecReduce_3  8# happyReduction_40
+happyReduction_40 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunCall "function" (address happySelfAttrs) (Id "readFloat") []] , address = "t"++(show ((fst (tempMod happySelfAttrs) ) + 1) ) , tempMod = (temp happySelfAttrs) , isReturn = False , typ = TFloat , value = StRead ReadT_readFloat  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+	)
+
+happyReduce_41 = happySpecReduce_3  8# happyReduction_41
+happyReduction_41 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunCall "function" (address happySelfAttrs) (Id "readChar") []] , address = "t"++(show ((fst (tempMod happySelfAttrs) ) + 1) ) , tempMod = (temp happySelfAttrs) , isReturn = False , typ = TChar , value = StRead ReadT_readChar  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+	)
+
+happyReduce_42 = happySpecReduce_3  8# happyReduction_42
+happyReduction_42 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  happyIn12
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunCall "function" (address happySelfAttrs) (Id "readString") []] , address = "t"++(show ((fst (tempMod happySelfAttrs) ) + 1) ) , tempMod = (temp happySelfAttrs) , isReturn = False , typ = TString , value = StRead ReadT_readString  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+	)
+
+happyReduce_43 = happySpecReduce_1  9# happyReduction_43
+happyReduction_43 happy_x_1
 	 =  case happyOut4 happy_x_1 of { happy_var_1 -> 
-	happyIn20
+	happyIn13
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typ = TInt , value = Int (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_70 = happySpecReduce_1  16# happyReduction_70
-happyReduction_70 happy_x_1
+happyReduce_44 = happySpecReduce_1  9# happyReduction_44
+happyReduction_44 happy_x_1
 	 =  case happyOut5 happy_x_1 of { happy_var_1 -> 
-	happyIn20
+	happyIn13
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typ = TFloat , value = Float (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_71 = happySpecReduce_1  16# happyReduction_71
-happyReduction_71 happy_x_1
+happyReduce_45 = happySpecReduce_1  9# happyReduction_45
+happyReduction_45 happy_x_1
 	 =  case happyOut6 happy_x_1 of { happy_var_1 -> 
-	happyIn20
+	happyIn13
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typ = TChar , value = Char (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_72 = happySpecReduce_1  16# happyReduction_72
-happyReduction_72 happy_x_1
+happyReduce_46 = happySpecReduce_1  9# happyReduction_46
+happyReduction_46 happy_x_1
 	 =  case happyOut7 happy_x_1 of { happy_var_1 -> 
-	happyIn20
+	happyIn13
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typ = TString , value = String (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_73 = happySpecReduce_1  16# happyReduction_73
-happyReduction_73 happy_x_1
-	 =  case happyOut21 happy_x_1 of { happy_var_1 -> 
-	happyIn20
+happyReduce_47 = happySpecReduce_1  9# happyReduction_47
+happyReduction_47 happy_x_1
+	 =  case happyOut9 happy_x_1 of { happy_var_1 -> 
+	happyIn13
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typ = TBool , value = Bool (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
+happyReduce_48 = happySpecReduce_1  10# happyReduction_48
+happyReduction_48 happy_x_1
+	 =  case happyOut8 happy_x_1 of { happy_var_1 -> 
+	happyIn14
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , address = (idToStr (value happySubAttrs_1) ) ++ (getPosV (value happySubAttrs_1) (envV happySelfAttrs) ) , tempMod = (temp happySelfAttrs) , err = if (not(searchVar (value happySubAttrs_1) (envV happySelfAttrs) )) then "Scope Error : Variable "++(idToStr (value happySubAttrs_1) )++" not in scope" else "" , typ = getTypeVar (extrVar (value happySubAttrs_1) (envV happySelfAttrs) ) , value = ExpId (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = [( if (not(searchVar (value happySubAttrs_1) (envV happySelfAttrs) )) then ( Bad $ "Scope Error : Variable "++(idToStr (value happySubAttrs_1) )++" not in scope") else ( Ok ()) ) ]++happyConditions_1 } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_49 = happyReduce 4# 10# happyReduction_49
+happyReduction_49 (happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOut14 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn14
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [ BinOp "*" ("t"++(show ((fst (tempMod happySubAttrs_3) ) +1))) (address happySubAttrs_3) ( show (mem (typ happySelfAttrs) ) ) ] , address = (address happySubAttrs_1) ++"[t"++(show ((fst (tempMod happySubAttrs_3) ) +1))++"]" , tempMod = ( ((fst (tempMod happySubAttrs_3) ) + 2), (snd (tempMod happySubAttrs_3) ) ) , err = if ( ( (err happySubAttrs_1) =="") && ( (err happySubAttrs_3) =="") ) then (case (typ happySubAttrs_1) of { (TArray _ _ ) -> (if (not( (typ happySubAttrs_3) ==TInt)) then "Type Error at "++(pos happy_var_2 )++": Type int expected, founded " ++ showType ( (typ happySubAttrs_3) ) else "" ) ; otherwise -> "Type Error at "++(pos happy_var_2 )++": Type array expected, founded " ++ showType ( (typ happySubAttrs_1) ) ; } ) else (if (err happySubAttrs_1) =="" then (err happySubAttrs_3) else (err happySubAttrs_1) ) , typ = getTypeArr (typ happySubAttrs_1) , value = ExpArr (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if ( ( (err happySubAttrs_1) =="") && ( (err happySubAttrs_3) =="") ) then case (typ happySubAttrs_1) of { (TArray _ _ ) -> (if (not( (typ happySubAttrs_3) ==TInt)) then Bad $ "Type Error at "++(pos happy_var_2 )++": Type int expected, founded " ++ showType ( (typ happySubAttrs_3) ) else Ok () ) ; otherwise -> ( Bad $ "Type Error at "++(pos happy_var_2 )++": Type array expected, founded " ++ showType ( (typ happySubAttrs_1) ) ) ; } else (if (err happySubAttrs_1) =="" then Bad $ (err happySubAttrs_3) else Bad $ (err happySubAttrs_1) )) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}}
+
+happyReduce_50 = happySpecReduce_2  10# happyReduction_50
+happyReduction_50 happy_x_2
+	happy_x_1
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut12 happy_x_2 of { happy_var_2 -> 
+	happyIn14
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) , address = "*"++( (address happySubAttrs_2) ) , tempMod = ( ((fst (tempMod happySubAttrs_2) ) + 1), (snd (tempMod happySubAttrs_2) ) ) , err = ( if (err happySubAttrs_2) =="" then if (not(isTyipePnt (typ happySubAttrs_2) )) then "Type Error at "++(pos happy_var_1 )++": Type pointer expected, founded " ++ showType ( (typ happySubAttrs_2) ) else "" else (err happySubAttrs_2) ) , typ = getTypePnt (typ happySubAttrs_2) , value = ExpDeref (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_2) =="" then if not(isTyipePnt (typ happySubAttrs_2) ) then Bad $ "Type Error at "++(pos happy_var_1 )++": Type pointer expected, founded " ++ showType ( (typ happySubAttrs_2) ) else Ok () else Bad $ (err happySubAttrs_2) ) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
+	)}}
+
+happyReduce_51 = happySpecReduce_3  11# happyReduction_51
+happyReduction_51 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut8 happy_x_2 of { happy_var_2 -> 
+	case happyOut23 happy_x_3 of { happy_var_3 -> 
+	happyIn15
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) , envF = [] , envV = [] , typ = TInt , value = (Entry (value happySubAttrs_2) (reverse (value happySubAttrs_3) ), (tac happySelfAttrs) )  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (0,0)  }; happyConditions = []++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}
+
+happyReduce_52 = happySpecReduce_3  12# happyReduction_52
+happyReduction_52 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut24 happy_x_2 of { happy_var_2 -> 
+	case happyOut10 happy_x_3 of { happy_var_3 -> 
+	happyIn16
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , tempMod = (temp happySelfAttrs) , envFMod = (envF happySelfAttrs) , envVMod = (unionVar (createList (value happySubAttrs_2) (value happySubAttrs_3) (pos happy_var_1 )) (envV happySelfAttrs) ) , idList = setPos (value happySubAttrs_2) (pos happy_var_1 ) , value = DeclVar (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = [( case (ctrlDeclVarList (idList happySelfAttrs) (envV happySelfAttrs) ) of { Just a -> Bad $ "Scope Error at "++(pos happy_var_1 )++": variable "++(idToStr a)++" already declared in this block" ; Nothing -> Ok () ; } ) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_53 = happyReduce 4# 12# happyReduction_53
+happyReduction_53 (happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut24 happy_x_2 of { happy_var_2 -> 
+	case happyOut22 happy_x_4 of { happy_var_4 -> 
+	happyIn16
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_4) ++ ( tacAssign (idList happySelfAttrs) (addressList happySubAttrs_4) ) , tempMod = (tempMod happySubAttrs_4) , envFMod = (envF happySelfAttrs) , envVMod = (unionVar ( createListMod (value happySubAttrs_2) (typList happySubAttrs_4) (pos happy_var_1 )) (envV happySelfAttrs) ) , idList = setPos (value happySubAttrs_2) (pos happy_var_1 ) , value = DeclVarInit (value happySubAttrs_2) (value happySubAttrs_4)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( case (ctrlDeclVarList (value happySubAttrs_2) (envV happySelfAttrs) ) of { Just a -> Bad $ "Scope Error at "++(pos happy_var_1 )++": variable "++(idToStr a)++" already declared in this block" ; Nothing -> ( if (not(length (value happySubAttrs_2) ==length (typList happySubAttrs_4) )) then Bad $ "Sintax Error at "++(pos happy_var_1 )++": n.of id and expression not matching" else Ok () ) ; } ) ]++happyConditions_2++happyConditions_4 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}}
+
+happyReduce_54 = happyReduce 5# 12# happyReduction_54
+happyReduction_54 (happy_x_5 `HappyStk`
+	happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut24 happy_x_2 of { happy_var_2 -> 
+	case happyOut10 happy_x_3 of { happy_var_3 -> 
+	case happyOutTok happy_x_4 of { happy_var_4 -> 
+	case happyOut22 happy_x_5 of { happy_var_5 -> 
+	happyIn16
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_5) ++ ( tacAssign (idList happySelfAttrs) (addressList happySubAttrs_5) ) , tempMod = (tempMod happySubAttrs_5) , envFMod = (envF happySelfAttrs) , envVMod = (unionVar ( createList (value happySubAttrs_2) (value happySubAttrs_3) (pos happy_var_1 )) (envV happySelfAttrs) ) , idList = setPos (value happySubAttrs_2) (pos happy_var_1 ) , value = DeclVarTypeInit (value happySubAttrs_2) (value happySubAttrs_3) (value happySubAttrs_5)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; (happyConditions_5,happySubAttrs_5) = happy_var_5 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( case (ctrlDeclVarList (value happySubAttrs_2) (envV happySelfAttrs) ) of { Just a -> Bad $ "Scope Error at "++(pos happy_var_1 )++": variable "++(idToStr a)++" already declared in this block" ; Nothing -> ( if (not(length (value happySubAttrs_2) ==length (typList happySubAttrs_5) )) then Bad $ "Sintax Error at "++(pos happy_var_1 )++": n.of id and expression not matching" else ( case ( matchType (value happySubAttrs_3) ( (typList happySubAttrs_5) )) of { Just a -> Bad $ "Type Error at: "++(pos happy_var_4 )++" Cannot use "++(showType (fst a))++" as type "++(showType (snd a))++" in assignment" ; Nothing -> Ok () ; } ) ) ; } ) ]++happyConditions_2++happyConditions_3++happyConditions_5 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}}}}
+
+happyReduce_55 = happyReduce 7# 12# happyReduction_55
+happyReduction_55 (happy_x_7 `HappyStk`
+	happy_x_6 `HappyStk`
+	happy_x_5 `HappyStk`
+	happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut8 happy_x_2 of { happy_var_2 -> 
+	case happyOut25 happy_x_4 of { happy_var_4 -> 
+	case happyOut10 happy_x_6 of { happy_var_6 -> 
+	case happyOut19 happy_x_7 of { happy_var_7 -> 
+	happyIn16
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunDecl "function" (Id $ idToStr $ head (idList happySelfAttrs) ) (length (typList happySubAttrs_4) )]++ (tac happySubAttrs_7) ++[Lbl ((snd (tempMod happySubAttrs_7) )+1)] , tempMod = ( (fst (tempMod happySubAttrs_7) ) , ((snd (tempMod happySubAttrs_7) )+1) ) , envFMod = ( insFun (Fun (value happySubAttrs_2) (value happySubAttrs_6) (typList happySubAttrs_4) (pos happy_var_1 )) (envF happySelfAttrs) ) , envVMod = (envV happySelfAttrs) , idList = setPos [ (value happySubAttrs_2) ] (pos happy_var_1 ) , value = DeclFun (value happySubAttrs_2) (value happySubAttrs_4) (value happySubAttrs_6) (value happySubAttrs_7)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs; (happyConditions_6,happySubAttrs_6) = happy_var_6 happyEmptyAttrs; (happyConditions_7,happySubAttrs_7) = happy_var_7 happyEmptyAttrs{ loopLabels = (-1,-1) , typFun = (value happySubAttrs_6) , envF = (envFMod happySelfAttrs) , envV = (unionVar (envV happySubAttrs_4) (resetEnvV (envV happySelfAttrs) ) ) , temp = (temp happySelfAttrs)  }; happyConditions = [(if (searchFun (value happySubAttrs_2) (envF happySelfAttrs) ) then Bad $ "Scope Error at "++(pos happy_var_1 )++": function "++(idToStr (value happySubAttrs_2) )++" already declared" else when (not( (isReturn happySubAttrs_7) )) $ Bad $ "Sintax Error at "++(pos happy_var_1 )++": missing return at end of function" ) ]++happyConditions_2++happyConditions_4++happyConditions_6++happyConditions_7 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}}}}
+
+happyReduce_56 = happyReduce 7# 12# happyReduction_56
+happyReduction_56 (happy_x_7 `HappyStk`
+	happy_x_6 `HappyStk`
+	happy_x_5 `HappyStk`
+	happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut8 happy_x_2 of { happy_var_2 -> 
+	case happyOut25 happy_x_4 of { happy_var_4 -> 
+	case happyOut19 happy_x_7 of { happy_var_7 -> 
+	happyIn16
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [FunDecl "procedure" (Id $ idToStr $ head (idList happySelfAttrs) ) (length (typList happySubAttrs_4) )]++ (tac happySubAttrs_7) ++[Lbl ((snd (tempMod happySubAttrs_7) )+1)] , tempMod = ( (fst (tempMod happySubAttrs_7) ) , ((snd (tempMod happySubAttrs_7) )+1) ) , envFMod = (insFun (Fun (value happySubAttrs_2) TVoid (typList happySubAttrs_4) (pos happy_var_1 )) (envF happySelfAttrs) ) , envVMod = (envV happySelfAttrs) , idList = setPos [ (value happySubAttrs_2) ] (pos happy_var_1 ) , value = DeclProc (value happySubAttrs_2) (value happySubAttrs_4) (value happySubAttrs_7)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs; (happyConditions_7,happySubAttrs_7) = happy_var_7 happyEmptyAttrs{ loopLabels = (-1,-1) , typFun = TVoid , envF = (envFMod happySelfAttrs) , envV = (unionVar (envV happySubAttrs_4) (resetEnvV (envV happySelfAttrs) ) ) , temp = (temp happySelfAttrs)  }; happyConditions = [(if (searchFun (value happySubAttrs_2) (envF happySelfAttrs) ) then Bad $ "Scope Error at "++(pos happy_var_1 )++": procedure "++(idToStr (value happySubAttrs_2) )++" already declared" else Ok () ) ]++happyConditions_2++happyConditions_4++happyConditions_7 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}}}
+
+happyReduce_57 = happySpecReduce_3  13# happyReduction_57
+happyReduction_57 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut24 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut22 happy_x_3 of { happy_var_3 -> 
+	happyIn17
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ ( tacAssign (idList happySelfAttrs) (addressList happySubAttrs_3) ) , tempMod = (tempMod happySubAttrs_3) , envFMod = (envF happySelfAttrs) , envVMod = (unionVar ( createListMod (value happySubAttrs_1) (typList happySubAttrs_3) (pos happy_var_2 )) (envV happySelfAttrs) ) , idList = setPos (value happySubAttrs_1) (pos happy_var_2 ) , value = DeclVarShort (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( case (ctrlDeclVarList (value happySubAttrs_1) (envV happySelfAttrs) ) of { Just a -> Bad $ "Scope Error at "++(pos happy_var_2 )++": variable "++(idToStr a)++" already declared in this block" ; Nothing -> ( if (not(length (value happySubAttrs_1) ==length (typList happySubAttrs_3) )) then Bad $ "Sintax Error at "++(pos happy_var_2 )++": n.of id and expression not matching" else Ok () ) ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_58 = happySpecReduce_2  14# happyReduction_58
+happyReduction_58 happy_x_2
+	happy_x_1
+	 =  case happyOut24 happy_x_1 of { happy_var_1 -> 
+	case happyOut10 happy_x_2 of { happy_var_2 -> 
+	happyIn18
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typList = (replicate (length (value happySubAttrs_1) ) (value happySubAttrs_2) ) , envV = (createList (value happySubAttrs_1) (value happySubAttrs_2) "0") , value = Parameter (value happySubAttrs_1) (value happySubAttrs_2)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; happyConditions = []++happyConditions_1++happyConditions_2 } in (happyConditions,happySelfAttrs)
+	)}}
+
+happyReduce_59 = happySpecReduce_3  14# happyReduction_59
+happyReduction_59 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut11 happy_x_1 of { happy_var_1 -> 
+	case happyOut24 happy_x_2 of { happy_var_2 -> 
+	case happyOut10 happy_x_3 of { happy_var_3 -> 
+	happyIn18
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typList = (replicate (length (value happySubAttrs_2) ) (value happySubAttrs_3) ) , envV = (createList (value happySubAttrs_2) (value happySubAttrs_3) "0") , value = ParameterPass (value happySubAttrs_1) (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = []++happyConditions_1++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_60 = happySpecReduce_3  15# happyReduction_60
+happyReduction_60 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut26 happy_x_2 of { happy_var_2 -> 
+	happyIn19
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) , tempMod = (tempMod happySubAttrs_2) , isReturn = (isReturn happySubAttrs_2) , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = (BodyBlock (reverse (value happySubAttrs_2) ))  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_2 } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_61 = happySpecReduce_1  16# happyReduction_61
+happyReduction_61 happy_x_1
+	 =  case happyOut16 happy_x_1 of { happy_var_1 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , isReturn = False , envFMod = (envFMod happySubAttrs_1) , envVMod = (envVMod happySubAttrs_1) , value = StDecl (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_62 = happySpecReduce_1  16# happyReduction_62
+happyReduction_62 happy_x_1
+	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StBlock (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_63 = happySpecReduce_1  16# happyReduction_63
+happyReduction_63 happy_x_1
+	 =  case happyOut21 happy_x_1 of { happy_var_1 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , isReturn = False , envFMod = (envFMod happySubAttrs_1) , envVMod = (envVMod happySubAttrs_1) , value = StSmpl (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_64 = happySpecReduce_3  16# happyReduction_64
+happyReduction_64 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut12 happy_x_2 of { happy_var_2 -> 
+	case happyOut19 happy_x_3 of { happy_var_3 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_3) )+2)] ++ [Lbl ((snd (tempMod happySubAttrs_3) )+1)] ++ (tac happySubAttrs_3) ++ [Lbl ((snd (tempMod happySubAttrs_3) )+2)] , tempMod = ( (fst (tempMod happySubAttrs_3) ) , ((snd (tempMod happySubAttrs_3) )+2) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StIf (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as if-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_65 = happyReduce 5# 16# happyReduction_65
+happyReduction_65 (happy_x_5 `HappyStk`
+	happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut12 happy_x_2 of { happy_var_2 -> 
+	case happyOut19 happy_x_3 of { happy_var_3 -> 
+	case happyOut19 happy_x_5 of { happy_var_5 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = shift (tacJ happySubAttrs_2) (snd (tempMod happySubAttrs_5) ) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_5) )+2)] ++ [Lbl ((snd (tempMod happySubAttrs_5) )+1)] ++ (tac happySubAttrs_3) ++ [UnCondJ ((snd (tempMod happySubAttrs_5) )+3)] ++ [Lbl ((snd (tempMod happySubAttrs_5) )+2)] ++ (tac happySubAttrs_5) ++ [Lbl ((snd (tempMod happySubAttrs_5) )+3)] , tempMod = ( (fst (tempMod happySubAttrs_5) ) , ((snd (tempMod happySubAttrs_5) )+3) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StIfElse (value happySubAttrs_2) (value happySubAttrs_3) (value happySubAttrs_5)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; (happyConditions_5,happySubAttrs_5) = happy_var_5 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_3)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as if-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3++happyConditions_5 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}}}
+
+happyReduce_66 = happySpecReduce_3  16# happyReduction_66
+happyReduction_66 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut12 happy_x_2 of { happy_var_2 -> 
+	case happyOut19 happy_x_3 of { happy_var_3 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [Lbl ((snd (tempMod happySubAttrs_3) )+1)] ++ (tac happySubAttrs_2) ++ [CondJ (address happySubAttrs_2) ((snd (tempMod happySubAttrs_3) )+2)] ++ (tac happySubAttrs_3) ++ [UnCondJ ((snd (tempMod happySubAttrs_3) )+1)] ++ [Lbl ((snd (tempMod happySubAttrs_3) )+2)] , tempMod = ( (fst (tempMod happySubAttrs_3) ) , ((snd (tempMod happySubAttrs_3) )+2) ) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWhile (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ loopLabels = ( ((snd (tempMod happySubAttrs_3) )+1) , ((snd (tempMod happySubAttrs_3) )+2) ) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (resetEnvV (envV happySelfAttrs) ) , temp = (tempMod happySubAttrs_2)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then (when (not( (typ happySubAttrs_2) ==TBool)) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Type "++ (showType (typ happySubAttrs_2) ) ++" used as for-condition" ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_67 = happySpecReduce_1  16# happyReduction_67
+happyReduction_67 happy_x_1
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [UnCondJ (snd (loopLabels happySelfAttrs) )] , tempMod = (temp happySelfAttrs) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StBreak  }; happyConditions = [(when ( (fst (loopLabels happySelfAttrs) ) ==(-1) ) $ Bad $ "Sintax Error at "++(pos happy_var_1 )++": Break is not in a loop" ) ] } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_68 = happySpecReduce_1  16# happyReduction_68
+happyReduction_68 happy_x_1
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [UnCondJ (fst (loopLabels happySelfAttrs) )] , tempMod = (temp happySelfAttrs) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StContinue  }; happyConditions = [(when ( (fst (loopLabels happySelfAttrs) ) ==(-1) ) $ Bad $ "Sintax Error at "++(pos happy_var_1 )++": Continue is not in a loop" ) ] } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_69 = happySpecReduce_2  16# happyReduction_69
+happyReduction_69 happy_x_2
+	happy_x_1
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut12 happy_x_2 of { happy_var_2 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++ [ Return (address happySubAttrs_2) ] , tempMod = (tempMod happySubAttrs_2) , isReturn = True , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StReturn (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if ( (err happySubAttrs_2) =="") then ( case (typFun happySelfAttrs) of { TVoid -> ( Bad $ "Sintax Error at "++(pos happy_var_1 )++": Cannot return any value" ) ; _ -> ( when (not( (typ happySubAttrs_2) ==(typFun happySelfAttrs) )) $ Bad $ "Type Error at "++(pos happy_var_1 )++": Cannot use type "++(showType (typ happySubAttrs_2) )++" as type "++(showType (typFun happySelfAttrs) )++" in return argument" ) ; } ) else ( Bad $ (err happySubAttrs_2) ) ) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
+	)}}
+
+happyReduce_70 = happyReduce 4# 16# happyReduction_70
+happyReduction_70 (happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id "writeInt") [ (address happySubAttrs_3) ]] , tempMod = (tempMod happySubAttrs_3) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWrite WriteT_writeInt (value happySubAttrs_3)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_3) =="" then when ( not $ (typ happySubAttrs_3) ==TInt ) $ Bad $ "Type Error at "++(pos happy_var_2 )++": needed integer input when using writeInt" else Bad $ (err happySubAttrs_3) ) ]++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}
+
+happyReduce_71 = happyReduce 4# 16# happyReduction_71
+happyReduction_71 (happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id "writeFloat") [ (address happySubAttrs_3) ]] , tempMod = (tempMod happySubAttrs_3) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWrite WriteT_writeFloat (value happySubAttrs_3)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_3) =="" then when ( not $ (typ happySubAttrs_3) ==TFloat ) $ Bad $ "Type Error at "++(pos happy_var_2 )++": needed float input when using writeFloat" else Bad $ (err happySubAttrs_3) ) ]++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}
+
+happyReduce_72 = happyReduce 4# 16# happyReduction_72
+happyReduction_72 (happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id "writeChar") [ (address happySubAttrs_3) ]] , tempMod = (tempMod happySubAttrs_3) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWrite WriteT_writeChar (value happySubAttrs_3)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_3) =="" then when ( not $ (typ happySubAttrs_3) ==TChar ) $ Bad $ "Type Error at "++(pos happy_var_2 )++": needed char input when using writeChar" else Bad $ (err happySubAttrs_3) ) ]++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}
+
+happyReduce_73 = happyReduce 4# 16# happyReduction_73
+happyReduction_73 (happy_x_4 `HappyStk`
+	happy_x_3 `HappyStk`
+	happy_x_2 `HappyStk`
+	happy_x_1 `HappyStk`
+	happyRest)
+	 = case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn20
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_3) ++ [FunCall "procedure" "" (Id "writeString") [ (address happySubAttrs_3) ]] , tempMod = (tempMod happySubAttrs_3) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StWrite WriteT_writeString (value happySubAttrs_3)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if (err happySubAttrs_3) =="" then when ( not $ (typ happySubAttrs_3) ==TString ) $ Bad $ "Type Error at "++(pos happy_var_2 )++": needed string input when using writeString" else Bad $ (err happySubAttrs_3) ) ]++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	) `HappyStk` happyRest}}
+
 happyReduce_74 = happySpecReduce_1  17# happyReduction_74
 happyReduction_74 happy_x_1
-	 =  happyIn21
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = Boolean_true  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
-	)
+	 =  case happyOut17 happy_x_1 of { happy_var_1 -> 
+	happyIn21
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , checkForIncr = False , envFMod = (envFMod happySubAttrs_1) , envVMod = (envVMod happySubAttrs_1) , value = StShortVarDecl (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
 happyReduce_75 = happySpecReduce_1  17# happyReduction_75
 happyReduction_75 happy_x_1
-	 =  happyIn21
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ value = Boolean_false  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	happyIn21
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tempMod = (tempMod happySubAttrs_1) , checkForIncr = True , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StExp (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = [( if ( (err happySubAttrs_1) =="") then ( if ( (address happySubAttrs_1) =="") then Ok () else Bad $ "Sintax Error : Right expression not assigned") else ( Bad $ (err happySubAttrs_1) ) ) ]++happyConditions_1 } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_76 = happySpecReduce_3  17# happyReduction_76
+happyReduction_76 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut14 happy_x_1 of { happy_var_1 -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
+	case happyOut12 happy_x_3 of { happy_var_3 -> 
+	happyIn21
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ [NulOp (address happySubAttrs_1) (address happySubAttrs_3) ] , tempMod = (tempMod happySubAttrs_3) , checkForIncr = True , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = StAsgn (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = [( if ( ( (err happySubAttrs_1) =="") && ( (err happySubAttrs_3) =="" ) ) then (if (( (typ happySubAttrs_1) ==TFloat) && ( (typ happySubAttrs_3) ==TInt)) then (Ok ()) else when (not( (typ happySubAttrs_1) ==(typ happySubAttrs_3) )) $ Bad $ "Type Error at "++(pos happy_var_2 )++": Cannot use "++(showType (typ happySubAttrs_3) )++" as type "++(showType (typ happySubAttrs_1) )++" in assignment" ) else (if not( (err happySubAttrs_1) =="") then Bad $ (err happySubAttrs_1) else Bad $ (err happySubAttrs_3) ) ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}}
+
+happyReduce_77 = happySpecReduce_1  18# happyReduction_77
+happyReduction_77 happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	happyIn22
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , addressList = [ (address happySubAttrs_1) ] , tempMod = (tempMod happySubAttrs_1) , err = (err happySubAttrs_1) , typList = [ (typ happySubAttrs_1) ] , value = (:[]) (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+	)}
+
+happyReduce_78 = happySpecReduce_3  18# happyReduction_78
+happyReduction_78 happy_x_3
+	happy_x_2
+	happy_x_1
+	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	case happyOut22 happy_x_3 of { happy_var_3 -> 
+	happyIn22
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) , addressList = (address happySubAttrs_1) : (addressList happySubAttrs_3) , tempMod = (tempMod happySubAttrs_3) , err = (err happySubAttrs_1) , typList = ( (typ happySubAttrs_1) : (typList happySubAttrs_3) ) , value = (:) (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = []++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+	)}}
+
+happyReduce_79 = happySpecReduce_0  19# happyReduction_79
+happyReduction_79  =  happyIn23
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , tempMod = (temp happySelfAttrs) , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = []  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_76 = happySpecReduce_1  18# happyReduction_76
-happyReduction_76 happy_x_1
+happyReduce_80 = happySpecReduce_2  19# happyReduction_80
+happyReduction_80 happy_x_2
+	happy_x_1
+	 =  case happyOut23 happy_x_1 of { happy_var_1 -> 
+	case happyOut16 happy_x_2 of { happy_var_2 -> 
+	happyIn23
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_2) , tempMod = (tempMod happySubAttrs_2) , envFMod = (envFMod happySubAttrs_2) , envVMod = (envVMod happySubAttrs_2) , value = flip (:) (value happySubAttrs_1) (value happySubAttrs_2)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envFMod happySubAttrs_1) , envV = (envVMod happySubAttrs_1) , temp = (tempMod happySubAttrs_1)  }; happyConditions = []++happyConditions_1++happyConditions_2 } in (happyConditions,happySelfAttrs)
+	)}}
+
+happyReduce_81 = happySpecReduce_1  20# happyReduction_81
+happyReduction_81 happy_x_1
 	 =  case happyOut8 happy_x_1 of { happy_var_1 -> 
-	happyIn22
+	happyIn24
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ idList = [ (value happySubAttrs_1) ] , value = (:[]) (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_77 = happySpecReduce_3  18# happyReduction_77
-happyReduction_77 happy_x_3
+happyReduce_82 = happySpecReduce_3  20# happyReduction_82
+happyReduction_82 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut8 happy_x_1 of { happy_var_1 -> 
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
-	case happyOut22 happy_x_3 of { happy_var_3 -> 
-	happyIn22
+	case happyOut24 happy_x_3 of { happy_var_3 -> 
+	happyIn24
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ idList = ( (value happySubAttrs_1) : (idList happySubAttrs_3) ) , value = (:) (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = [( when (elem (value happySubAttrs_1) (value happySubAttrs_3) ) $ Bad $ "Sintax Error at "++(pos happy_var_2 )++": Duplicate identificator " ++ (idToStr (value happySubAttrs_1) ) ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_78 = happySpecReduce_1  19# happyReduction_78
-happyReduction_78 happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	happyIn23
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , addressList = [ (address happySubAttrs_1) ] , tempMod = (tempMod happySubAttrs_1) , err = (err happySubAttrs_1) , typList = [ (typ happySubAttrs_1) ] , value = (:[]) (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
-	)}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_79 = happySpecReduce_3  19# happyReduction_79
-happyReduction_79 happy_x_3
-	happy_x_2
-	happy_x_1
-	 =  case happyOut19 happy_x_1 of { happy_var_1 -> 
-	case happyOut23 happy_x_3 of { happy_var_3 -> 
-	happyIn23
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) , addressList = (address happySubAttrs_1) : (addressList happySubAttrs_3) , tempMod = (tempMod happySubAttrs_3) , err = (err happySubAttrs_1) , typList = ( (typ happySubAttrs_1) : (typList happySubAttrs_3) ) , value = (:) (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (tempMod happySubAttrs_1)  }; happyConditions = []++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
-	)}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_80 = happySpecReduce_0  20# happyReduction_80
-happyReduction_80  =  happyIn24
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , tempMod = (temp happySelfAttrs) , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = []  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
-	)
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_81 = happySpecReduce_2  20# happyReduction_81
-happyReduction_81 happy_x_2
-	happy_x_1
-	 =  case happyOut24 happy_x_1 of { happy_var_1 -> 
-	case happyOut10 happy_x_2 of { happy_var_2 -> 
-	happyIn24
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_2) , tempMod = (tempMod happySubAttrs_2) , envFMod = (envFMod happySubAttrs_2) , envVMod = (envVMod happySubAttrs_2) , value = flip (:) (value happySubAttrs_1) (value happySubAttrs_2)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envF = (envFMod happySubAttrs_1) , envV = (envVMod happySubAttrs_1) , temp = (tempMod happySubAttrs_1)  }; happyConditions = []++happyConditions_1++happyConditions_2 } in (happyConditions,happySelfAttrs)
-	)}}
-
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_82 = happySpecReduce_0  21# happyReduction_82
-happyReduction_82  =  happyIn25
+happyReduce_83 = happySpecReduce_0  21# happyReduction_83
+happyReduction_83  =  happyIn25
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typList = [] , envV = [] , value = []  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_83 = happySpecReduce_1  21# happyReduction_83
-happyReduction_83 happy_x_1
-	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+happyReduce_84 = happySpecReduce_1  21# happyReduction_84
+happyReduction_84 happy_x_1
+	 =  case happyOut18 happy_x_1 of { happy_var_1 -> 
 	happyIn25
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typList = (typList happySubAttrs_1) , envV = (envV happySubAttrs_1) , value = (:[]) (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_84 = happySpecReduce_3  21# happyReduction_84
-happyReduction_84 happy_x_3
+happyReduce_85 = happySpecReduce_3  21# happyReduction_85
+happyReduction_85 happy_x_3
 	happy_x_2
 	happy_x_1
-	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
+	 =  case happyOut18 happy_x_1 of { happy_var_1 -> 
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut25 happy_x_3 of { happy_var_3 -> 
 	happyIn25
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ typList = ( (typList happySubAttrs_1) ++ (typList happySubAttrs_3) ) , envV = (envV happySubAttrs_1) ++ (envV happySubAttrs_3) , value = (:) (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = [( case (checkVarParamList (envV happySubAttrs_1) (envV happySubAttrs_3) ) of { Just a -> ( Bad $ "Sintax Error at "++(pos happy_var_2 )++": Duplicate identificator "++ idToStr a ) ; Nothing -> ( Ok () ) ; } ) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_85 = happySpecReduce_0  22# happyReduction_85
-happyReduction_85  =  happyIn26
+happyReduce_86 = happySpecReduce_0  22# happyReduction_86
+happyReduction_86  =  happyIn26
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [] , tempMod = (temp happySelfAttrs) , isReturn = False , envFMod = (envF happySelfAttrs) , envVMod = (envV happySelfAttrs) , value = []  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
-#if __GLASGOW_HASKELL__ >= 710
-#endif
-happyReduce_86 = happySpecReduce_2  22# happyReduction_86
-happyReduction_86 happy_x_2
+happyReduce_87 = happySpecReduce_2  22# happyReduction_87
+happyReduction_87 happy_x_2
 	happy_x_1
 	 =  case happyOut26 happy_x_1 of { happy_var_1 -> 
-	case happyOut16 happy_x_2 of { happy_var_2 -> 
+	case happyOut20 happy_x_2 of { happy_var_2 -> 
 	happyIn26
 		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_2) , tempMod = (tempMod happySubAttrs_2) , isReturn = (isReturn happySubAttrs_2) , envFMod = (envFMod happySubAttrs_2) , envVMod = (envVMod happySubAttrs_2) , value = flip (:) (value happySubAttrs_1) (value happySubAttrs_2)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envF happySelfAttrs) , envV = (envV happySelfAttrs) , temp = (temp happySelfAttrs)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ loopLabels = (loopLabels happySelfAttrs) , typFun = (typFun happySelfAttrs) , envF = (envFMod happySubAttrs_1) , envV = (envVMod happySubAttrs_1) , temp = (tempMod happySubAttrs_1)  }; happyConditions = []++happyConditions_1++happyConditions_2 } in (happyConditions,happySelfAttrs)
 	)}}
@@ -1315,11 +1127,11 @@ happyNewToken action sts stk (tk:tks) =
 	PT _ (TC happy_dollar_dollar) -> cont 54#;
 	PT _ (TL happy_dollar_dollar) -> cont 55#;
 	PT _ (T_Id happy_dollar_dollar) -> cont 56#;
-	_ -> happyError' ((tk:tks), [])
+	_ -> happyError' (tk:tks)
 	}
 
-happyError_ explist 57# tk tks = happyError' (tks, explist)
-happyError_ explist _ tk tks = happyError' ((tk:tks), explist)
+happyError_ 57# tk tks = happyError' tks
+happyError_ _ tk tks = happyError' (tk:tks)
 
 happyThen :: () => Err a -> (a -> Err b) -> Err b
 happyThen = (thenM)
@@ -1328,10 +1140,11 @@ happyReturn = (returnM)
 happyThen1 m k tks = (thenM) m (\a -> k a tks)
 happyReturn1 :: () => a -> b -> Err a
 happyReturn1 = \a tks -> (returnM) a
-happyError' :: () => ([(Token)], [String]) -> Err a
-happyError' = (\(tokens, _) -> happyError tokens)
+happyError' :: () => [(Token)] -> Err a
+happyError' = happyError
+
 do_pStart tks = happySomeParser where
- happySomeParser = happyThen (happyParse 0# tks) (\x -> happyReturn (happyOut9 x))
+  happySomeParser = happyThen (happyParse 0# tks) (\x -> happyReturn (happyOut15 x))
 
 pStart toks = do { f <- do_pStart toks; let { (conds,attrs) = f happyEmptyAttrs } in do { sequence_ conds; return (value attrs) }}
 
@@ -1436,8 +1249,8 @@ showType (TChar) =  "char"
 showType (TString) = "string"
 showType (TBool) =  "boolean"
 showType (TVoid) = "void"
-showType (TArray n t) = "array["++(show n)++"] " ++ showType t
-showType (TPointer t) = "pointer -> " ++ showType t
+showType (TArray n t) = "array[] " ++ showType t
+showType (TPointer t) = "*" ++ showType t
 
 
 showVal (Int i) = show i
@@ -1455,23 +1268,17 @@ getPosF id env = case (extrFun id env) of
 
 setPos ids pos = map (\id -> Id $ (idToStr id) ++ "_" ++ drop 5 pos) ids
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-removeJumpCode l1 l2 l3 temp =  show l1 ++ 
-                                show temp ++ " = true\n" ++ 
-                                "goto " ++ show l3 ++
-                                show l2 ++ 
-                                show temp ++ " = false\n" ++ 
-                                show l3
-{-jumpDelData statIn = (l1,l2,l3,temp,stat4) where
-                            (temp, stat1) = nextTemp statIn
-                            (l1, stat2) = nextLabel stat1
-                            (l2, stat3) = nextLabel stat2
-                            (l3, stat4) = nextLabel stat3-}
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+shift tacList n = map (\x -> shift1 x n) tacList
+shift1 tacOp n = case tacOp of
+                      CondJ t1 lab -> CondJ t1 (lab+n)
+                      CondJTrue t1 lab -> CondJTrue t1 (lab+n)
+                      x -> x
 
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 returnM :: a -> Err a
 returnM = return
 
@@ -1491,7 +1298,7 @@ myLexer = tokens
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}
 {-# LINE 1 "<command-line>" #-}
-{-# LINE 9 "<command-line>" #-}
+{-# LINE 11 "<command-line>" #-}
 # 1 "/usr/include/stdc-predef.h" 1 3 4
 
 # 17 "/usr/include/stdc-predef.h" 3 4
@@ -1538,10 +1345,7 @@ myLexer = tokens
 
 
 
-
-
-
-{-# LINE 9 "<command-line>" #-}
+{-# LINE 11 "<command-line>" #-}
 {-# LINE 1 "/usr/lib/ghc/include/ghcversion.h" #-}
 
 
@@ -1560,7 +1364,7 @@ myLexer = tokens
 
 
 
-{-# LINE 9 "<command-line>" #-}
+{-# LINE 11 "<command-line>" #-}
 {-# LINE 1 "/tmp/ghcb5f8_0/ghc_2.h" #-}
 
 
@@ -1718,17 +1522,17 @@ myLexer = tokens
 
 
 
-{-# LINE 9 "<command-line>" #-}
+
+
+
+
+
+
+{-# LINE 11 "<command-line>" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp 
 
-
-
-
-
-
-
-
+{-# LINE 13 "templates/GenericTemplate.hs" #-}
 
 
 
@@ -1744,7 +1548,8 @@ myLexer = tokens
 #define GTE(n,m) (n Happy_GHC_Exts.>=# m)
 #define EQ(n,m) (n Happy_GHC_Exts.==# m)
 #endif
-{-# LINE 43 "templates/GenericTemplate.hs" #-}
+{-# LINE 46 "templates/GenericTemplate.hs" #-}
+
 
 data Happy_IntList = HappyCons Happy_GHC_Exts.Int# Happy_IntList
 
@@ -1752,13 +1557,11 @@ data Happy_IntList = HappyCons Happy_GHC_Exts.Int# Happy_IntList
 
 
 
+{-# LINE 67 "templates/GenericTemplate.hs" #-}
 
+{-# LINE 77 "templates/GenericTemplate.hs" #-}
 
-{-# LINE 65 "templates/GenericTemplate.hs" #-}
-
-{-# LINE 75 "templates/GenericTemplate.hs" #-}
-
-{-# LINE 84 "templates/GenericTemplate.hs" #-}
+{-# LINE 86 "templates/GenericTemplate.hs" #-}
 
 infixr 9 `HappyStk`
 data HappyStk a = HappyStk a (HappyStk a)
@@ -1790,7 +1593,7 @@ happyDoAction i tk st
 
           case action of
                 0#           -> {- nothing -}
-                                     happyFail (happyExpListPerState ((Happy_GHC_Exts.I# (st)) :: Int)) i tk st
+                                     happyFail i tk st
                 -1#          -> {- nothing -}
                                      happyAccept i tk st
                 n | LT(n,(0# :: Happy_GHC_Exts.Int#)) -> {- nothing -}
@@ -1802,16 +1605,14 @@ happyDoAction i tk st
 
                                      happyShift new_state i tk st
                                      where new_state = (n Happy_GHC_Exts.-# (1# :: Happy_GHC_Exts.Int#))
-   where off    = happyAdjustOffset (indexShortOffAddr happyActOffsets st)
-         off_i  = (off Happy_GHC_Exts.+#  i)
+   where off    = indexShortOffAddr happyActOffsets st
+         off_i  = (off Happy_GHC_Exts.+# i)
          check  = if GTE(off_i,(0# :: Happy_GHC_Exts.Int#))
                   then EQ(indexShortOffAddr happyCheck off_i, i)
                   else False
          action
           | check     = indexShortOffAddr happyTable off_i
           | otherwise = indexShortOffAddr happyDefActions st
-
-
 
 
 indexShortOffAddr (HappyA# arr) off =
@@ -1825,26 +1626,16 @@ indexShortOffAddr (HappyA# arr) off =
 
 
 
-{-# INLINE happyLt #-}
-happyLt x y = LT(x,y)
-
-
-readArrayBit arr bit =
-    Bits.testBit (Happy_GHC_Exts.I# (indexShortOffAddr arr ((unbox_int bit) `Happy_GHC_Exts.iShiftRA#` 4#))) (bit `mod` 16)
-  where unbox_int (Happy_GHC_Exts.I# x) = x
-
-
-
-
-
 
 data HappyAddr = HappyA# Happy_GHC_Exts.Addr#
+
+
 
 
 -----------------------------------------------------------------------------
 -- HappyState data type (not arrays)
 
-{-# LINE 180 "templates/GenericTemplate.hs" #-}
+{-# LINE 170 "templates/GenericTemplate.hs" #-}
 
 -----------------------------------------------------------------------------
 -- Shifting a token
@@ -1860,30 +1651,30 @@ happyShift new_state i tk st sts stk =
 -- happyReduce is specialised for the common cases.
 
 happySpecReduce_0 i fn 0# tk st sts stk
-     = happyFail [] 0# tk st sts stk
+     = happyFail 0# tk st sts stk
 happySpecReduce_0 nt fn j tk st@((action)) sts stk
      = happyGoto nt j tk st (HappyCons (st) (sts)) (fn `HappyStk` stk)
 
 happySpecReduce_1 i fn 0# tk st sts stk
-     = happyFail [] 0# tk st sts stk
+     = happyFail 0# tk st sts stk
 happySpecReduce_1 nt fn j tk _ sts@((HappyCons (st@(action)) (_))) (v1`HappyStk`stk')
      = let r = fn v1 in
        happySeq r (happyGoto nt j tk st sts (r `HappyStk` stk'))
 
 happySpecReduce_2 i fn 0# tk st sts stk
-     = happyFail [] 0# tk st sts stk
+     = happyFail 0# tk st sts stk
 happySpecReduce_2 nt fn j tk _ (HappyCons (_) (sts@((HappyCons (st@(action)) (_))))) (v1`HappyStk`v2`HappyStk`stk')
      = let r = fn v1 v2 in
        happySeq r (happyGoto nt j tk st sts (r `HappyStk` stk'))
 
 happySpecReduce_3 i fn 0# tk st sts stk
-     = happyFail [] 0# tk st sts stk
+     = happyFail 0# tk st sts stk
 happySpecReduce_3 nt fn j tk _ (HappyCons (_) ((HappyCons (_) (sts@((HappyCons (st@(action)) (_))))))) (v1`HappyStk`v2`HappyStk`v3`HappyStk`stk')
      = let r = fn v1 v2 v3 in
        happySeq r (happyGoto nt j tk st sts (r `HappyStk` stk'))
 
 happyReduce k i fn 0# tk st sts stk
-     = happyFail [] 0# tk st sts stk
+     = happyFail 0# tk st sts stk
 happyReduce k nt fn j tk st sts stk
      = case happyDrop (k Happy_GHC_Exts.-# (1# :: Happy_GHC_Exts.Int#)) sts of
          sts1@((HappyCons (st1@(action)) (_))) ->
@@ -1891,7 +1682,7 @@ happyReduce k nt fn j tk st sts stk
                 happyDoSeq r (happyGoto nt j tk st1 sts1 r)
 
 happyMonadReduce k nt fn 0# tk st sts stk
-     = happyFail [] 0# tk st sts stk
+     = happyFail 0# tk st sts stk
 happyMonadReduce k nt fn j tk st sts stk =
       case happyDrop k (HappyCons (st) (sts)) of
         sts1@((HappyCons (st1@(action)) (_))) ->
@@ -1899,16 +1690,15 @@ happyMonadReduce k nt fn j tk st sts stk =
           happyThen1 (fn stk tk) (\r -> happyGoto nt j tk st1 sts1 (r `HappyStk` drop_stk))
 
 happyMonad2Reduce k nt fn 0# tk st sts stk
-     = happyFail [] 0# tk st sts stk
+     = happyFail 0# tk st sts stk
 happyMonad2Reduce k nt fn j tk st sts stk =
       case happyDrop k (HappyCons (st) (sts)) of
         sts1@((HappyCons (st1@(action)) (_))) ->
          let drop_stk = happyDropStk k stk
 
-             off = happyAdjustOffset (indexShortOffAddr happyGotoOffsets st1)
-             off_i = (off Happy_GHC_Exts.+#  nt)
+             off = indexShortOffAddr happyGotoOffsets st1
+             off_i = (off Happy_GHC_Exts.+# nt)
              new_state = indexShortOffAddr happyTable off_i
-
 
 
 
@@ -1928,8 +1718,8 @@ happyDropStk n (x `HappyStk` xs) = happyDropStk (n Happy_GHC_Exts.-# (1#::Happy_
 happyGoto nt j tk st = 
    {- nothing -}
    happyDoAction j tk new_state
-   where off = happyAdjustOffset (indexShortOffAddr happyGotoOffsets st)
-         off_i = (off Happy_GHC_Exts.+#  nt)
+   where off = indexShortOffAddr happyGotoOffsets st
+         off_i = (off Happy_GHC_Exts.+# nt)
          new_state = indexShortOffAddr happyTable off_i
 
 
@@ -1939,10 +1729,10 @@ happyGoto nt j tk st =
 -- Error recovery (0# is the error token)
 
 -- parse error if we are in recovery and we fail again
-happyFail explist 0# tk old_st _ stk@(x `HappyStk` _) =
+happyFail 0# tk old_st _ stk@(x `HappyStk` _) =
      let i = (case Happy_GHC_Exts.unsafeCoerce# x of { (Happy_GHC_Exts.I# (i)) -> i }) in
 --      trace "failing" $ 
-        happyError_ explist i tk
+        happyError_ i tk
 
 {-  We don't need state discarding for our restricted implementation of
     "error".  In fact, it can cause some bogus parses, so I've disabled it
@@ -1957,7 +1747,7 @@ happyFail  0# tk old_st (HappyCons ((action)) (sts))
 
 -- Enter error recovery: generate an error token,
 --                       save the old token and carry on.
-happyFail explist i tk (action) sts stk =
+happyFail  i tk (action) sts stk =
 --      trace "entering error recovery" $
         happyDoAction 0# tk action sts ( (Happy_GHC_Exts.unsafeCoerce# (Happy_GHC_Exts.I# (i))) `HappyStk` stk)
 

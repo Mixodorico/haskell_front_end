@@ -10,64 +10,37 @@ import Structures
 
 }
 
-------------------------------------------------------------------------------------
-------------------------------  ATTRIBUTI ------------------------------------------
-------------------------------------------------------------------------------------
-
-
 %attributetype      { MyAttributes a }
 %attribute value    { a }
--- enviroment per la gestione e la visibilità delle variabili e delle funzioni(procedure)
 %attribute envV     { [ElmVar] }        
 %attribute envF     { [ElmFun] }
 %attribute envVMod  { [ElmVar] }
 %attribute envFMod  { [ElmFun] }
 
---  usato per nelle dichiarazioni di variabili multiple
 %attribute idList   { [Id] }
--- contiene il tipo del nodo
 %attribute typ      { Type }
--- usato per nelle dichiarazioni di variabili multiple
 %attribute typList  { [Type] }
--- tipo di ritorno della funzone
 %attribute typFun       { Type }
--- usato nel controllo del return
 %attribute isReturn     { Bool }
--- contiene gli errori di espressioni sottostanti
 %attribute err       { String }
--- usato per la gestione di break e continue ,anche nella gestione degli errori, (Label continue, Label break) 
 %attribute loopLabels   { (Int, Int) }
--- usato nel controllo degli errori nel for-increment
 %attribute checkForIncr { Bool }
 
-
--- three address code (lista di operazioni elementari)
 %attribute tac          { [TacOp] }
--- attributi per la gestione e creazione del tac 
 %attribute address      { String }
 %attribute addressList  { [String] }
 %attribute temp         { (Int, Int) }
 %attribute tempMod      { (Int, Int) }
 
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- per le espressioni booleane
 %attribute true {Int}
 %attribute false {Int}
 %attribute tacJ { [TacOp] }
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
------
 
 %name pStart Start
-
 -- no lexer declaration
 %monad { Err } { thenM } { returnM }
 %tokentype { Token }
-
 %token
   '!' { PT _ (TS _ 1) }
   '!=' { PT _ (TS _ 2) }
@@ -128,7 +101,6 @@ L_doubl  { PT _ (TD $$) }
 L_charac { PT _ (TC $$) }
 L_quoted { PT _ (TL $$) }
 L_Id { PT _ (T_Id $$) }
---L_err    { _ }
 
 -- precedenze 
 
@@ -149,629 +121,475 @@ Integer : L_integ  { $$ = (read ( $1)) :: Integer }
 Double  : L_doubl  { $$ = (read ( $1)) :: Double }
 Char    : L_charac { $$ = (read ( $1)) :: Char }
 String  : L_quoted { $$ = $1 }
-Id     : L_Id { $$ = Id ($1)}
+Id      : L_Id { $$ = Id ($1)}
 
----------------------------------------------------------------------------------------------------
--------------------------------------- SINTAX TREE ------------------------------------------------
----------------------------------------------------------------------------------------------------
+Boolean : 'true'  { $$ = Boolean_true; } 
+        | 'false' { $$ = Boolean_false; }
 
-Start : 'package' Id ListDecl       {
-                    $$ = (Entry $2 (reverse $3), $$.tac);
-                    $$.typ = TInt; 
-                    $$.envV = [];
-                    $$.envF = [];
-                    $3.envV = $$.envV;
-                    $3.envF = $$.envF;
-                    $3.temp = (0,0);
-                    $$.tac = $3.tac;
-                    } 
+Type : 'void'      { $$ = TVoid;}
+     | 'int'       { $$ = TInt;} 
+     | 'bool'      { $$ = TBool;} 
+     | 'float'     { $$ = TFloat;} 
+     | 'char'      { $$ = TChar;} 
+     | 'string'     { $$ = TString;} 
+     | '[' Integer ']' Type    { $$ = TArray $2 $4;} 
+     | '*' Type    %prec PUN   { $$ = TPointer $2;}
 
+Pass : 'val'                    { $$ = PassVal; } 
+     | 'ref'                    { $$ = PassRef; }
 
--- Dichiarazione di funzioni, procedure e variabili (anche inizializzate)
-Decl : 'func' Id '(' ListParam ')' Type Block   { 
-                        $$ = DeclFun $2 $4 $6 $7;
-                        $$.idList = setPos [$2] (pos $1);
-                        $$.envVMod = $$.envV;
-                        $$.envFMod = ( insFun (Fun $2 $6 $4.typList (pos $1)) $$.envF );
-                        $7.envV = (unionVar $4.envV (resetEnvV $$.envV) );
-                        $7.envF = $$.envFMod;
-                        $7.typFun = $6;
-                        $7.loopLabels = (-1,-1);
-                        $7.temp = $$.temp;
-                        $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
-                        $$.tac = [FunDecl "function" (Id $ idToStr $ head $$.idList) (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
-                        where (if (searchFun $2 $$.envF) 
-                            then Bad $ "Scope Error at "++(pos $1)++": function "++(idToStr $2)++" already declared"
-                            else when (not($7.isReturn)) $ Bad $ "Sintax Error at "++(pos $1)++": missing return at end of function" );
-                        }
+RExp : RExp '&&' RExp { 
+            $$ = ExpAnd $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;  
+            $$.typ = TBool;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            
+            $1.true = snd $1.tempMod;
+            $1.false = $$.false;
+            $3.true = $$.true;
+            $3.false = $$.false;
+            
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "&&" $$.address $1.address $3.address)];
+            $$.tacJ = $1.tacJ ++ [(CondJ $1.address ($1.true+2))] ++ $3.tacJ ++ [(BinOp "&&" $$.address $1.address $3.address)];
+            where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
-     | 'func' Id '(' ListParam ')' 'void' Block     { 
-                        $$ = DeclProc $2 $4 $7;
-                        $$.idList = setPos [$2] (pos $1);
-                        $$.envVMod = $$.envV;
-                        $$.envFMod = (insFun (Fun $2 TVoid $4.typList (pos $1)) $$.envF);
-                        $7.envV = (unionVar $4.envV (resetEnvV $$.envV) ); 
-                        $7.envF = $$.envFMod;
-                        $7.typFun = TVoid; 
-                        $7.loopLabels = (-1,-1);
-                        $7.temp = $$.temp;
-                        $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
-                        $$.tac = [FunDecl "procedure" (Id $ idToStr $ head $$.idList) (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
-                        where (if (searchFun $2 $$.envF) 
-                            then Bad $ "Scope Error at "++(pos $1)++": procedure "++(idToStr $2)++" already declared"
-                            else Ok () );
-                        }
+     | RExp '||' RExp { 
+            $$ = ExpOr $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;  
+            $$.typ = TBool;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            
+            $1.true = snd $1.tempMod;
+            $1.false = $$.false;
+            $3.true = $$.true;
+            $3.false = $$.false;
+            
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "||" $$.address $1.address $3.address)];
+            $$.tacJ = $1.tacJ ++ [(CondJTrue $1.address ($1.true+1))] ++ $3.tacJ ++ [(BinOp "||" $$.address $1.address $3.address)];
+            where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
-     | 'var' ListId Type            { 
-                        $$ = DeclVar $2 $3;
-                        $$.idList = setPos $2 (pos $1);
-                        $$.envVMod = (unionVar (createList $2 $3 (pos $1)) $$.envV);
-                        $$.envFMod = $$.envF;
-                        $$.tempMod = $$.temp;
-                        $$.tac = [] ;
-                        where ( case (ctrlDeclVarList $$.idList $$.envV) of {
-                                Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block" ;
-                                Nothing -> Ok ();
-                            });
-                        }
+     | '!' RExp { 
+            $$ = ExpNot $2; 
+            $2.envV = $$.envV;
+            $2.envF = $$.envF;
+            $$.err = if ($2.err == "")  
+                    then    (if (not($2.typ == TBool))
+                        then "Type Error at "++(pos $1)++": Expected boolean type"
+                        else ""
+                    )
+                    else $2.err;
+            $$.typ = TBool;
+            $2.temp = $$.temp;
+            $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $2.tac ++ [(UnOp "!" $$.address $2.address)];
+            where ( if ($2.err == "")  
+                then    (if (not($2.typ == TBool))
+                    then Bad $ "Type Error at "++(pos $1)++": Expected boolean type"
+                    else Ok ()
+                    )
+                else Bad $ $2.err );
+            }
 
-     | 'var' ListId '=' ListExpR        { 
-                        $$ = DeclVarInit $2 $4;
-                        $$.idList = setPos $2 (pos $1);
-                        $4.envV = $$.envV;
-                        $4.envF = $$.envF;                              
-                        $$.envVMod = (unionVar ( createListMod $2 $4.typList (pos $1)) $$.envV);
-                        $$.envFMod = $$.envF;
-                        $4.temp = $$.temp;
-                        $$.tempMod = $4.tempMod;
-                        $$.tac = $4.tac ++ ( tacAssign $$.idList $4.addressList );
-                        where ( case (ctrlDeclVarList $2 $$.envV) of {
-                                Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
-                                Nothing -> ( if (not(length $2 == length $4.typList)) 
-                                        then Bad $ "Sintax Error at "++(pos $1)++": n.of id and expression not matching"
-                                        else Ok ()  );
-                                }
-                            );
-                        }
-{-
-     | 'var' ListId Type '=' ListExpR 		{ 
-						$$ = DeclVarTypeInit $2 $3 $5;
-						$5.envV = $$.envV;
-						$5.envF = $$.envF;								
-						$$.envVMod = (unionVar ( createList $2 $3) $$.envV);
-						$$.envFMod = $$.envF;
-						$5.temp = $$.temp;
-						$$.tempMod = $5.tempMod;
-						$$.tac = $5.tac ++ ( tacAssign $2 $5.addressList );
-						where ( case (ctrlDeclVarList $2 $$.envV) of {
-								Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
-								Nothing -> ( if (not(length $2 == length $5.typList)) 
-										then Bad $ "Sintax Error at "++(pos $1)++": n.of id and expression not matching"
-										else Ok ()  );
-								}
-							);
-						}
-                    -}
-                        
-     | 'var' ListId Type '=' ListExpR       { 
-                        $$ = DeclVarTypeInit $2 $3 $5;
-                        $$.idList = setPos $2 (pos $1);
-                        $5.envV = $$.envV;
-                        $5.envF = $$.envF;                              
-                        $$.envVMod = (unionVar ( createList $2 $3 (pos $1)) $$.envV);
-                        $$.envFMod = $$.envF;
-                        $5.temp = $$.temp;
-                        $$.tempMod = $5.tempMod;
-                        $$.tac = $5.tac ++ ( tacAssign $$.idList $5.addressList );
-                        where ( case (ctrlDeclVarList $2 $$.envV) of {
-                                Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
-                                Nothing -> ( if (not(length $2 == length $5.typList)) 
-                                               then Bad $ "Sintax Error at "++(pos $1)++": n.of id and expression not matching"
-                                               else ( case ( matchType $3 ($5.typList)) of {
-						                          Just a  -> Bad $ "Type Error at: "++(pos $4)++" Cannot use "++(showType (fst a))++" as type "++(showType (snd a))++" in assignment";
-						                          Nothing -> Ok () ;
-                                          }
-                                       )
-                                    );
-                                }
-                            );
-                        }
+     | RExp '==' RExp { 
+            $$ = ExpEq $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;      
+            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
+            $$.typ = TBool;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "==" $$.address $1.address $3.address)]; 
+            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
--- Dichiare di variabile breve 
-ShortVarDecl : ListId ':=' ListExpR         {
-                        $$ = DeclVarShort $1 $3;
-                        $$.idList = setPos $1 (pos $2);
-                        $3.envV = $$.envV;
-                        $3.envF = $$.envF;
-                        $$.envVMod = (unionVar ( createListMod $1 $3.typList (pos $2)) $$.envV);
-                        $$.envFMod = $$.envF;
-                        $3.temp = $$.temp;
-                        $$.tempMod = $3.tempMod;
-                        $$.tac = $3.tac ++ ( tacAssign $$.idList $3.addressList );
-                        where ( case (ctrlDeclVarList $1 $$.envV) of {
-                                Just a -> Bad $ "Scope Error at "++(pos $2)++": variable "++(idToStr a)++" already declared in this block";
-                                Nothing -> ( if (not(length $1 == length $3.typList)) 
-                                        then Bad $ "Sintax Error at "++(pos $2)++": n.of id and expression not matching"
-                                        else Ok ()  );
-                                }
-                            );
-                        }
+     | RExp '!=' RExp { 
+            $$ = ExpNeq $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
+            $$.typ = TBool;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "!=" $$.address $1.address $3.address)];
+            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
--- Parametri di funzioni e procedure
-Param : ListId Type                 { 
-                        $$ = ParamL $1 $2; 
-                        $$.envV = (createList $1 $2 "0");
-                        $$.typList = (replicate (length $1) $2);
-                        } 
+     | RExp '<' RExp { 
+            $$ = ExpLt $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
+            $$.typ = TBool;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "<" $$.address $1.address $3.address)];
+            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
-  | Pass ListId Type                { 
-                        $$ = ParamLPassType $1 $2 $3; 
-                        $$.envV = (createList $2 $3 "0");
-                        $$.typList = (replicate (length $2) $3);
-                        }
+     | RExp '<=' RExp { 
+            $$ = ExpLtE $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
+            $$.typ = TBool;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "<=" $$.address $1.address $3.address)];
+            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
--- Tipo di passaggio
-Pass : 'val'                    { $$ = PassValue; } 
-  | 'ref'                   { $$ = PassRef; }
- -- | 'valres'                    { $$ = PassValueRes; }
+     | RExp '>' RExp { 
+            $$ = ExpGt $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
+            $$.typ = TBool;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp ">" $$.address $1.address $3.address)];
+            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
---Tipi di dato
-Type : 'int'            { $$ = TInt;} 
-  | 'bool'          { $$ = TBool;} 
-  | 'float'             { $$ = TFloat;} 
-  | 'char'          { $$ = TChar;} 
-  | 'string'            { $$ = TString;} 
-  | '[' Integer ']' Type    { $$ = TArray $2 $4;} 
-  | '*' Type    %prec PUN   { $$ = TPointer $2;}
+     | RExp '>=' RExp { 
+            $$ = ExpGtE $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
+            $$.typ = TBool;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp ">=" $$.address $1.address $3.address)];
+            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
--- Blocco di comandi 
-Block : '{' ListStmt '}'        { 
-                    $$ = (BodyBlock (reverse $2)); 
-                    $2.envV = $$.envV;
-                    $2.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $2.typFun = $$.typFun;
-                    $$.isReturn = $2.isReturn;
-                    $2.loopLabels = $$.loopLabels;
-                    $2.temp = $$.temp;
-                    $$.tempMod = $2.tempMod;
-                    $$.tac = $2.tac;
-                    } 
--- Comandi base del linguaggio
-Stmt : Block            { 
-                    $$ = StBlock $1; 
-                    $1.envV = (resetEnvV $$.envV);
-                    $1.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $1.typFun = $$.typFun;
-                    $$.isReturn = False;
-                    $1.loopLabels = $$.loopLabels;
-                    $1.temp = $$.temp;
-                    $$.tempMod = $1.tempMod;
-                    $$.tac = $1.tac;
-                    } 
+     | RExp '+' RExp { 
+            $$ = ExpAdd $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
+            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "+" $$.address $1.address $3.address)]; 
+            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            } 
 
-  | StmtSmpl            { 
-                    $$ = StSmpl $1; 
-                    $1.envV = $$.envV;
-                    $1.envF = $$.envF;
-                    $$.envVMod = $1.envVMod;
-                    $$.envFMod = $1.envFMod;
-                    $$.isReturn = False;
-                    $1.temp = $$.temp;
-                    $$.tempMod = $1.tempMod;
-                    $$.tac = $1.tac;
-                    }
+     | RExp '-' RExp { 
+            $$ = ExpSub $1 $3;
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
+            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "-" $$.address $1.address $3.address)]; 
+            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
-  | 'return' RExp           { 
-                    $$ = StReturn $2; 
-                    $2.envV = $$.envV;
-                    $2.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $$.isReturn = True;
-                    $2.temp = $$.temp;
-                    $$.tempMod = $2.tempMod;
-                    $$.tac = $2.tac ++ [ Return $2.address ];
-                    where ( if ($2.err== "") 
-                        then ( case $$.typFun of {
-                            TVoid -> ( Bad $ "Sintax Error at "++(pos $1)++": Cannot return any value" );
-                            _ -> ( when (not($2.typ == $$.typFun)) $ Bad $ "Type Error at "++(pos $1)++": Cannot use type "++(showType $2.typ)++" as type "++(showType $$.typFun)++" in return argument" );
+     | RExp '*' RExp { 
+            $$ = ExpMul $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
+            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "*" $$.address $1.address $3.address)]; 
+            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
-                        })
-                        else ( Bad $ $2.err) 
-                );
-                    }
+     | RExp '/' RExp { 
+            $$ = ExpDiv $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
+            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "/" $$.address $1.address $3.address)]; 
+            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
-  | 'if' RExp Block             { 
-                    $$ = StIf $2 $3; 
-                    $2.envV = $$.envV;
-                    $2.envF = $$.envF;
-                    $3.envV = (resetEnvV $$.envV);
-                    $3.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $3.typFun = $$.typFun;
-                    $$.isReturn = False;
-                    $3.loopLabels = $$.loopLabels;
-                    $2.temp = $$.temp;
-                    $3.temp = $2.tempMod;
-                    $$.tempMod = ( (fst $3.tempMod) , ((snd $3.tempMod)+2) );
-                    $$.tac = $2.tac ++ [CondJ $2.address ((snd $3.tempMod)+2)]
-                            ++ [Lbl ((snd $3.tempMod)+1)]
-                            ++ $3.tac
-                            ++ [Lbl ((snd $3.tempMod)+2)];
-                    where ( if ($2.err== "") 
-                        then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
-                        else ( Bad $ $2.err) 
-                    );
-                    }
+     | RExp '%' RExp { 
+            $$ = ExpMod $1 $3; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
+            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
+            $1.temp = $$.temp;
+            $3.temp = $1.tempMod;
+            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "%" $$.address $1.address $3.address)]; 
+            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
+            }
 
-  | 'if' RExp Block 'else' Block    { 
-                    $$ = StIfElse $2 $3 $5; 
-                    $2.envV = $$.envV;
-                    $2.envF = $$.envF;
-                    $3.envV = (resetEnvV $$.envV);
-                    $3.envF = $$.envF;
-                    $5.envV = (resetEnvV $$.envV);
-                    $5.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $3.typFun = $$.typFun;
-                    $5.typFun = $$.typFun;
-                    $$.isReturn = False;
-                    $3.loopLabels = $$.loopLabels;
-                    $5.loopLabels = $$.loopLabels;
-                    $2.temp = $$.temp;
-                    $3.temp = $2.tempMod;
-                    $5.temp = $3.tempMod;
-                    $$.tempMod = ( (fst $5.tempMod) , ((snd $5.tempMod)+3) );
-                    $$.tac = $2.tacJ ++ [CondJ $2.address ((snd $5.tempMod)+2)]
-                            ++ [Lbl ((snd $5.tempMod)+1)]
-                            ++ $3.tac
-                            ++ [UnCondJ ((snd $5.tempMod)+3)]
-                            ++ [Lbl ((snd $5.tempMod)+2)]
-                            ++ $5.tac
-                            ++ [Lbl ((snd $5.tempMod)+3)];
-                    where ( if ($2.err== "") 
-                        then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
-                        else ( Bad $ $2.err) 
-                    );
-                    }
-{-
-  | 'if' StmtSmpl ';' RExp Block    { 
-                    $$ = StIfStm $2 $4 $5; 
-                    $2.envV = (resetEnvV $$.envV);
-                    $2.envF = $$.envF;
-                    $4.envV = $2.envVMod;
-                    $4.envF = $2.envFMod;
-                    $5.envV = (resetEnvV $2.envVMod);
-                    $5.envF = $2.envFMod;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $5.typFun = $$.typFun;
-                    $$.isReturn = False;
-                    $5.loopLabels = $$.loopLabels;
-                    $2.temp = $$.temp;
-                    $4.temp = $2.tempMod;
-                    $5.temp = $4.tempMod;
-                    $$.tempMod = ( (fst $5.tempMod) , ((snd $5.tempMod)+1) );
-                    $$.tac = $2.tac ++ $4.tac ++ [CondJ $4.address ((snd $5.tempMod)+1)] 
-                            ++ $5.tac 
-                            ++ [Lbl ((snd $5.tempMod)+1)];
-                    where ( if ($4.err== "") 
-                        then (when (not($4.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $4.typ) ++" used as if-condition" )
-                        else ( Bad $ $4.err) 
-                );
-                    }
+     | '-' RExp  %prec NEG { 
+            $$ = ExpNeg $2; 
+            $2.envV = $$.envV;
+            $2.envF = $$.envF;
+            $$.err = if ($2.err == "")  
+                    then    (if (not($2.typ == TInt || $2.typ == TFloat))
+                        then "Type Error at "++(pos $1)++": Expected numeric type (int or float)"
+                        else ""
+                    )
+                    else $2.err;
+            $$.typ = $2.typ;
+            $2.temp = $$.temp;
+            $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
+            $$.address = "t"++ (show  (fst $$.tempMod) );
+            $$.tac = $2.tac ++ [(UnOp "-" $$.address $2.address)];
+            where ( if ($2.err == "")  
+                then    (if (not($2.typ == TInt || $2.typ == TFloat))
+                    then Bad $ "Type Error at "++(pos $1)++": Expected numeric type (int or float)"
+                    else Ok ()
+                    )
+                else Bad $ $2.err );
+            }
 
-  | 'if' StmtSmpl ';' RExp Block 'else' Block   { 
-                            $$ = StIfElseStm $2 $4 $5 $7; 
-                            $2.envV = (resetEnvV $$.envV);
-                            $2.envF = $$.envF;
-                            $4.envV = $2.envVMod;
-                            $4.envF = $2.envFMod;
-                            $5.envV = (resetEnvV $2.envVMod);
-                            $5.envF = $2.envFMod;
-                            $7.envV = (resetEnvV $2.envVMod);
-                            $7.envF = $2.envFMod;
-                            $$.envVMod = $$.envV;
-                            $$.envFMod = $$.envF;
-                            $5.typFun = $$.typFun;
-                            $7.typFun = $$.typFun;
-                            $$.isReturn = False;
-                            $5.loopLabels = $$.loopLabels;
-                            $7.loopLabels = $$.loopLabels;
-                            $2.temp = $$.temp;
-                            $4.temp = $2.tempMod;
-                            $5.temp = $4.tempMod;
-                            $7.temp = $5.tempMod;
-                            $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+2) );
-                            $$.tac = $2.tac ++ $4.tac ++ [CondJ $4.address ((snd $7.tempMod)+1)] 
-                                    ++ $5.tac
-                                    ++ [UnCondJ ((snd $7.tempMod)+2)] 
-                                    ++ [Lbl ((snd $7.tempMod)+1)]
-                                    ++ $7.tac
-                                    ++ [Lbl ((snd $7.tempMod)+2)];
-                            where ( if ($4.err== "") 
-                                then (when (not($4.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $4.typ) ++" used as if-condition" )
-                                else ( Bad $ $4.err) 
-                            );
-                            }
+     | '&' LExp { 
+            $$ = ExpRef $2;
+            $2.envV = $$.envV;
+            $2.envF = $$.envF;
+            $$.err = $2.err;
+            $$.typ = TPointer $2.typ;
+            $2.temp = $$.temp;
+            $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
+            $$.address = "t"++(show (fst $$.tempMod) );
+            $$.tac = $2.tac ++ [(NulOp $$.address ("&"++$2.address))];
+            }
 
-  | 'for' ListStmtSmpl ';' RExp ';' ListStmtSmpl Block  { 
-                                    $$ = StFor $2 $4 $6 $7; 
-                                    $2.envV = (resetEnvV $$.envV);
-                                    $2.envF = $$.envF;
-                                    $4.envV = $2.envVMod;
-                                    $4.envF = $2.envFMod;
-                                    $5.envV = $2.envVMod;
-                                    $5.envF = $2.envFMod;
-                                    $6.envV = $2.envVMod;
-                                    $6.envF = $2.envFMod;
-                                    $7.envV = (resetEnvV $2.envVMod);
-                                    $7.envF = $6.envFMod;
-                                    $$.envVMod = $$.envV;
-                                    $$.envFMod = $$.envF;
-                                    $7.typFun = $$.typFun;
-                                    $$.isReturn = False;
-                                    $7.loopLabels = ( ((snd $7.tempMod)+2) , ((snd $7.tempMod)+3) );
-                                    $2.temp = $$.temp;
-                                    $4.temp = $2.tempMod;
-                                    $6.temp = $4.tempMod;
-                                    $7.temp = $6.tempMod;
-                                    $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+3) );
-                                    $$.tac = $2.tac ++ [Lbl ((snd $7.tempMod)+1)] 
-                                            ++ $4.tac
-                                            ++ [CondJ $4.address ((snd $7.tempMod)+3)] 
-                                            ++ $7.tac
-                                            ++ [Lbl ((snd $7.tempMod)+2)]
-                                            ++ $6.tac
-                                            ++ [UnCondJ ((snd $7.tempMod)+1)] 
-                                            ++ [Lbl ((snd $7.tempMod)+3)];
-                                    where ( if ($4.err== "") 
-                                        then (if ($4.typ == TBool) 
-                                            then if $6.checkForIncr
-                                                then Ok ()
-                                                else Bad $ "Sintax Error at "++(pos $1)++": Cannot declare in the for-increment"
-                                            else Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $4.typ) ++" used as for-condition" )
-                                        else ( Bad $ $4.err) 
-                                    );
-                                    }
--}
-  | 'for' RExp Block        { 
-                $$ = StWhile $2 $3;
-                $2.envV = $$.envV;
-                $2.envF = $$.envF;
-                $3.envV = (resetEnvV $$.envV);
-                $3.envF = $$.envF;
-                $$.envVMod = $$.envV;
-                $$.envFMod = $$.envF;
-                $3.typFun = $$.typFun;
-                $$.isReturn = False;
-                $3.loopLabels = ( ((snd $3.tempMod)+1) , ((snd $3.tempMod)+2) );
-                $2.temp = $$.temp;
-                $3.temp = $2.tempMod;                   
-                $$.tempMod = ( (fst $3.tempMod) , ((snd $3.tempMod)+2) );
-                $$.tac = [Lbl ((snd $3.tempMod)+1)]
-                        ++ $2.tac
-                        ++ [CondJ $2.address ((snd $3.tempMod)+2)]
-                        ++ $3.tac
-                        ++ [UnCondJ ((snd $3.tempMod)+1)]
-                        ++ [Lbl ((snd $3.tempMod)+2)];
-                where ( if ($2.err== "")
-                    then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as for-condition" )
-                    else ( Bad $ $2.err)
-                );
-                }
+     | Id '(' ')' { 
+            $$ = ExpFuncEmpty $1; 
+            $$.typ = getTypeFun (extrFun $1 $$.envF);   
+            $$.err = checkErrProc $1 $$.envF [] $2;
+            $$.tempMod = if ($$.typ==TVoid) then ( $$.temp ) else ( ((fst $$.temp) + 1), (snd $$.temp) );
+            $1.address = (idToStr $1) ++ getPosF $1 $$.envF;
+            $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod)));
+            $$.tac = if ($$.typ==TVoid) then [FunCall "procedure" "" (Id $1.address) []] else [FunCall "function" $$.address(Id $1.address) []];
+            where (case checkErrProc $1 $$.envF [] $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                }); 
+            }
 
-  | Decl            { 
-                $$ = StDecl $1; 
-                $1.envV = $$.envV;
-                $1.envF = $$.envF;
-                $$.envVMod = $1.envVMod;
-                $$.envFMod = $1.envFMod;
-                $$.isReturn = False;
-                $1.temp = $$.temp;
-                $$.tempMod = $1.tempMod;                    
-                $$.tac = $1.tac;
-                }
+     | Id '(' ListRExp ')' { 
+            $$ = ExpFunc $1 $3; 
+            $3.envV = $$.envV;
+            $3.envF = $$.envF;
+            $$.typ = getTypeFun (extrFun $1 $$.envF);
+            $$.err = checkErrFun $3.err $1 $$.envF $3.typList $2;
+            $3.temp = $$.temp;
+            $$.tempMod = if ($$.typ==TVoid) then ( $3.tempMod ) else ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
+            $1.address = (idToStr $1) ++ getPosF $1 $$.envF;
+            $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
+            $$.tac = if ($$.typ==TVoid) 
+                    then $3.tac ++ [FunCall "procedure" "" (Id $1.address) $3.addressList] 
+                    else $3.tac ++ [FunCall "function" $$.address (Id $1.address) $3.addressList];
+            where (case checkErrFun $3.err $1 $$.envF $3.typList $2 of {
+                    "" -> Ok ();
+                    x -> Bad $ x;               
+                });
 
-  | 'break'             { 
-                $$ = StBreak; 
-                $$.envVMod = $$.envV;
-                $$.envFMod = $$.envF;
+            }
+
+     | Val { 
+            $$ = ExpVal $1; 
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $$.typ = $1.typ;
+            $$.err = "";
+            $$.tempMod = $$.temp;
+            $$.address = (showVal $1);
+            $$.tac = [];
+            $$.tacJ = [];
+            }
+
+     | LExp { 
+            $$ = ExpLExp $1;
+            $1.envV = $$.envV;
+            $1.envF = $$.envF;
+            $$.typ = $1.typ;
+            $$.err = $1.err;
+            $1.temp = $$.temp;
+            $$.tempMod = $1.tempMod;
+            $$.address = $1.address;
+            $$.tac = $1.tac;
+            $$.tacJ = $$.tac;
+            }
+
+     | '(' RExp ')' { 
+            $$ = ExpPar $2; 
+            $2.envV = $$.envV;
+            $2.envF = $$.envF;
+            $$.typ = $2.typ;
+            $$.err = $2.err;
+            $2.temp = $$.temp;
+            $$.tempMod = $2.tempMod;
+            $$.address = $2.address;
+            $$.tac = $2.tac;
+            }
+
+     | 'readInt' '(' ')' { 
+                $$ = StRead ReadT_readInt;
+                $$.typ = TInt;
                 $$.isReturn = False;
                 $$.tempMod = $$.temp;
-                $$.tac = [UnCondJ (snd $$.loopLabels)];                 
-                where (when ( (fst $$.loopLabels) == (-1) ) $ Bad $ "Sintax Error at "++(pos $1)++": Break is not in a loop" );
+                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
+                $$.tac = [FunCall "function" $$.address (Id "readInt") []];
                 }
 
-  | 'continue'          { 
-                $$ = StContinue;
-                $$.envVMod = $$.envV;
-                $$.envFMod = $$.envF;
+     | 'readFloat' '(' ')' { 
+                $$ = StRead ReadT_readFloat;
+                $$.typ = TFloat;
                 $$.isReturn = False;
                 $$.tempMod = $$.temp;
-                $$.tac = [UnCondJ (fst $$.loopLabels)];             
-                where (when ( (fst $$.loopLabels) == (-1) ) $ Bad $ "Sintax Error at "++(pos $1)++": Continue is not in a loop" );
+                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
+                $$.tac = [FunCall "function" $$.address (Id "readFloat") []];
                 }
-{-
-  | 'try' Block 'catch' Block   { 
-                $$ = StTryCatch $2 $4;
-                $2.envV = (resetEnvV $$.envV);
-                $2.envF = $$.envF;
-                $4.envV = (resetEnvV $$.envV);
-                $4.envF = $$.envF; 
-                $$.envVMod = $$.envV;
-                $$.envFMod = $$.envF;
-                $2.typFun = $$.typFun;
-                $4.typFun = $$.typFun;
+
+     | 'readChar' '(' ')' { 
+                $$ = StRead ReadT_readChar;
+                $$.typ = TChar;
                 $$.isReturn = False;
-                $2.loopLabels = $$.loopLabels;
-                $4.loopLabels = $$.loopLabels;
-                $2.temp = $$.temp;
-                $4.temp = $2.tempMod;                   
-                $$.tempMod = ( (fst $4.tempMod) , ((snd $4.tempMod)+2) );
-                $$.tac = [OneExcpJ ((snd $4.tempMod)+1)] ++ $2.tac 
-                    ++ [UnCondJ ((snd $4.tempMod)+2)] 
-                    ++ [Lbl ((snd $4.tempMod)+1)]
-                    ++ $4.tac 
-                    ++ [Lbl ((snd $4.tempMod)+2)];
+                $$.tempMod = $$.temp;
+                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
+                $$.tac = [FunCall "function" $$.address (Id "readChar") []];
                 }
 
-  | 'write' '(' RExp ')'    { 
-                $$ = StWrite $3; 
-                $3.envV = $$.envV;
-                $3.envF = $$.envF;
-                $$.envVMod = $$.envV;
-                $$.envFMod = $$.envF;
+     | 'readString' '(' ')' { 
+                $$ = StRead ReadT_readString;
+                $$.typ = TString;
                 $$.isReturn = False;
-                $3.temp = $$.temp;
-                $$.tempMod = $3.tempMod;
-                $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "write") [$3.address]];
-                where ( if $3.err == ""
-                    then when ( $3.typ == TBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as write-argument"
-                    else Bad $ $3.err );
-                }
--}
-  | 'writeInt' '(' RExp ')'    { 
-                    $$ = StWrite WriteT_writeInt $3;
-                    $3.envV = $$.envV;
-                    $3.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $$.isReturn = False;
-                    $3.temp = $$.temp;
-                    $$.tempMod = $3.tempMod;
-                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeInt") [$3.address]];
-                    where ( if $3.err == ""
-                        then when ( not $ $3.typ == TInt ) $ Bad $ "Type Error at "++(pos $2)++": needed integer input when using writeInt"
-                        else Bad $ $3.err );
-                    }
-
-  | 'writeFloat' '(' RExp ')'    { 
-                    $$ = StWrite WriteT_writeFloat $3;
-                    $3.envV = $$.envV;
-                    $3.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $$.isReturn = False;
-                    $3.temp = $$.temp;
-                    $$.tempMod = $3.tempMod;
-                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeFloat") [$3.address]];
-                    where ( if $3.err == ""
-                        then when ( not $ $3.typ == TFloat ) $ Bad $ "Type Error at "++(pos $2)++": needed float input when using writeFloat"
-                        else Bad $ $3.err );
-                    }
-
-  | 'writeChar' '(' RExp ')'    { 
-                    $$ = StWrite WriteT_writeChar $3;
-                    $3.envV = $$.envV;
-                    $3.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $$.isReturn = False;
-                    $3.temp = $$.temp;
-                    $$.tempMod = $3.tempMod;
-                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeChar") [$3.address]];
-                    where ( if $3.err == ""
-                        then when ( not $ $3.typ == TChar ) $ Bad $ "Type Error at "++(pos $2)++": needed char input when using writeChar"
-                        else Bad $ $3.err );
-                    }
-
-  | 'writeString' '(' RExp ')'    { 
-                    $$ = StWrite WriteT_writeString $3;
-                    $3.envV = $$.envV;
-                    $3.envF = $$.envF;
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $$.isReturn = False;
-                    $3.temp = $$.temp;
-                    $$.tempMod = $3.tempMod;
-                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeString") [$3.address]];
-                    where ( if $3.err == ""
-                        then when ( not $ $3.typ == TString ) $ Bad $ "Type Error at "++(pos $2)++": needed string input when using writeString"
-                        else Bad $ $3.err );
-                    }
-{-
-  | 'read' '(' RExp ')'     { 
-                $$ = StRead $3;
-                $3.envV = $$.envV;
-                $3.envF = $$.envF;
-                $$.envVMod = $$.envV;
-                $$.envFMod = $$.envF;
-                $$.isReturn = False;
-                $3.temp = $$.temp;
-                $$.tempMod = $3.tempMod;
-                $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "read") [$3.address]];
-                where ( if $3.err == ""
-                    then when ( $3.typ == TBool ) $ Bad $ "Type Error at "++(pos $2)++": Cannot use bool as read-argument"
-                    else Bad $ $3.err );
-                }
--}
-
--- Sotto insieme dei comandi utilizzato in alcune situazioni particolari (ad es: all'interno di if e for)
-StmtSmpl : ShortVarDecl     { 
-                $$ = StShortVarDecl $1; 
-                $1.envV = $$.envV;
-                $1.envF = $$.envF;
-                $$.envVMod = $1.envVMod;
-                $$.envFMod = $1.envFMod;
-                $$.checkForIncr = False;
-                $1.temp = $$.temp;
-                $$.tempMod = $1.tempMod;
-                $$.tac = $1.tac ;
-                } 
-
-  | RExp            { 
-                $$ = StExp $1; 
-                $1.envV = $$.envV;
-                $1.envF = $$.envF;
-                $$.envVMod = $$.envV;
-                $$.envFMod = $$.envF;
-                $$.checkForIncr = True;
-                $1.temp = $$.temp;
-                $$.tempMod = $1.tempMod;
-                $$.tac = $1.tac;
-                where ( if ($1.err== "") 
-                    then ( if ($1.address == "")
-                        then Ok ()
-                        else Bad $ "Sintax Error : Right expression not assigned")
-                    else ( Bad $ $1.err) 
-                );
+                $$.tempMod = $$.temp;
+                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
+                $$.tac = [FunCall "function" $$.address (Id "readString") []];
                 }
 
-  | LExp '=' RExp       { 
-                $$ = StAsgn $1 $3; 
-                $1.envV = $$.envV;
-                $1.envF = $$.envF;
-                $3.envV = $$.envV;
-                $3.envF = $$.envF;
-                $$.envVMod = $$.envV;
-                $$.envFMod = $$.envF;
-                $$.checkForIncr = True;
-                $1.temp = $$.temp;
-                $3.temp = $1.tempMod;
-                $$.tempMod = $3.tempMod;
-                $$.tac = $1.tac ++ $3.tac ++ [NulOp $1.address $3.address] ;
-                where ( if ( ($1.err== "") && ($3.err== "" ) ) 
-                        then (if (($1.typ == TFloat) && ($3.typ == TInt)) 
-                            then (Ok ()) 
-                            else when (not($1.typ == $3.typ)) $ Bad $ "Type Error at "++(pos $2)++": Cannot use "++(showType $3.typ)++" as type "++(showType $1.typ)++" in assignment"
-                        )
-                        else (if not($1.err=="")
-                                then Bad $ $1.err
-                            else Bad $ $3.err
-                            )
-                    ); 
-                }
+Val : Integer { 
+        $$ = Int $1; 
+        $$.typ = TInt;
+        } 
 
+    | Double { 
+        $$ = Float $1; 
+        $$.typ = TFloat;
+        }
 
--- Left Expressions (per assegnamenti)
-LExp : Id       { 
+    | Char { 
+        $$ = Char $1; 
+        $$.typ = TChar;
+        }
+
+    | String { 
+        $$ = String $1; 
+        $$.typ = TString;
+        }
+
+    | Boolean { 
+        $$ = Bool $1; 
+        $$.typ = TBool;
+        }
+
+LExp : Id { 
             $$ = ExpId $1; 
             $$.typ = getTypeVar (extrVar $1 $$.envV);
             $$.err = if (not(searchVar $1 $$.envV)) 
@@ -787,7 +605,7 @@ LExp : Id       {
         
             } 
 
-  | LExp '[' RExp ']'   { 
+     | LExp '[' RExp ']' { 
             $$ = ExpArr $1 $3; 
             $1.envV = $$.envV;
             $1.envF = $$.envF;
@@ -827,7 +645,7 @@ LExp : Id       {
                         else Bad $ $1.err)); 
             }
 
-  | '*' RExp %prec PUN  { 
+     | '*' RExp %prec PUN { 
             $$ = ExpDeref $2; 
             $2.envV = $$.envV;
             $2.envF = $$.envF;
@@ -839,7 +657,7 @@ LExp : Id       {
                     else $2.err);
             $2.temp = $$.temp;
             $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
-            $$.address = "*"++(show $2.address);
+            $$.address = "*"++($2.address);
             $$.tac = $2.tac;
             where ( if $2.err==""
                     then if  not(isTyipePnt $2.typ) 
@@ -848,527 +666,430 @@ LExp : Id       {
                     else Bad $ $2.err );
             }
 
+Start : 'package' Id ListDecl {
+                    $$ = (Entry $2 (reverse $3), $$.tac);
+                    $$.typ = TInt; 
+                    $$.envV = [];
+                    $$.envF = [];
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $3.temp = (0,0);
+                    $$.tac = $3.tac;
+                    } 
 
+Decl : 'var' ListId Type  { 
+                        $$ = DeclVar $2 $3;
+                        $$.idList = setPos $2 (pos $1);
+                        $$.envVMod = (unionVar (createList $2 $3 (pos $1)) $$.envV);
+                        $$.envFMod = $$.envF;
+                        $$.tempMod = $$.temp;
+                        $$.tac = [] ;
+                        where ( case (ctrlDeclVarList $$.idList $$.envV) of {
+                                Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block" ;
+                                Nothing -> Ok ();
+                            });
+                        }
 
--- Right Expressions (operazioni matematiche,booleane,relazionali,chiamate di procedura(funzioni),referenziazioni)
-RExp : RExp '+' RExp    { 
-            $$ = ExpAdd $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
-            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "+" $$.address $1.address $3.address)]; 
-            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            } 
+     | 'var' ListId '=' ListRExp { 
+                        $$ = DeclVarInit $2 $4;
+                        $$.idList = setPos $2 (pos $1);
+                        $4.envV = $$.envV;
+                        $4.envF = $$.envF;                              
+                        $$.envVMod = (unionVar ( createListMod $2 $4.typList (pos $1)) $$.envV);
+                        $$.envFMod = $$.envF;
+                        $4.temp = $$.temp;
+                        $$.tempMod = $4.tempMod;
+                        $$.tac = $4.tac ++ ( tacAssign $$.idList $4.addressList );
+                        where ( case (ctrlDeclVarList $2 $$.envV) of {
+                                Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
+                                Nothing -> ( if (not(length $2 == length $4.typList)) 
+                                        then Bad $ "Sintax Error at "++(pos $1)++": n.of id and expression not matching"
+                                        else Ok ()  );
+                                }
+                            );
+                        }
+                        
+     | 'var' ListId Type '=' ListRExp { 
+                        $$ = DeclVarTypeInit $2 $3 $5;
+                        $$.idList = setPos $2 (pos $1);
+                        $5.envV = $$.envV;
+                        $5.envF = $$.envF;                              
+                        $$.envVMod = (unionVar ( createList $2 $3 (pos $1)) $$.envV);
+                        $$.envFMod = $$.envF;
+                        $5.temp = $$.temp;
+                        $$.tempMod = $5.tempMod;
+                        $$.tac = $5.tac ++ ( tacAssign $$.idList $5.addressList );
+                        where ( case (ctrlDeclVarList $2 $$.envV) of {
+                                Just a -> Bad $ "Scope Error at "++(pos $1)++": variable "++(idToStr a)++" already declared in this block";
+                                Nothing -> ( if (not(length $2 == length $5.typList)) 
+                                               then Bad $ "Sintax Error at "++(pos $1)++": n.of id and expression not matching"
+                                               else ( case ( matchType $3 ($5.typList)) of {
+						                          Just a  -> Bad $ "Type Error at: "++(pos $4)++" Cannot use "++(showType (fst a))++" as type "++(showType (snd a))++" in assignment";
+						                          Nothing -> Ok () ;
+                                          }
+                                       )
+                                    );
+                                }
+                            );
+                        }
 
-  | RExp '-' RExp   { 
-            $$ = ExpSub $1 $3;
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
-            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "-" $$.address $1.address $3.address)]; 
-            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+     | 'func' Id '(' ListParam ')' Type Block { 
+                        $$ = DeclFun $2 $4 $6 $7;
+                        $$.idList = setPos [$2] (pos $1);
+                        $$.envVMod = $$.envV;
+                        $$.envFMod = ( insFun (Fun $2 $6 $4.typList (pos $1)) $$.envF );
+                        $7.envV = (unionVar $4.envV (resetEnvV $$.envV) );
+                        $7.envF = $$.envFMod;
+                        $7.typFun = $6;
+                        $7.loopLabels = (-1,-1);
+                        $7.temp = $$.temp;
+                        $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
+                        $$.tac = [FunDecl "function" (Id $ idToStr $ head $$.idList) (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
+                        where (if (searchFun $2 $$.envF) 
+                            then Bad $ "Scope Error at "++(pos $1)++": function "++(idToStr $2)++" already declared"
+                            else when (not($7.isReturn)) $ Bad $ "Sintax Error at "++(pos $1)++": missing return at end of function" );
+                        }
 
-  | RExp '*' RExp       { 
-            $$ = ExpMul $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
-            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "*" $$.address $1.address $3.address)]; 
-            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+     | 'func' Id '(' ListParam ')' 'void' Block { 
+                        $$ = DeclProc $2 $4 $7;
+                        $$.idList = setPos [$2] (pos $1);
+                        $$.envVMod = $$.envV;
+                        $$.envFMod = (insFun (Fun $2 TVoid $4.typList (pos $1)) $$.envF);
+                        $7.envV = (unionVar $4.envV (resetEnvV $$.envV) ); 
+                        $7.envF = $$.envFMod;
+                        $7.typFun = TVoid; 
+                        $7.loopLabels = (-1,-1);
+                        $7.temp = $$.temp;
+                        $$.tempMod = ( (fst $7.tempMod) , ((snd $7.tempMod)+1) );
+                        $$.tac = [FunDecl "procedure" (Id $ idToStr $ head $$.idList) (length $4.typList)]++$7.tac++[Lbl ((snd $7.tempMod)+1)] ;
+                        where (if (searchFun $2 $$.envF) 
+                            then Bad $ "Scope Error at "++(pos $1)++": procedure "++(idToStr $2)++" already declared"
+                            else Ok () );
+                        }
 
-  | RExp '/' RExp   { 
-            $$ = ExpDiv $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
-            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "/" $$.address $1.address $3.address)]; 
-            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+ShortVarDecl : ListId ':=' ListRExp {
+                        $$ = DeclVarShort $1 $3;
+                        $$.idList = setPos $1 (pos $2);
+                        $3.envV = $$.envV;
+                        $3.envF = $$.envF;
+                        $$.envVMod = (unionVar ( createListMod $1 $3.typList (pos $2)) $$.envV);
+                        $$.envFMod = $$.envF;
+                        $3.temp = $$.temp;
+                        $$.tempMod = $3.tempMod;
+                        $$.tac = $3.tac ++ ( tacAssign $$.idList $3.addressList );
+                        where ( case (ctrlDeclVarList $1 $$.envV) of {
+                                Just a -> Bad $ "Scope Error at "++(pos $2)++": variable "++(idToStr a)++" already declared in this block";
+                                Nothing -> ( if (not(length $1 == length $3.typList)) 
+                                        then Bad $ "Sintax Error at "++(pos $2)++": n.of id and expression not matching"
+                                        else Ok ()  );
+                                }
+                            );
+                        }
 
-  | RExp '%' RExp   { 
-            $$ = ExpMod $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= (checkMathOp $1.typ $3.typ $1.err $3.err $2);    
-            $$.typ = if (($1.typ == TInt) && ($3.typ == TInt)) then TInt else TFloat ;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "%" $$.address $1.address $3.address)]; 
-            where (case checkMathOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+Param : ListId Type { 
+                  $$ = Parameter $1 $2; 
+                  $$.envV = (createList $1 $2 "0");
+                  $$.typList = (replicate (length $1) $2);
+                  } 
 
-  | RExp '==' RExp  { 
-            $$ = ExpEq $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;      
-            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
-            $$.typ = TBool;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "==" $$.address $1.address $3.address)]; 
-            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+      | Pass ListId Type { 
+                  $$ = ParameterPass $1 $2 $3; 
+                  $$.envV = (createList $2 $3 "0");
+                  $$.typList = (replicate (length $2) $3);
+                  }
 
-  | RExp '!=' RExp  { 
-            $$ = ExpNeq $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
-            $$.typ = TBool;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "!=" $$.address $1.address $3.address)];
-            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+Block : '{' ListStmt '}' { 
+                    $$ = (BodyBlock (reverse $2)); 
+                    $2.envV = $$.envV;
+                    $2.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $2.typFun = $$.typFun;
+                    $$.isReturn = $2.isReturn;
+                    $2.loopLabels = $$.loopLabels;
+                    $2.temp = $$.temp;
+                    $$.tempMod = $2.tempMod;
+                    $$.tac = $2.tac;
+                    }
 
-  | RExp '<' RExp   { 
-            $$ = ExpLt $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
-            $$.typ = TBool;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "<" $$.address $1.address $3.address)];
-            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+Stmt : Decl { 
+              $$ = StDecl $1; 
+              $1.envV = $$.envV;
+              $1.envF = $$.envF;
+              $$.envVMod = $1.envVMod;
+              $$.envFMod = $1.envFMod;
+              $$.isReturn = False;
+              $1.temp = $$.temp;
+              $$.tempMod = $1.tempMod;                    
+              $$.tac = $1.tac;
+              }
 
-  | RExp '<=' RExp  { 
-            $$ = ExpLtE $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
-            $$.typ = TBool;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "<=" $$.address $1.address $3.address)];
-            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+     | Block { 
+              $$ = StBlock $1; 
+              $1.envV = (resetEnvV $$.envV);
+              $1.envF = $$.envF;
+              $$.envVMod = $$.envV;
+              $$.envFMod = $$.envF;
+              $1.typFun = $$.typFun;
+              $$.isReturn = False;
+              $1.loopLabels = $$.loopLabels;
+              $1.temp = $$.temp;
+              $$.tempMod = $1.tempMod;
+              $$.tac = $1.tac;
+              }
 
-  | RExp '>' RExp   { 
-            $$ = ExpGt $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
-            $$.typ = TBool;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp ">" $$.address $1.address $3.address)];
-            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
+     | StmtSmpl { 
+              $$ = StSmpl $1; 
+              $1.envV = $$.envV;
+              $1.envF = $$.envF;
+              $$.envVMod = $1.envVMod;
+              $$.envFMod = $1.envFMod;
+              $$.isReturn = False;
+              $1.temp = $$.temp;
+              $$.tempMod = $1.tempMod;
+              $$.tac = $1.tac;
+              }
 
-  | RExp '>=' RExp  { 
-            $$ = ExpGtE $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= checkRelOp $1.typ $3.typ $1.err $3.err $2;   
-            $$.typ = TBool;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp ">=" $$.address $1.address $3.address)];
-            where (case checkRelOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
-            
-{------------------------- short-cut ------------------------------
-  | RExp '&&' RExp   { 
-                $$ = ExpAnd $1 $3; 
-                $1.envV = $$.envV; 
-                $1.envF = $$.envF; 
+     | 'if' RExp Block { 
+                    $$ = StIf $2 $3; 
+                    $2.envV = $$.envV;
+                    $2.envF = $$.envF;
+                    $3.envV = (resetEnvV $$.envV);
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $3.typFun = $$.typFun;
+                    $$.isReturn = False;
+                    $3.loopLabels = $$.loopLabels;
+                    $2.temp = $$.temp;
+                    $3.temp = $2.tempMod;
+                    $$.tempMod = ( (fst $3.tempMod) , ((snd $3.tempMod)+2) );
+                    $$.tac = $2.tac ++ [CondJ $2.address ((snd $3.tempMod)+2)]
+                            ++ [Lbl ((snd $3.tempMod)+1)]
+                            ++ $3.tac
+                            ++ [Lbl ((snd $3.tempMod)+2)];
+                    where ( if ($2.err== "") 
+                        then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
+                        else ( Bad $ $2.err) 
+                    );
+                    }
+
+     | 'if' RExp Block 'else' Block { 
+                    $$ = StIfElse $2 $3 $5;
+                    $2.envV = $$.envV;
+                    $2.envF = $$.envF;
+                    $3.envV = (resetEnvV $$.envV);
+                    $3.envF = $$.envF;
+                    $5.envV = (resetEnvV $$.envV);
+                    $5.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $3.typFun = $$.typFun;
+                    $5.typFun = $$.typFun;
+                    $$.isReturn = False;
+                    $3.loopLabels = $$.loopLabels;
+                    $5.loopLabels = $$.loopLabels;
+                    $2.temp = $$.temp;
+                    $3.temp = $2.tempMod;
+                    $5.temp = $3.tempMod;
+                    $$.tempMod = ( (fst $5.tempMod) , ((snd $5.tempMod)+3) );
+                    $$.tac = shift $2.tacJ (snd $5.tempMod)
+                          ++ [CondJ $2.address ((snd $5.tempMod)+2)]
+                          ++ [Lbl ((snd $5.tempMod)+1)]
+                          ++ $3.tac
+                          ++ [UnCondJ ((snd $5.tempMod)+3)]
+                          ++ [Lbl ((snd $5.tempMod)+2)]
+                          ++ $5.tac
+                          ++ [Lbl ((snd $5.tempMod)+3)];
+                    where ( if ($2.err== "") 
+                        then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as if-condition" )
+                        else ( Bad $ $2.err) 
+                    );
+                    }
+
+     | 'for' RExp Block { 
+                $$ = StWhile $2 $3;
+                $2.envV = $$.envV;
+                $2.envF = $$.envF;
+                $3.envV = (resetEnvV $$.envV);
+                $3.envF = $$.envF;
+                $$.envVMod = $$.envV;
+                $$.envFMod = $$.envF;
+                $3.typFun = $$.typFun;
+                $$.isReturn = False;
+                $3.loopLabels = ( ((snd $3.tempMod)+1) , ((snd $3.tempMod)+2) );
+                $2.temp = $$.temp;
+                $3.temp = $2.tempMod;                   
+                $$.tempMod = ( (fst $3.tempMod) , ((snd $3.tempMod)+2) );
+                $$.tac = [Lbl ((snd $3.tempMod)+1)]
+                        ++ $2.tac
+                        ++ [CondJ $2.address ((snd $3.tempMod)+2)]
+                        ++ $3.tac
+                        ++ [UnCondJ ((snd $3.tempMod)+1)]
+                        ++ [Lbl ((snd $3.tempMod)+2)];
+                where ( if ($2.err== "")
+                    then (when (not($2.typ == TBool)) $ Bad $ "Type Error at "++(pos $1)++": Type "++ (showType $2.typ) ++" used as for-condition" )
+                    else ( Bad $ $2.err)
+                );
+                }
+
+     | 'break' { 
+                $$ = StBreak; 
+                $$.envVMod = $$.envV;
+                $$.envFMod = $$.envF;
+                $$.isReturn = False;
+                $$.tempMod = $$.temp;
+                $$.tac = [UnCondJ (snd $$.loopLabels)];                 
+                where (when ( (fst $$.loopLabels) == (-1) ) $ Bad $ "Sintax Error at "++(pos $1)++": Break is not in a loop" );
+                }
+
+     | 'continue' { 
+                $$ = StContinue;
+                $$.envVMod = $$.envV;
+                $$.envFMod = $$.envF;
+                $$.isReturn = False;
+                $$.tempMod = $$.temp;
+                $$.tac = [UnCondJ (fst $$.loopLabels)];             
+                where (when ( (fst $$.loopLabels) == (-1) ) $ Bad $ "Sintax Error at "++(pos $1)++": Continue is not in a loop" );
+                }
+
+     | 'return' RExp { 
+                    $$ = StReturn $2; 
+                    $2.envV = $$.envV;
+                    $2.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = True;
+                    $2.temp = $$.temp;
+                    $$.tempMod = $2.tempMod;
+                    $$.tac = $2.tac ++ [ Return $2.address ];
+                    where ( if ($2.err== "") 
+                        then ( case $$.typFun of {
+                            TVoid -> ( Bad $ "Sintax Error at "++(pos $1)++": Cannot return any value" );
+                            _ -> ( when (not($2.typ == $$.typFun)) $ Bad $ "Type Error at "++(pos $1)++": Cannot use type "++(showType $2.typ)++" as type "++(showType $$.typFun)++" in return argument" );
+
+                        })
+                        else ( Bad $ $2.err) 
+                    );
+                    }
+
+     | 'writeInt' '(' RExp ')' { 
+                    $$ = StWrite WriteT_writeInt $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeInt") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TInt ) $ Bad $ "Type Error at "++(pos $2)++": needed integer input when using writeInt"
+                        else Bad $ $3.err );
+                    }
+
+     | 'writeFloat' '(' RExp ')' { 
+                    $$ = StWrite WriteT_writeFloat $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeFloat") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TFloat ) $ Bad $ "Type Error at "++(pos $2)++": needed float input when using writeFloat"
+                        else Bad $ $3.err );
+                    }
+
+     | 'writeChar' '(' RExp ')' { 
+                    $$ = StWrite WriteT_writeChar $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeChar") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TChar ) $ Bad $ "Type Error at "++(pos $2)++": needed char input when using writeChar"
+                        else Bad $ $3.err );
+                    }
+
+     | 'writeString' '(' RExp ')' { 
+                    $$ = StWrite WriteT_writeString $3;
+                    $3.envV = $$.envV;
+                    $3.envF = $$.envF;
+                    $$.envVMod = $$.envV;
+                    $$.envFMod = $$.envF;
+                    $$.isReturn = False;
+                    $3.temp = $$.temp;
+                    $$.tempMod = $3.tempMod;
+                    $$.tac = $3.tac ++ [FunCall "procedure" "" (Id "writeString") [$3.address]];
+                    where ( if $3.err == ""
+                        then when ( not $ $3.typ == TString ) $ Bad $ "Type Error at "++(pos $2)++": needed string input when using writeString"
+                        else Bad $ $3.err );
+                    }
+
+StmtSmpl : ShortVarDecl { 
+                $$ = StShortVarDecl $1; 
+                $1.envV = $$.envV;
+                $1.envF = $$.envF;
+                $$.envVMod = $1.envVMod;
+                $$.envFMod = $1.envFMod;
+                $$.checkForIncr = False;
+                $1.temp = $$.temp;
+                $$.tempMod = $1.tempMod;
+                $$.tac = $1.tac ;
+                } 
+
+         | RExp { 
+                $$ = StExp $1; 
+                $1.envV = $$.envV;
+                $1.envF = $$.envF;
+                $$.envVMod = $$.envV;
+                $$.envFMod = $$.envF;
+                $$.checkForIncr = True;
+                $1.temp = $$.temp;
+                $$.tempMod = $1.tempMod;
+                $$.tac = $1.tac;
+                where ( if ($1.err== "") 
+                    then ( if ($1.address == "")
+                        then Ok ()
+                        else Bad $ "Sintax Error : Right expression not assigned")
+                    else ( Bad $ $1.err) 
+                );
+                }
+
+         | LExp '=' RExp { 
+                $$ = StAsgn $1 $3; 
+                $1.envV = $$.envV;
+                $1.envF = $$.envF;
                 $3.envV = $$.envV;
                 $3.envF = $$.envF;
-                $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;
-                $$.typ = TBool;
+                $$.envVMod = $$.envV;
+                $$.envFMod = $$.envF;
+                $$.checkForIncr = True;
                 $1.temp = $$.temp;
                 $3.temp = $1.tempMod;
-                $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-                $$.address = "t"++ (show  (fst $$.tempMod) );
-                $$.tac = $1.tac ++ [CondJ $1.address ((snd $3.tempMod)+1)]
-                    ++ $3.tac
-                    ++ [(BinOp "&&" $$.address $1.address $3.address)];
-               where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
-
-  | RExp '||' RExp  { 
-                $$ = ExpOr $1 $3; 
-                $1.envV = $$.envV; 
-                $1.envF = $$.envF; 
-                $3.envV = $$.envV;
-                $3.envF = $$.envF;
-                $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;
-                $$.typ = TBool;
-                $1.temp = $$.temp;
-                $3.temp = $1.tempMod;
-                $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-                $$.address = "t"++ (show  (fst $$.tempMod) );
-                $$.tac = $1.tac ++ [Lbl ((snd $3.tempMod)+1)] ++ [CondJTrue $1.address ((snd $3.tempMod)+1)]
-                    ++ $3.tac
-                    ++ [(BinOp "||" $$.address $1.address $3.address)];
-               where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
-----------------------------------------------------}
-
-  | RExp '&&' RExp  { 
-            $$ = ExpAnd $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;  
-            $$.typ = TBool;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            
-            $1.true = snd $1.tempMod;
-            $1.false = $$.false;
-            $3.true = $$.true;
-            $3.false = $$.false;
-            
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "&&" $$.address $1.address $3.address)];
-            $$.tacJ = $1.tacJ ++ [(CondJ $1.address ($1.true+2))] ++ $3.tacJ ++ [(BinOp "&&" $$.address $1.address $3.address)];
-            where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
-
-  | RExp '||' RExp  { 
-            $$ = ExpOr $1 $3; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.err= checkBoolOp $1.typ $3.typ $1.err $3.err $2;  
-            $$.typ = TBool;
-            $1.temp = $$.temp;
-            $3.temp = $1.tempMod;
-            $$.tempMod = ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            
-            $1.true = snd $1.tempMod;
-            $1.false = $$.false;
-            $3.true = $$.true;
-            $3.false = $$.false;
-            
-            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "||" $$.address $1.address $3.address)];
-            $$.tacJ = $1.tacJ ++ [(CondJTrue $1.address ($1.true+1))] ++ $3.tacJ ++ [(BinOp "||" $$.address $1.address $3.address)];
-            where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-            }
-                
-  | '!' RExp             { 
-            $$ = ExpNot $2; 
-            $2.envV = $$.envV;
-            $2.envF = $$.envF;
-            $$.err = if ($2.err == "")  
-                    then    (if (not($2.typ == TBool))
-                        then "Type Error at "++(pos $1)++": Expected boolean type"
-                        else ""
-                    )
-                    else $2.err;
-            $$.typ = TBool;
-            $2.temp = $$.temp;
-            $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $2.tac ++ [(UnOp "!" $$.address $2.address)];
-            where ( if ($2.err == "")  
-                then    (if (not($2.typ == TBool))
-                    then Bad $ "Type Error at "++(pos $1)++": Expected boolean type"
-                    else Ok ()
-                    )
-                else Bad $ $2.err );
-            }
-
-  | '-' RExp  %prec NEG { 
-            $$ = ExpNeg $2; 
-            $2.envV = $$.envV;
-            $2.envF = $$.envF;
-            $$.err = if ($2.err == "")  
-                    then    (if (not($2.typ == TInt || $2.typ == TFloat))
-                        then "Type Error at "++(pos $1)++": Expected numeric type (int or float)"
-                        else ""
-                    )
-                    else $2.err;
-            $$.typ = $2.typ;
-            $2.temp = $$.temp;
-            $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
-            $$.address = "t"++ (show  (fst $$.tempMod) );
-            $$.tac = $2.tac ++ [(UnOp "-" $$.address $2.address)];
-            where ( if ($2.err == "")  
-                then    (if (not($2.typ == TInt || $2.typ == TFloat))
-                    then Bad $ "Type Error at "++(pos $1)++": Expected numeric type (int or float)"
-                    else Ok ()
-                    )
-                else Bad $ $2.err );
-            }
-
-  | Value       { 
-            $$ = ExpVal $1; 
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $$.typ = $1.typ;
-            $$.err = "";
-            $$.tempMod = $$.temp;
-            $$.address = (showVal $1);
-            $$.tac = [];
-            $$.tacJ = [];
-            }
-
-  | LExp        { 
-            $$ = ExpLef $1;
-            $1.envV = $$.envV;
-            $1.envF = $$.envF;
-            $$.typ = $1.typ;
-            $$.err = $1.err;
-            $1.temp = $$.temp;
-            $$.tempMod = $1.tempMod;
-            $$.address = $1.address;
-            $$.tac = $1.tac;
-            $$.tacJ = $$.tac;
-            }
-
-  | Id '(' ')'      { 
-            $$ = ExpFuncEmpty $1; 
-            $$.typ = getTypeFun (extrFun $1 $$.envF);   
-            $$.err = checkErrProc $1 $$.envF [] $2;
-            $$.tempMod = if ($$.typ==TVoid) then ( $$.temp ) else ( ((fst $$.temp) + 1), (snd $$.temp) );
-            $1.address = (idToStr $1) ++ getPosF $1 $$.envF;
-            $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod)));
-            $$.tac = if ($$.typ==TVoid) then [FunCall "procedure" "" (Id $1.address) []] else [FunCall "function" $$.address(Id $1.address) []];
-            where (case checkErrProc $1 $$.envF [] $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                }); 
-            }
-
-  | Id '(' ListExpR ')' { 
-            $$ = ExpFunc $1 $3; 
-            $3.envV = $$.envV;
-            $3.envF = $$.envF;
-            $$.typ = getTypeFun (extrFun $1 $$.envF);
-            $$.err = checkErrFun $3.err $1 $$.envF $3.typList $2;
-            $3.temp = $$.temp;
-            $$.tempMod = if ($$.typ==TVoid) then ( $3.tempMod ) else ( ((fst $3.tempMod) + 1), (snd $3.tempMod) );
-            $1.address = (idToStr $1) ++ getPosF $1 $$.envF;
-            $$.address = if ($$.typ==TVoid) then ("") else ("t"++(show (fst $$.tempMod) )); 
-            $$.tac = if ($$.typ==TVoid) 
-                    then $3.tac ++ [FunCall "procedure" "" (Id $1.address) $3.addressList] 
-                    else $3.tac ++ [FunCall "function" $$.address (Id $1.address) $3.addressList];
-            where (case checkErrFun $3.err $1 $$.envF $3.typList $2 of {
-                    "" -> Ok ();
-                    x -> Bad $ x;               
-                });
-
-            }
-
-  | 'readInt' '(' ')'     { 
-                $$ = StRead ReadT_readInt;
-                $$.typ = TInt;
-                $$.isReturn = False;
-                $$.tempMod = $$.temp;
-                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
-                $$.tac = [FunCall "function" $$.address (Id "readInt") []];
+                $$.tempMod = $3.tempMod;
+                $$.tac = $1.tac ++ $3.tac ++ [NulOp $1.address $3.address] ;
+                where ( if ( ($1.err== "") && ($3.err== "" ) ) 
+                        then (if (($1.typ == TFloat) && ($3.typ == TInt)) 
+                            then (Ok ()) 
+                            else when (not($1.typ == $3.typ)) $ Bad $ "Type Error at "++(pos $2)++": Cannot use "++(showType $3.typ)++" as type "++(showType $1.typ)++" in assignment"
+                        )
+                        else (if not($1.err=="")
+                                then Bad $ $1.err
+                            else Bad $ $3.err
+                            )
+                    ); 
                 }
 
-  | 'readFloat' '(' ')'     { 
-                $$ = StRead ReadT_readFloat;
-                $$.typ = TFloat;
-                $$.isReturn = False;
-                $$.tempMod = $$.temp;
-                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
-                $$.tac = [FunCall "function" $$.address (Id "readFloat") []];
-                }
 
-  | 'readChar' '(' ')'     { 
-                $$ = StRead ReadT_readChar;
-                $$.typ = TChar;
-                $$.isReturn = False;
-                $$.tempMod = $$.temp;
-                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
-                $$.tac = [FunCall "function" $$.address (Id "readChar") []];
-                }
-
-  | 'readString' '(' ')'     { 
-                $$ = StRead ReadT_readString;
-                $$.typ = TString;
-                $$.isReturn = False;
-                $$.tempMod = $$.temp;
-                $$.address = "t"++(show ((fst $$.tempMod) + 1) );
-                $$.tac = [FunCall "function" $$.address (Id "readString") []];
-                }
-
-  | '&' LExp        { 
-            $$ = ExpRef $2;
-            $2.envV = $$.envV;
-            $2.envF = $$.envF;
-            $$.err = $2.err;
-            $$.typ = TPointer $2.typ;
-            $2.temp = $$.temp;
-            $$.tempMod = ( ((fst $2.tempMod) + 1), (snd $2.tempMod) );
-            $$.address = "t"++(show (fst $$.tempMod) );
-            $$.tac = $2.tac ++ [(NulOp $$.address ("&"++$2.address))];
-            }
-
-  | '(' RExp ')'    { 
-            $$ = ExpPar $2; 
-            $2.envV = $$.envV;
-            $2.envF = $$.envF;
-            $$.typ = $2.typ;
-            $$.err = $2.err;
-            $2.temp = $$.temp;
-            $$.tempMod = $2.tempMod;
-            $$.address = $2.address;
-            $$.tac = $2.tac;
-            }
-
-
--- Valori base
-Value : Integer { 
-        $$ = Int $1; 
-        $$.typ = TInt;
-        } 
-
-  | Double  { 
-        $$ = Float $1; 
-        $$.typ = TFloat;
-        }
-
-  | Char    { 
-        $$ = Char $1; 
-        $$.typ = TChar;
-        }
-
-  | String  { 
-        $$ = String $1; 
-        $$.typ = TString;
-        }
-
-  |  Boolean    { 
-        $$ = Bool $1; 
-        $$.typ = TBool;
-        }
-
-
-
-Boolean : 'true'    { $$ = Boolean_true; } 
-  | 'false'         { $$ = Boolean_false; }
-
-
--- Lista di Id (uno o più)
-ListId : Id         { 
-            $$ = (:[]) $1;
-            $$.idList = [$1];
-            } 
-
-  | Id ',' ListId   { 
-            $$ = (:) $1 $3;
-            $$.idList = ( $1 : $3.idList ) ;
-            where ( when (elem $1 $3) $ Bad $ "Sintax Error at "++(pos $2)++": Duplicate identificator " ++ (idToStr $1) ); 
-            }
-
-
--- Lista di espressioni destre (una o più)
-ListExpR : RExp     { 
+ListRExp : RExp { 
             $$ = (:[]) $1; 
             $1.envV = $$.envV;
             $1.envF = $$.envF;
@@ -1380,7 +1101,7 @@ ListExpR : RExp     {
             $$.tac = $1.tac;
             } 
 
-  | RExp ',' ListExpR   { 
+         | RExp ',' ListRExp { 
             $$ = (:) $1 $3; 
             $1.envV = $$.envV;
             $1.envF = $$.envF;
@@ -1395,34 +1116,7 @@ ListExpR : RExp     {
             $$.tac = $1.tac ++ $3.tac;
             }
 
-
--- Lista di comandi semplici (zero o uno)
-{-
-ListStmtSmpl : {- empty -}  { 
-                    $$ = []; 
-                    $$.envVMod = $$.envV;
-                    $$.envFMod = $$.envF;
-                    $$.checkForIncr = True;
-                    $$.tempMod = $$.temp;
-                    $$.tac = [] ;
-                    } 
-
-           | StmtSmpl   { 
-                    $$ = (:[]) $1; 
-                    $1.envV = $$.envV;
-                    $1.envF = $$.envF;
-                    $$.envVMod = $1.envVMod;
-                    $$.envFMod = $1.envFMod;
-                    $$.checkForIncr = $1.checkForIncr;
-                    $1.temp = $$.temp;
-                    $$.tempMod = $1.tempMod;
-                    $$.tac = $1.tac;
-                    }
-
--}
-
--- Lista di dichiarazioni di variabili, funzioni(procedure) (zero o più)
-ListDecl : {- empty -}      { 
+ListDecl : {- empty -} { 
                 $$ = []; 
                 $$.envVMod = $$.envV;
                 $$.envFMod = $$.envF;
@@ -1430,7 +1124,7 @@ ListDecl : {- empty -}      {
                 $$.tac = [];
                 } 
 
-           | ListDecl Decl  { 
+         | ListDecl Decl { 
                 $$ = flip (:) $1 $2; 
                 $1.envV = $$.envV;
                 $1.envF = $$.envF;
@@ -1444,21 +1138,30 @@ ListDecl : {- empty -}      {
                 $$.tac = $1.tac ++ $2.tac;
                 }
 
+ListId : Id { 
+            $$ = (:[]) $1;
+            $$.idList = [$1];
+            } 
 
--- Lista di parametri  (zero o più)
-ListParam : {- empty -}         { 
+       | Id ',' ListId { 
+            $$ = (:) $1 $3;
+            $$.idList = ( $1 : $3.idList ) ;
+            where ( when (elem $1 $3) $ Bad $ "Sintax Error at "++(pos $2)++": Duplicate identificator " ++ (idToStr $1) ); 
+            }
+
+ListParam : {- empty -} { 
                     $$ = []; 
                     $$.envV = [];
                     $$.typList = [];
                     } 
 
-            | Param             { 
+          | Param { 
                     $$ = (:[]) $1; 
                     $$.envV = $1.envV;
                     $$.typList = $1.typList;            
                     }
 
-        | Param ',' ListParam   { 
+          | Param ',' ListParam { 
                     $$ = (:) $1 $3;
                     $$.envV = $1.envV ++ $3.envV;
                     $$.typList = ( $1.typList ++ $3.typList );
@@ -1468,9 +1171,7 @@ ListParam : {- empty -}         {
                         } );
                     }
 
-
--- Lista di comandi  (zero o più)
-ListStmt : {- empty -}          { 
+ListStmt : {- empty -} { 
                         $$ = []; 
                         $$.envVMod = $$.envV;
                         $$.envFMod = $$.envF;
@@ -1479,7 +1180,7 @@ ListStmt : {- empty -}          {
                         $$.tac = [];
                         }
  
-        | ListStmt Stmt     { 
+         | ListStmt Stmt { 
                         $$ = flip (:) $1 $2; 
                         $1.envV = $$.envV;
                         $1.envF = $$.envF;
@@ -1500,8 +1201,61 @@ ListStmt : {- empty -}          {
 
 
 
-{
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
 -------------------------------------------------------------------------------------------------------------------------------
 ---------------------------- FUNZIONI AUSILIARIE PER INDIVIDUAZIONE E STAMPA DEGLI ERRORI -------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------
@@ -1598,8 +1352,8 @@ showType (TChar) =  "char"
 showType (TString) = "string"
 showType (TBool) =  "boolean"
 showType (TVoid) = "void"
-showType (TArray n t) = "array["++(show n)++"] " ++ showType t
-showType (TPointer t) = "pointer -> " ++ showType t
+showType (TArray n t) = "array[] " ++ showType t
+showType (TPointer t) = "*" ++ showType t
 
 
 showVal (Int i) = show i
@@ -1617,23 +1371,17 @@ getPosF id env = case (extrFun id env) of
 
 setPos ids pos = map (\id -> Id $ (idToStr id) ++ "_" ++ drop 5 pos) ids
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-removeJumpCode l1 l2 l3 temp =  show l1 ++ 
-                                show temp ++ " = true\n" ++ 
-                                "goto " ++ show l3 ++
-                                show l2 ++ 
-                                show temp ++ " = false\n" ++ 
-                                show l3
-{-jumpDelData statIn = (l1,l2,l3,temp,stat4) where
-                            (temp, stat1) = nextTemp statIn
-                            (l1, stat2) = nextLabel stat1
-                            (l2, stat3) = nextLabel stat2
-                            (l3, stat4) = nextLabel stat3-}
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+shift tacList n = map (\x -> shift1 x n) tacList
+shift1 tacOp n = case tacOp of
+                      CondJ t1 lab -> CondJ t1 (lab+n)
+                      CondJTrue t1 lab -> CondJTrue t1 (lab+n)
+                      x -> x
 
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 returnM :: a -> Err a
 returnM = return
 

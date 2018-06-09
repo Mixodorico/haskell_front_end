@@ -1,19 +1,55 @@
+comment "//";
+comment "/*" "*/";
+
+entrypoints Start;
+
+rules     Boolean ::= "true" | "false" ;
+
+ExpAnd.        RExp ::= RExp "&&" RExp ;
+ExpOr.         RExp ::= RExp "||" RExp ;
+ExpNot.        RExp ::= "!" RExp ;        
+ExpEq.         RExp ::= RExp "==" RExp ;
+ExpNeq.        RExp ::= RExp "!=" RExp ;
+ExpLt.         RExp ::= RExp "<" RExp ;
+ExpLtE.        RExp ::= RExp "<=" RExp ;
+ExpGt.         RExp ::= RExp ">" RExp ;
+ExpGtE.        RExp ::= RExp ">=" RExp ;
+ExpAdd.        RExp ::= RExp "+" RExp ;
+ExpSub.        RExp ::= RExp "-" RExp ;
+ExpMul.        RExp ::= RExp "*" RExp ;
+ExpDiv.        RExp ::= RExp "/" RExp ;
+ExpMod.        RExp ::= RExp "%" RExp ;
+ExpNeg.        RExp ::= "-" RExp ;
+ExpRef.        RExp ::= "&" LExp ;
+ExpFuncEmpty.  RExp ::= Id "(" ")" ;
+ExpFunc.       RExp ::= Id "(" [RExp] ")" ;
+ExpVal.        RExp ::= Val ;
+ExpLExp.       RExp ::= LExp ;
+ExpPar.        RExp ::= "(" RExp ")";
+StRead.        RExp ::= ReadT "(" ")";
+
+Int .         Val ::= Integer ;
+Float .       Val ::= Double ;
+Char .        Val  ::= Char ;
+String .      Val ::= String ;
+Bool .        Val  ::= Boolean ;
+
+rules     ReadT  ::= "readInt" | "readFloat" | "readChar" | "readString" ;
+
+ExpId.    LExp ::= Id ;
+ExpArr.   LExp ::= LExp "[" RExp "]" ;
+ExpDeref. LExp ::= "*" RExp ;
+
+separator nonempty RExp "," ;
+
 Entry.          Start ::= "package" Id [Decl];
 
-DeclFun.         Decl ::= "func" Id "(" [Param] ")" Type Block;
-DeclProc.        Decl ::= "func" Id "(" [Param] ")" "void" Block;
+separator Decl "";
+
 DeclVar.         Decl ::= "var"  [Id] Type;
 DeclVarInit.     Decl ::= "var"  [Id] "=" [RExp];
 DeclVarTypeInit. Decl ::= "var"  [Id] Type "=" [RExp];
 DeclVarShort.    ShortVarDecl ::= [Id] ":=" [RExp];
-
-
-ParamL.     Param ::=  [Id] Type;       -- di default è passaggio per valore
-ParamLPassType. Param ::=  Pass [Id] Type;
-PassValue.  Pass  ::=  "val";
-PassRef.  Pass  ::=  "ref";
---PassValueRes.   Pass  ::=  "valres";
-
 
 TVoid.    Type ::= "void";
 TInt.     Type ::= "int";
@@ -24,92 +60,76 @@ TString.  Type ::= "string";
 TArray.   Type ::=  "[" Integer "]" Type; 
 TPointer. Type ::= "*" Type; 
 
+token Id (letter | '_')(letter | digit | '_')*;
+separator nonempty Id "," ;
+
+DeclFun.         Decl ::= "func" Id "(" [Param] ")" Type Block;
+DeclProc.        Decl ::= "func" Id "(" [Param] ")" "void" Block;
+
+separator Param ",";
+
+Parameter.         Param ::=  [Id] Type;       -- di default è passaggio per valore
+ParameterPass.     Param ::=  Pass [Id] Type;
+
+PassVal.        Pass  ::=  "val";
+PassRef.        Pass  ::=  "ref";
+
+separator Stmt "";
 
 BodyBlock. Block ::= "{" [Stmt] "}";
 
+StDecl.           Stmt ::= Decl;
 StBlock.          Stmt ::= Block;
 StSmpl.           Stmt ::= StmtSmpl;
-StReturn.         Stmt ::= "return" RExp;
 StIf.             Stmt ::= "if" RExp Block;
 StIfElse.         Stmt ::= "if" RExp Block "else" Block;
+StWhile.          Stmt ::= "for" RExp Block;
+StBreak.          Stmt ::= "break"; 
+StContinue.       Stmt ::= "continue";
+StReturn.         Stmt ::= "return" RExp;
+StWrite.          Stmt ::= WriteT "(" RExp ")";
+
+rules     WriteT ::= "writeInt" | "writeFloat" | "writeChar" | "writeString" ;
+
+StShortVarDecl.   StmtSmpl ::= ShortVarDecl;
+StExp.            StmtSmpl ::= RExp;          -- non possiamo toglierlo,
+                                              -- altrimenti il parser non funziona
+StAsgn.           StmtSmpl ::= LExp "=" RExp;
+
+
+
+
+
+
+
+--PassValRes.   Pass  ::=  "valres";
+
+
+
 --StIfStm.          Stmt ::= "if" StmtSmpl ";" RExp Block;
 --StIfElseStm.      Stmt ::= "if" StmtSmpl ";" RExp Block "else" Block;
 --StFor.            Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
-StWhile.          Stmt ::= "for" RExp Block;
-StDecl.           Stmt ::= Decl;
-StBreak.          Stmt ::= "break"; 
-StContinue.       Stmt ::= "continue";
 --StTryCatch.       Stmt ::= "try" Block "catch" Block;
 --StWrite.          Stmt ::= "write" "(" RExp ")";
-StWrite.          Stmt ::= WriteT "(" RExp ")";
 --StRead.           Stmt ::= "read" "(" RExp ")";
-StRead.           RExp ::= ReadT "(" ")";
-rules     WriteT ::= "writeInt" | "writeFloat" | "writeChar" | "writeString" ;
-rules     ReadT  ::= "readInt" | "readFloat" | "readChar" | "readString" ;
-
-StShortVarDecl.   StmtSmpl ::= ShortVarDecl;
-StExp.            StmtSmpl ::= RExp;
-StAsgn.           StmtSmpl ::= LExp "=" RExp;
-
-            
-ExpId.    LExp ::= Id ;
-ExpArr.   LExp ::= LExp "[" RExp "]" ;
-ExpDeref. LExp ::= "*" RExp ;
-
-ExpAdd. RExp ::= RExp "+" RExp ;
-ExpSub. RExp ::= RExp "-" RExp ;
-ExpMul. RExp ::= RExp "*" RExp ;
-ExpDiv. RExp ::= RExp "/" RExp ;
-ExpMod. RExp ::= RExp "%" RExp ;            
-ExpEq.  RExp ::= RExp "==" RExp ;
-ExpNeq.  RExp ::= RExp "!=" RExp ;
-ExpLt. RExp ::= RExp "<" RExp ;
-ExpLtE. RExp ::= RExp "<=" RExp ;
-ExpGt. RExp ::= RExp ">" RExp ;
-ExpGtE. RExp ::= RExp ">=" RExp ;
-ExpAnd. RExp ::= RExp "&&" RExp ;
-ExpOr.  RExp ::= RExp "||" RExp ;
-ExpNot. RExp ::= "!" RExp ;
-ExpNeg. RExp ::= "-" RExp ;
-ExpVal. RExp ::= Value ;
-ExpLef.   RExp ::= LExp ;
-ExpFuncEmpty.  RExp ::= Id "(" ")" ;
-ExpFunc.  RExp ::= Id "(" [RExp] ")" ;
-ExpRef.   RExp ::= "&" LExp ;
-ExpPar.   RExp ::= "(" RExp ")";
 
 
-Int .         Value ::= Integer ;
-Float .       Value ::= Double ;
-Char .        Value  ::= Char ;
-String .      Value ::= String ;
-Bool .        Value  ::= Boolean ;
+
+
+
+
 --BoolTrue .    Boolean ::= "true" ;
 --BoolFalse .   Boolean ::= "false" ;
-rules     Boolean ::= "true" | "false" ;
 
 
 --(:[]).  [Id] ::= Id;
 --(:).  [Id] ::= Id "," [Id];
-separator nonempty Id "," ;
 
 --(:[]).  [RExp] ::= RExp;
 --(:).  [RExp] ::= RExp "," [RExp];
-separator nonempty RExp "," ;
 
 -- [].  [StmtSmpl] ::= ;
 --(:[]).  [StmtSmpl] ::= StmtSmpl;
 
 
 --
-
-token Id (letter | '_')(letter | digit | '_')*;
-
-comment "//";
-comment "/*" "*/";
-
-separator Decl "";
-separator Param ",";
-separator Stmt "";
-
-entrypoints Start;

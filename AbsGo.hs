@@ -8,24 +8,64 @@ module AbsGo where
 
 
 newtype Id = Id String deriving (Eq, Ord, Show, Read)
+data Boolean = Boolean_true | Boolean_false
+  deriving (Eq, Ord, Show, Read)
+
+data RExp
+    = ExpAnd RExp RExp
+    | ExpOr RExp RExp
+    | ExpNot RExp
+    | ExpEq RExp RExp
+    | ExpNeq RExp RExp
+    | ExpLt RExp RExp
+    | ExpLtE RExp RExp
+    | ExpGt RExp RExp
+    | ExpGtE RExp RExp
+    | ExpAdd RExp RExp
+    | ExpSub RExp RExp
+    | ExpMul RExp RExp
+    | ExpDiv RExp RExp
+    | ExpMod RExp RExp
+    | ExpNeg RExp
+    | ExpRef LExp
+    | ExpFuncEmpty Id
+    | ExpFunc Id [RExp]
+    | ExpVal Val
+    | ExpLExp LExp
+    | ExpPar RExp
+    | StRead ReadT
+  deriving (Eq, Ord, Show, Read)
+
+data Val
+    = Int Integer
+    | Float Double
+    | Char Char
+    | String String
+    | Bool Boolean
+  deriving (Eq, Ord, Show, Read)
+
+data ReadT
+    = ReadT_readInt
+    | ReadT_readFloat
+    | ReadT_readChar
+    | ReadT_readString
+  deriving (Eq, Ord, Show, Read)
+
+data LExp = ExpId Id | ExpArr LExp RExp | ExpDeref RExp
+  deriving (Eq, Ord, Show, Read)
+
 data Start = Entry Id [Decl]
   deriving (Eq, Ord, Show, Read)
 
 data Decl
-    = DeclFun Id [Param] Type Block
-    | DeclProc Id [Param] Block
-    | DeclVar [Id] Type
+    = DeclVar [Id] Type
     | DeclVarInit [Id] [RExp]
     | DeclVarTypeInit [Id] Type [RExp]
+    | DeclFun Id [Param] Type Block
+    | DeclProc Id [Param] Block
   deriving (Eq, Ord, Show, Read)
 
 data ShortVarDecl = DeclVarShort [Id] [RExp]
-  deriving (Eq, Ord, Show, Read)
-
-data Param = ParamL [Id] Type | ParamLPassType Pass [Id] Type
-  deriving (Eq, Ord, Show, Read)
-
-data Pass = PassValue | PassRef
   deriving (Eq, Ord, Show, Read)
 
 data Type
@@ -39,45 +79,26 @@ data Type
     | TPointer Type
   deriving (Eq, Ord, Show, Read)
 
+data Param = Parameter [Id] Type | ParameterPass Pass [Id] Type
+  deriving (Eq, Ord, Show, Read)
+
+data Pass = PassVal | PassRef
+  deriving (Eq, Ord, Show, Read)
+
 data Block = BodyBlock [Stmt]
   deriving (Eq, Ord, Show, Read)
 
 data Stmt
-    = StBlock Block
+    = StDecl Decl
+    | StBlock Block
     | StSmpl StmtSmpl
-    | StReturn RExp
     | StIf RExp Block
     | StIfElse RExp Block Block
     | StWhile RExp Block
-    | StDecl Decl
     | StBreak
     | StContinue
+    | StReturn RExp
     | StWrite WriteT RExp
-  deriving (Eq, Ord, Show, Read)
-
-data RExp
-    = StRead ReadT
-    | ExpAdd RExp RExp
-    | ExpSub RExp RExp
-    | ExpMul RExp RExp
-    | ExpDiv RExp RExp
-    | ExpMod RExp RExp
-    | ExpEq RExp RExp
-    | ExpNeq RExp RExp
-    | ExpLt RExp RExp
-    | ExpLtE RExp RExp
-    | ExpGt RExp RExp
-    | ExpGtE RExp RExp
-    | ExpAnd RExp RExp
-    | ExpOr RExp RExp
-    | ExpNot RExp
-    | ExpNeg RExp
-    | ExpVal Value
-    | ExpLef LExp
-    | ExpFuncEmpty Id
-    | ExpFunc Id [RExp]
-    | ExpRef LExp
-    | ExpPar RExp
   deriving (Eq, Ord, Show, Read)
 
 data WriteT
@@ -87,28 +108,7 @@ data WriteT
     | WriteT_writeString
   deriving (Eq, Ord, Show, Read)
 
-data ReadT
-    = ReadT_readInt
-    | ReadT_readFloat
-    | ReadT_readChar
-    | ReadT_readString
-  deriving (Eq, Ord, Show, Read)
-
 data StmtSmpl
     = StShortVarDecl ShortVarDecl | StExp RExp | StAsgn LExp RExp
-  deriving (Eq, Ord, Show, Read)
-
-data LExp = ExpId Id | ExpArr LExp RExp | ExpDeref RExp
-  deriving (Eq, Ord, Show, Read)
-
-data Value
-    = Int Integer
-    | Float Double
-    | Char Char
-    | String String
-    | Bool Boolean
-  deriving (Eq, Ord, Show, Read)
-
-data Boolean = Boolean_true | Boolean_false
   deriving (Eq, Ord, Show, Read)
 

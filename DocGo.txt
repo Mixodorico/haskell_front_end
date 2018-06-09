@@ -49,12 +49,12 @@ The reserved words used in go are the following:
   | ``writeFloat`` | ``writeInt`` | ``writeString`` | 
 
 The symbols used in go are the following:
-  | ( | ) | = | :=
-  | [ | ] | * | {
-  | } | + | - | /
-  | % | == | != | <
-  | <= | > | >= | &&
-  | || | ! | & | ,
+  | && | || | ! | ==
+  | != | < | <= | >
+  | >= | + | - | *
+  | / | % | & | (
+  | ) | [ | ] | ,
+  | = | := | { | }
 
 ===Comments===
 Single-line comments begin with //.Multiple-line comments are  enclosed with /* and */.
@@ -65,17 +65,53 @@ The symbols -> (production),  **|**  (union)
 and **eps** (empty rule) belong to the BNF notation. 
 All other symbols are terminals.
 
+  | //Boolean// | -> | ``true`` 
+  |  |  **|**  | ``false`` 
+  | //RExp// | -> | //RExp// ``&&`` //RExp// 
+  |  |  **|**  | //RExp// ``||`` //RExp// 
+  |  |  **|**  | ``!`` //RExp// 
+  |  |  **|**  | //RExp// ``==`` //RExp// 
+  |  |  **|**  | //RExp// ``!=`` //RExp// 
+  |  |  **|**  | //RExp// ``<`` //RExp// 
+  |  |  **|**  | //RExp// ``<=`` //RExp// 
+  |  |  **|**  | //RExp// ``>`` //RExp// 
+  |  |  **|**  | //RExp// ``>=`` //RExp// 
+  |  |  **|**  | //RExp// ``+`` //RExp// 
+  |  |  **|**  | //RExp// ``-`` //RExp// 
+  |  |  **|**  | //RExp// ``*`` //RExp// 
+  |  |  **|**  | //RExp// ``/`` //RExp// 
+  |  |  **|**  | //RExp// ``%`` //RExp// 
+  |  |  **|**  | ``-`` //RExp// 
+  |  |  **|**  | ``&`` //LExp// 
+  |  |  **|**  | //Id// ``(`` ``)`` 
+  |  |  **|**  | //Id// ``(`` //[RExp]// ``)`` 
+  |  |  **|**  | //Val// 
+  |  |  **|**  | //LExp// 
+  |  |  **|**  | ``(`` //RExp// ``)`` 
+  |  |  **|**  | //ReadT// ``(`` ``)`` 
+  | //Val// | -> | //Integer// 
+  |  |  **|**  | //Double// 
+  |  |  **|**  | //Char// 
+  |  |  **|**  | //String// 
+  |  |  **|**  | //Boolean// 
+  | //ReadT// | -> | ``readInt`` 
+  |  |  **|**  | ``readFloat`` 
+  |  |  **|**  | ``readChar`` 
+  |  |  **|**  | ``readString`` 
+  | //LExp// | -> | //Id// 
+  |  |  **|**  | //LExp// ``[`` //RExp// ``]`` 
+  |  |  **|**  | ``*`` //RExp// 
+  | //[RExp]// | -> | //RExp// 
+  |  |  **|**  | //RExp// ``,`` //[RExp]// 
   | //Start// | -> | ``package`` //Id// //[Decl]// 
-  | //Decl// | -> | ``func`` //Id// ``(`` //[Param]// ``)`` //Type// //Block// 
-  |  |  **|**  | ``func`` //Id// ``(`` //[Param]// ``)`` ``void`` //Block// 
-  |  |  **|**  | ``var`` //[Id]// //Type// 
+  | //[Decl]// | -> | **eps**
+  |  |  **|**  | //Decl// //[Decl]// 
+  | //Decl// | -> | ``var`` //[Id]// //Type// 
   |  |  **|**  | ``var`` //[Id]// ``=`` //[RExp]// 
   |  |  **|**  | ``var`` //[Id]// //Type// ``=`` //[RExp]// 
+  |  |  **|**  | ``func`` //Id// ``(`` //[Param]// ``)`` //Type// //Block// 
+  |  |  **|**  | ``func`` //Id// ``(`` //[Param]// ``)`` ``void`` //Block// 
   | //ShortVarDecl// | -> | //[Id]// ``:=`` //[RExp]// 
-  | //Param// | -> | //[Id]// //Type// 
-  |  |  **|**  | //Pass// //[Id]// //Type// 
-  | //Pass// | -> | ``val`` 
-  |  |  **|**  | ``ref`` 
   | //Type// | -> | ``void`` 
   |  |  **|**  | ``int`` 
   |  |  **|**  | ``bool`` 
@@ -84,70 +120,34 @@ All other symbols are terminals.
   |  |  **|**  | ``string`` 
   |  |  **|**  | ``[`` //Integer// ``]`` //Type// 
   |  |  **|**  | ``*`` //Type// 
+  | //[Id]// | -> | //Id// 
+  |  |  **|**  | //Id// ``,`` //[Id]// 
+  | //[Param]// | -> | **eps**
+  |  |  **|**  | //Param// 
+  |  |  **|**  | //Param// ``,`` //[Param]// 
+  | //Param// | -> | //[Id]// //Type// 
+  |  |  **|**  | //Pass// //[Id]// //Type// 
+  | //Pass// | -> | ``val`` 
+  |  |  **|**  | ``ref`` 
+  | //[Stmt]// | -> | **eps**
+  |  |  **|**  | //Stmt// //[Stmt]// 
   | //Block// | -> | ``{`` //[Stmt]// ``}`` 
-  | //Stmt// | -> | //Block// 
+  | //Stmt// | -> | //Decl// 
+  |  |  **|**  | //Block// 
   |  |  **|**  | //StmtSmpl// 
-  |  |  **|**  | ``return`` //RExp// 
   |  |  **|**  | ``if`` //RExp// //Block// 
   |  |  **|**  | ``if`` //RExp// //Block// ``else`` //Block// 
   |  |  **|**  | ``for`` //RExp// //Block// 
-  |  |  **|**  | //Decl// 
   |  |  **|**  | ``break`` 
   |  |  **|**  | ``continue`` 
+  |  |  **|**  | ``return`` //RExp// 
   |  |  **|**  | //WriteT// ``(`` //RExp// ``)`` 
-  | //RExp// | -> | //ReadT// ``(`` ``)`` 
-  |  |  **|**  | //RExp// ``+`` //RExp// 
-  |  |  **|**  | //RExp// ``-`` //RExp// 
-  |  |  **|**  | //RExp// ``*`` //RExp// 
-  |  |  **|**  | //RExp// ``/`` //RExp// 
-  |  |  **|**  | //RExp// ``%`` //RExp// 
-  |  |  **|**  | //RExp// ``==`` //RExp// 
-  |  |  **|**  | //RExp// ``!=`` //RExp// 
-  |  |  **|**  | //RExp// ``<`` //RExp// 
-  |  |  **|**  | //RExp// ``<=`` //RExp// 
-  |  |  **|**  | //RExp// ``>`` //RExp// 
-  |  |  **|**  | //RExp// ``>=`` //RExp// 
-  |  |  **|**  | //RExp// ``&&`` //RExp// 
-  |  |  **|**  | //RExp// ``||`` //RExp// 
-  |  |  **|**  | ``!`` //RExp// 
-  |  |  **|**  | ``-`` //RExp// 
-  |  |  **|**  | //Value// 
-  |  |  **|**  | //LExp// 
-  |  |  **|**  | //Id// ``(`` ``)`` 
-  |  |  **|**  | //Id// ``(`` //[RExp]// ``)`` 
-  |  |  **|**  | ``&`` //LExp// 
-  |  |  **|**  | ``(`` //RExp// ``)`` 
   | //WriteT// | -> | ``writeInt`` 
   |  |  **|**  | ``writeFloat`` 
   |  |  **|**  | ``writeChar`` 
   |  |  **|**  | ``writeString`` 
-  | //ReadT// | -> | ``readInt`` 
-  |  |  **|**  | ``readFloat`` 
-  |  |  **|**  | ``readChar`` 
-  |  |  **|**  | ``readString`` 
   | //StmtSmpl// | -> | //ShortVarDecl// 
   |  |  **|**  | //RExp// 
   |  |  **|**  | //LExp// ``=`` //RExp// 
-  | //LExp// | -> | //Id// 
-  |  |  **|**  | //LExp// ``[`` //RExp// ``]`` 
-  |  |  **|**  | ``*`` //RExp// 
-  | //Value// | -> | //Integer// 
-  |  |  **|**  | //Double// 
-  |  |  **|**  | //Char// 
-  |  |  **|**  | //String// 
-  |  |  **|**  | //Boolean// 
-  | //Boolean// | -> | ``true`` 
-  |  |  **|**  | ``false`` 
-  | //[Id]// | -> | //Id// 
-  |  |  **|**  | //Id// ``,`` //[Id]// 
-  | //[RExp]// | -> | //RExp// 
-  |  |  **|**  | //RExp// ``,`` //[RExp]// 
-  | //[Decl]// | -> | **eps**
-  |  |  **|**  | //Decl// //[Decl]// 
-  | //[Param]// | -> | **eps**
-  |  |  **|**  | //Param// 
-  |  |  **|**  | //Param// ``,`` //[Param]// 
-  | //[Stmt]// | -> | **eps**
-  |  |  **|**  | //Stmt// //[Stmt]// 
 
 
