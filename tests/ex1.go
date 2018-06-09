@@ -51,7 +51,7 @@ func di () void
   x = true && true && true
   
   
-  if x&&x&&x&&x {
+  if x||x||x||x {
     f := 90
   } else {
     p := 91

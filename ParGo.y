@@ -1148,7 +1148,8 @@ RExp : RExp '+' RExp    {
             $3.true = $$.true;
             $3.false = $$.false;
             
-            $$.tac = $1.tac ++ [(CondJTrue $1.address ($1.true+1))] ++ $3.tac ++ [(BinOp "||" $$.address $1.address $3.address)];
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "||" $$.address $1.address $3.address)];
+            $$.tacJ = $1.tacJ ++ [(CondJTrue $1.address ($1.true+1))] ++ $3.tacJ ++ [(BinOp "||" $$.address $1.address $3.address)];
             where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
                     "" -> Ok ();
                     x -> Bad $ x;               
