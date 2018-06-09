@@ -3,13 +3,37 @@
 
 \begin{document}
 
-\noindent{\Huge LC2, Parte 3, Gruppo 1}
+\begin{center}
+\noindent{\Huge Progetto LC2, Parte 3}
+\end{center}
 
-\section*{Esercizio 1}
+\begin{center}
+\noindent{\Huge Gruppo 1}
+\end{center}
 
-\subsection*{Overlap esercizi 4 e 5}
-roba
+\section*{Assunzioni}
+\begin{itemize}
+\item Non è possibile dichiarare più di una funzione con lo stesso identificativo.
+\item non è consientito dichiarare delle variabili con lo stesso identificativo nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
+\item è stato usato l'operatore '!' nelle condizioni degli 'if per veicolare correttamente i salti condizionati;
+\item nel corpo delle procedure non deve presentare l'istruzione return, sempre richiesta invece nei corpi delle funzioni;
+\item sono stati mantenuti solamente gli usuali comandi per il controllo della sequenza (\textit{condizionali semplici}, \textit{iterazione indeterminata});
+\item le guardie booleane dei controlli di sequenza vengono gestite tramite short-cut mentre le altre espressioni booleani vengono gestite senza short-cut.
+\end{itemize}
 
+\subsection*{Scelte implementative}
+\begin{itemize}
+\item Abbiamo generato \textit{lexer} e \textit{parser} tramite il tool BNFC, partendo da una gramatica iniziale;
+\item la gestione del \textit{Type Checker} e del \textit{Three Address Code} vengono fatte all'interno del parser;
+\item le funzioni \textit{write} sono trattate come statements che prendendono come argomento una right expression, mentre le funzioni \textit{read} vengono viste come right expressions e hanno una lista di parametri vuota.
+\end{itemize}
 
+\subsection*{Type Checker}
+Il Type Checker viene gestito all'interno del parser appoggiandosi ad un modulo esterno (\textit{nome-modulo}) contenente una serie di funzioni di controllo sull'environment. Il Type Checker tiene conto in modo automatico di una conversione dal tipo int al tipo float.
+In particolare, 
+
+\subsection*{Three Address Code}
+Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{nome-modulo}) contenente la struttura dati per gestirne la generazione ed una funzione addetta alla stampa.
+Il Three Address Code viene rappresentato dalla 
 
 \end{document}

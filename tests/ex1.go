@@ -18,6 +18,7 @@ func sum (x, y int) int {
 }
 */
 
+a := 5
 func di () void
 {
   //writeFloat(9.8)
