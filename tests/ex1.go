@@ -20,7 +20,6 @@ func sum (x, y int) int {
 
 func di () void
 {
-  
   //writeFloat(9.8)
   //c := 'o'
   //writeChar(c)
@@ -48,11 +47,14 @@ func di () void
 
   x = true*/
   
-  if(true&&true&&true){
-    y:=99
-    if(true&&true&&true){
-    y:=99
-  }
+  var x bool
+  x = true && true && true
+  
+  
+  if x&&x&&x&&x {
+    f := 90
+  } else {
+    p := 91
   }
   
   //fg := true && true && false

@@ -8,6 +8,8 @@ ordine codice
 errori TC
 output principale
 labels sfasate nelle funzioni (messe dopo la funzione)
+ordine di valutazione dei booleani nelle condizioni
+il return che jumpi fuori dalla funzione
 
 ------------
 Cose da fare

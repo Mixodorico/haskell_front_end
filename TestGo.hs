@@ -34,7 +34,7 @@ run v p s = let ts = myLLexer s in case p ts of
            Bad s    -> do putStrLn "\nParse              Failed...\n"
                           putStrV v "Error:"
                           putStrLn s
-           Ok  (tree, tac) -> do putStrLn "\nParse Successful!"
+           Ok  (tree, tac) -> do putStrLn "\nParse successful"
                                  putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
                                  putStrV v $ "\n[Three Address Code]\n\n" ++ printTac tac
         

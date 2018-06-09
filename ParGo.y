@@ -55,6 +55,7 @@ import Structures
 -- per le espressioni booleane
 %attribute true {Int}
 %attribute false {Int}
+%attribute tacJ { [TacOp] }
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -427,7 +428,7 @@ Stmt : Block            {
                     $3.temp = $2.tempMod;
                     $5.temp = $3.tempMod;
                     $$.tempMod = ( (fst $5.tempMod) , ((snd $5.tempMod)+3) );
-                    $$.tac = $2.tac ++ [CondJ $2.address ((snd $5.tempMod)+2)]
+                    $$.tac = $2.tacJ ++ [CondJ $2.address ((snd $5.tempMod)+2)]
                             ++ [Lbl ((snd $5.tempMod)+1)]
                             ++ $3.tac
                             ++ [UnCondJ ((snd $5.tempMod)+3)]
@@ -778,7 +779,7 @@ LExp : Id       {
                     else "";
             $$.tempMod = $$.temp;
             $$.address = (idToStr $1) ++ (getPosV $1 $$.envV);
-            $$.tac = []; 
+            $$.tac = [];
             where ( if (not(searchVar $1 $$.envV)) 
                 then ( Bad $ "Scope Error : Variable  "++(idToStr $1)++" not in scope")
                 else ( Ok ()) 
@@ -1121,7 +1122,8 @@ RExp : RExp '+' RExp    {
             $3.true = $$.true;
             $3.false = $$.false;
             
-            $$.tac = $1.tac ++ [(CondJ $1.address ($1.true+2))] ++ $3.tac ++ [(BinOp "&&" $$.address $1.address $3.address)];
+            $$.tac = $1.tac ++ $3.tac ++ [(BinOp "&&" $$.address $1.address $3.address)];
+            $$.tacJ = $1.tacJ ++ [(CondJ $1.address ($1.true+2))] ++ $3.tacJ ++ [(BinOp "&&" $$.address $1.address $3.address)];
             where (case checkBoolOp $1.typ $3.typ $1.err $3.err $2 of {
                     "" -> Ok ();
                     x -> Bad $ x;               
@@ -1208,6 +1210,7 @@ RExp : RExp '+' RExp    {
             $$.tempMod = $$.temp;
             $$.address = (showVal $1);
             $$.tac = [];
+            $$.tacJ = [];
             }
 
   | LExp        { 
@@ -1220,6 +1223,7 @@ RExp : RExp '+' RExp    {
             $$.tempMod = $1.tempMod;
             $$.address = $1.address;
             $$.tac = $1.tac;
+            $$.tacJ = $$.tac;
             }
 
   | Id '(' ')'      { 
