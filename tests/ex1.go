@@ -50,12 +50,14 @@ func di () void
 
 func f (ref ggg *int) void {
   
+  //var g int = -7.5      /////////////////////////////////////////////////////////////////////////////
+  
   var a ** int
   var b int
   var c *int
   {
-  *c = 3
-}
+    *c = 3
+  }
   b = **a
   c = &b
   
@@ -68,7 +70,7 @@ func f (ref ggg *int) void {
   } else {
     p := 91
   }
-  ddd := f (c)
+  ddd := f(c)
   fg := true && true && false
   
 }
