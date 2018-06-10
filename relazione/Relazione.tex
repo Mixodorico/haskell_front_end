@@ -13,11 +13,11 @@
 
 \section*{Assunzioni}
 \begin{itemize}
-\item Non è possibile dichiarare più di una funzione con lo stesso identificativo.
-\item non è consientito dichiarare delle variabili con lo stesso identificativo nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
-\item è stato usato l'operatore '!' nelle condizioni degli 'if per veicolare correttamente i salti condizionati;
+\item Non è possibile dichiarare più di una funzione con lo stesso identificatore.
+\item non è consientito dichiarare delle variabili con lo stesso identificatore nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
+\item è stato usato l'operatore `!' nelle condizioni degli if per veicolare correttamente i salti condizionati;
 \item nel corpo delle procedure non deve presentare l'istruzione return, sempre richiesta invece nei corpi delle funzioni;
-\item sono stati mantenuti solamente gli usuali comandi per il controllo della sequenza (\textit{condizionali semplici}, \textit{iterazione indeterminata});
+\item sono stati implementati solamente i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici}, \textit{iterazione indeterminata});
 \item le guardie booleane dei controlli di sequenza vengono gestite tramite short-cut mentre le altre espressioni booleani vengono gestite senza short-cut.
 \end{itemize}
 
@@ -25,17 +25,16 @@
 \begin{itemize}
 \item Abbiamo generato \textit{lexer} e \textit{parser} tramite il tool BNFC, partendo da una gramatica iniziale;
 \item la gestione del \textit{Type Checker} e del \textit{Three Address Code} vengono fatte all'interno del parser;
-\item le funzioni \textit{write} sono trattate come statements che prendendono come argomento una right expression, mentre le funzioni \textit{read} vengono viste come right expressions e hanno una lista di parametri vuota.
+\item le funzioni \textit{write} sono trattate come statements che prendendono come argomento una right expression, mentre le funzioni \textit{read} vengono viste come right expressions e hanno una lista di parametri di input vuota.
 \end{itemize}
 
 \subsection*{Type Checker}
-Il Type Checker viene gestito all'interno del parser appoggiandosi ad un modulo esterno (\textit{nome-modulo}) contenente una serie di funzioni di controllo sull'environment. Il Type Checker tiene conto in modo automatico di una conversione dal tipo int al tipo float.
+Il Type Checker viene gestito all'interno del parser. Si tiene conto in modo automatico di una conversione dal tipo int al tipo float.
 
 \subsection*{Three Address Code}
-Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{nome-modulo}) contenente la struttura dati per gestirne la generazione ed una funzione addetta alla stampa.
-Il Three Address Code viene rappresentato dalla 
+Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{TAC.hs}) contenente la struttura dati per gestirne la generazione e le funzioni addette alla stampa.
 
 \subsection*{Test Case}
-Sono stati preparati dei test-case significativi che possono essere eseguiti in sequenza attraverso il comando \textit{make demo}, oppure singolarmente attraverso il comando \textit{make demo1} $\dots$ \textit{make demo3}.
+Sono stati preparati dei test-case significativi che possono essere eseguiti in sequenza attraverso il comando \textit{make demo}, oppure singolarmente attraverso i comandi \textit{make demo1}, \textit{make demo2}, \textit{make demo3}.
 
 \end{document}
