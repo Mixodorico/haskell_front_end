@@ -26,7 +26,7 @@ clean:
 demo1: $(base)
 	-./$(base) ./tests/demo1.go
 	
-.PHONY : dmeo2
+.PHONY : demo2
 demo2: $(base)
 	-./$(base) ./tests/demo2.go
 	
