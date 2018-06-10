@@ -28,3 +28,25 @@ Se c'é tempo se c'é voglia
 inizializzare direttamente gli array
 togliere l'ultima etichetta stampata
 dare a "&&" priorità maggiore di "||"
+
+-------------------------
+Cose spaccate
+-------------------------
+Le operazioni -, * non funzionano (errore di TC)
+i parametri delle funzioni non vengono enumerati nel TAC
+chiamate a funzioni esterne (not in scope)
+if then else nel TAC
+
+  
+if b1 && b2 && b3 {
+  s1 := "if_block_AND"
+}else{
+  s1 := "else_block_AND" 
+}
+
+--------------------
+Non ho:
+messo modalità di passaggio parametri ref/val
+usato i parametri all'interno del corpo delle funzioni 
+ho evita come la peste tutte le cose che non funzionano.
+

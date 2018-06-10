@@ -23,11 +23,11 @@ clean:
 	-rm -fv $(base) Parser.hs Lexer.hs *.o *.hi *.bak
 
 .PHONY : demo1
-demo1: $(base)
+dmeo1: $(base)
 	-./$(base) ./tests/demo1.go
 	
 .PHONY : dmeo2
-demo2: $(base)
+dmeo2: $(base)
 	-./$(base) ./tests/demo2.go
 	
 .PHONY : demo3
