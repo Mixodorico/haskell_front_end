@@ -10,18 +10,14 @@ import ParGo
 import SkelGo
 import PrintGo
 import AbsGo
-import Structures
-
-
-
+import Env
+import TAC
 
 import ErrM
 
 type ParseFun a = [Token] -> Err a
 
 myLLexer = myLexer
-
-type Verbosity = Int
 
 
 putStrV v s = if v > 1 then putStrLn s else return ()
@@ -31,12 +27,12 @@ runFile v p f = putStrLn f >> readFile f >>= run v p
 
 
 run v p s = let ts = myLLexer s in case p ts of
-           Bad s    -> do putStrLn "\nParse              Failed...\n"
-                          putStrV v "Error:"
-                          putStrLn s
-           Ok  (tree, tac) -> do putStrLn "\nParse successful"
-                                 putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
-                                 putStrV v $ "\n[Three Address Code]\n\n" ++ printTac tac
+           Bad s          -> do putStrLn "\nParse              Failed...\n"
+                                putStrV v "Error:"
+                                putStrLn s
+           Ok (tree, tac) -> do putStrLn "\nParse successful"
+                                putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
+                                putStrV v $ "\n[Three Address Code]\n\n" ++ printTac tac
         
 
 

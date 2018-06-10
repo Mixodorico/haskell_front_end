@@ -1,4 +1,16 @@
 package main
+ 
+ /*
+  var x bool
+  x = true && true && true
+  if x||x||x||x {
+    f := 90
+  } else {
+    p := 91
+  }
+  ddd := f (c)
+  fg := true && true && false
+  */
 
 /*
 func sum (x, y int) int {
@@ -47,30 +59,5 @@ func di () void
   }
 
   x = true*/
-
-func f (ref ggg *int) void {
-  
-  //var g int = -7.5      /////////////////////////////////////////////////////////////////////////////
-  
-  var a ** int
-  var b int
-  var c *int
-  {
-    *c = 3
-  }
-  b = **a
-  c = &b
-  
-  var x bool
-  x = true && true && true
-  
-  
-  if x||x||x||x {
-    f := 90
-  } else {
-    p := 91
-  }
-  ddd := f(c)
-  fg := true && true && false
   
 }

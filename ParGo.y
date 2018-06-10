@@ -6,7 +6,8 @@ import AbsGo
 import LexGo
 import ErrM
 import Control.Monad
-import Structures
+import Env
+import TAC
 }
 
 %attributetype        { MyAttributes a }
@@ -105,11 +106,11 @@ L_Id { PT _ (T_Id $$) }
 
 %left NEG
 %left PTR
-%nonassoc '==' '!=' '<' '<=' '>' '>='  '!'
-%left '+' '-' 
-%left '*' '/' '%'
-%left '&&' '||'
 %left '='
+%left '&&' '||'
+%nonassoc '==' '!=' '<' '<=' '>' '>='  '!'
+%left '*' '/' '%'
+%left '+' '-' 
 
 
 
@@ -725,7 +726,7 @@ Decl : 'var' ListId Type {
                                    Nothing -> if not $ length $2 == length $5.aTypeList
                                                 then Bad $ "Error at "++(pos $1)++": number of variables and number of expressions don't match"
                                                 else case checkTypes $3 ($5.aTypeList) of {
-                                                          Just a  -> Bad $ "Type error at: "++(pos $4)++" cannot use "++(showType $ fst a)++" as "++(showType $ snd a)++" in assignment";
+                                                          Just a  -> Bad $ "Type error at "++(pos $4)++": cannot use "++(showType $ snd a)++" as "++(showType $ fst a)++" in assignment";
                                                           Nothing -> Ok () ;
                                                      };
                               };
@@ -1192,64 +1193,64 @@ ListStmt : {- empty -} {
 {
 -- functions for type checking and other errors handling
 
-checkAritOp t1 t2 e1 e2 op = if ( (e1 == "") && (e2 == "")  ) 
-                 then ( if ((t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat))
-                    then ""
-                    else "Type Error at "++(pos op)++": Math operator expected numeric type (int or float)"
-                    )
-                 else if  e1/=""
-                    then e1
-                    else e2
+checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
+                               then if (t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat)
+                                      then ""
+                                      else "Type error at "++(pos op)++": expected numeric type"
+                               else if e1/=""
+                                      then e1
+                                      else e2
 
-checkRelOp t1 t2 e1 e2 op = if ( (e1 == "") && (e2 == "")  ) 
-                then  ( if (t1 == t2) 
-                    then ""
-                    else if ((t1 == TInt && t2 == TFloat) || (t1 == TFloat && t2 == TInt))
-                        then ""
-                        else "Type Error at "++(pos op)++": Couldn't match type "++(showType t1)++" with type "++(showType t2)
-                    )
-                else if  e1/=""
-                    then e1
-                    else e2
+checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
+                              then if t1 == t2
+                                     then ""
+                                     else if (t1 == TInt && t2 == TFloat) || (t1 == TFloat && t2 == TInt)
+                                            then ""
+                                            else "Type error at "++(pos op)++": can't match type "++(showType t1)++" with type "++(showType t2)
+                              else if e1/=""
+                                     then e1
+                                     else e2
 
-checkBoolOp t1 t2 e1 e2 op  = if ( (e1 == "") && (e2 == "")  ) 
-                then    (if (t2 == t1)
-                    then    if (t1/=TBool) 
-                        then "Type Error at "++(pos op)++": Expected boolean type" 
-                        else ""
-                    else "Type Error at "++(pos op)++": Couldn't match type "++(showType t1)++" with type "++(showType t2)
-                    )
-                else  if  e1/=""
-                    then e1
-                    else e2
+checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
+                                then if t2 == t1
+                                       then if t1/=TBool
+                                              then "Type error at "++(pos op)++": expected boolean type" 
+                                              else ""
+                                       else "Type error at "++(pos op)++": can't match type "++(showType t1)++" with type "++(showType t2)
+                                else if e1/=""
+                                       then e1
+                                       else e2
 
-checkCallProc id envFun tl p  = if (not(searchFun id envFun)) 
-                    then "Scope Error at "++(pos p)++": Procedure  "++(idToStr id)++" not in scope"
-                    else checkParams id envFun tl p  
+checkCallProc id envFun tl p  = if not $ searchFun id envFun
+                                  then "Error at "++(pos p)++": procedure  "++(idToStr id)++" not in scope"
+                                  else checkParams id envFun tl p  
 
-checkCallFun e id envFun tl p  = if (e=="") 
-                then if not(searchFun id envFun) 
-                    then  "Scope Error at "++(pos p)++": Function  "++(idToStr id)++" not in scope"
-                    else checkParams id envFun tl p  
-                else e
+checkCallFun e id envFun tl p  = if e==""
+                                   then if not $ searchFun id envFun
+                                          then "Error at "++(pos p)++": function  "++(idToStr id)++" not in scope"
+                                          else checkParams id envFun tl p  
+                                   else e
 
-checkParams id envFun tl p  =  if ( (length (getTypeListFun (extractFun id envFun))) /= (length tl)  ) 
-                then "Sintax Error at "++(pos p)++": Wrong n.of arguments in call of "++(idToStr id)++", expected: "++(show (length (getTypeListFun (extractFun id envFun))))
-                else ( case ( checkTypesList (getTypeListFun (extractFun id envFun)) tl ) of {
-                        Just a  -> "Type Error at "++(pos p)++": Wrong argument type, couldn't match "++(showType (fst a))++" with "++(showType (snd a))++" in function "++(idToStr id);
-                        Nothing -> "";
-                        } )
+checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFun) /= (length tl)
+                                 then "Error at "++(pos p)++": wrong number of arguments when calling "++(idToStr id)++", expected: "++(show $ length $ getTypeListFun $ extractFun id envFun)
+                                 else case checkTypesList (getTypeListFun $ extractFun id envFun) tl of {
+                                           Just a  -> "Type Error at "++(pos p)++": Wrong argument type, couldn't match "++(showType $ fst a)++" with "++(showType $ snd a)++" in function "++(idToStr id);
+                                           Nothing -> "";
+                                      };
 
 checkTypesList [] [] = Nothing
-checkTypesList (x:xs) (y:ys) | x/=y = Just (x,y)
+checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = Nothing
+                             | x/=y = Just (x,y)
                              | otherwise = checkTypesList xs ys
                 
 checkTypes _ [] = Nothing
-checkTypes x (y:ys) | x/=y = Just (x,y)
+checkTypes x (y:ys) | x == TFloat && y == TInt = Nothing
+                    | x/=y = Just (x,y)
                     | otherwise = checkTypes x ys
 
 checkVarParams [] ys = Nothing
-checkVarParams (x@(Var a _ _ _):xs) ys | (searchVar a ys) =  Just a
+checkVarParams (x@(Var a _ _ _):xs) ys
+                    | (searchVar a ys) =  Just a
                     | otherwise = (checkVarParams xs ys)
 
 checkSameBlock id [] = Nothing
@@ -1266,10 +1267,7 @@ checkSameBlockList (x:xs) ys = case checkSameBlock x ys of
 
 pos tok = tokenPos [tok]
 
------------------------------------------------------------------------------
------------------------------------------------------------------------------
------------------------------------------------------------------------------
------------------------------------------------------------------------------
+
 returnM :: a -> Err a
 returnM = return
 

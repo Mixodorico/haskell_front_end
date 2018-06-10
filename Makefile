@@ -9,7 +9,7 @@ LEX = alex -g
 PAR = happy -gca
 GHC = ghc
 
-$(base): LexGo.hs ParGo.hs AbsGo.hs PrintGo.hs TestGo.hs Structures.hs
+$(base): LexGo.hs ParGo.hs AbsGo.hs PrintGo.hs TestGo.hs TAC.hs Env.hs
 	$(GHC) $^ -w -o $@
 
 Parser.hs: ParGo.y
@@ -22,38 +22,18 @@ Lexer.hs: LexGo.x
 clean:
 	-rm -fv $(base) Parser.hs Lexer.hs *.o *.hi *.bak
 
-.PHONY : ex1
-ex1: $(base)
-	-./$(base) ./tests/ex1.go
+.PHONY : demo1
+demo1: $(base)
+	-./$(base) ./tests/demo1.go
 	
-.PHONY : ex11
-ex11: $(base)
-	-./$(base) ./tests/ex11.go
+.PHONY : demo2
+demo2: $(base)
+	-./$(base) ./tests/demo2.go
 	
-.PHONY : ex2
-ex2: $(base)
-	-./$(base) ./tests/ex2.go
+.PHONY : demo3
+demo3: $(base)
+	-./$(base) ./tests/demo3.go 
 
-.PHONY : ex3
-ex3: $(base)
-	-./$(base) ./tests/ex3.go
-
-.PHONY : ex4
-ex4: $(base)
-	-./$(base) ./tests/ex4.go
-
-.PHONY : ex5
-ex5: $(base)
-	-./$(base) ./tests/ex5.go
-
-.PHONY : ex6
-ex6: $(base)
-	-./$(base) ./tests/ex6.go
-	
-.PHONY : ex11
-ex7: $(base)
-	-./$(base) ./tests/ex11.go
-	
-.PHONY : prova
-ex8: $(base)
-	-./$(base) ./tests/prova.go
+.PHONY : demo
+demo: $(base)
+	-./$(base) ./tests/demo1.go ./tests/demo2.go ./tests/demo3.go
