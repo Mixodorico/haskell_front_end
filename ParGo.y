@@ -1234,7 +1234,7 @@ checkCallFun e id envFun tl p  = if e==""
 checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFun) /= (length tl)
                                  then "Error at "++(pos p)++": wrong number of arguments when calling "++(idToStr id)++", expected: "++(show $ length $ getTypeListFun $ extractFun id envFun)
                                  else case checkTypesList (getTypeListFun $ extractFun id envFun) tl of {
-                                           Just a  -> "Type Error at "++(pos p)++": Wrong argument type, couldn't match "++(showType $ fst a)++" with "++(showType $ snd a)++" in function "++(idToStr id);
+                                           Just a  -> "Type Error at "++(pos p)++": wrong argument type, couldn't match "++(showType $ fst a)++" with "++(showType $ snd a)++" in function "++(idToStr id);
                                            Nothing -> "";
                                       };
 
