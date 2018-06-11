@@ -144,7 +144,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err= checkBoolOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err = checkBoolOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -168,7 +168,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err= checkBoolOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err = checkBoolOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -199,6 +199,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $2.indexNew) + 1, snd $2.indexNew );
             $$.tacId = "t"++(show  $ fst $$.indexNew );
             $$.tac = $2.tac++[UnOp "!" $$.tacId $2.tacId];
+            $$.tacJ = $$.tac;
             where if $2.err == ""
                     then if not $ $2.aType == TBool
                            then Bad $ "Type error at "++(pos $1)++": expected type: boolean"
@@ -218,7 +219,8 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "==" $$.tacId $1.tacId $3.tacId]; 
+            $$.tac = $1.tac++$3.tac++[BinOp "==" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -238,6 +240,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "!=" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -257,6 +260,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "<" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -276,6 +280,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "<=" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -295,6 +300,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp ">" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -314,6 +320,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp ">=" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -334,7 +341,8 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "+" $$.tacId $1.tacId $3.tacId]; 
+            $$.tac = $1.tac++$3.tac++[BinOp "+" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -355,7 +363,8 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "-" $$.tacId $1.tacId $3.tacId]; 
+            $$.tac = $1.tac++$3.tac++[BinOp "-" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;
@@ -376,7 +385,8 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "*" $$.tacId $1.tacId $3.tacId]; 
+            $$.tac = $1.tac++$3.tac++[BinOp "*" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;
@@ -397,7 +407,8 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "/" $$.tacId $1.tacId $3.tacId]; 
+            $$.tac = $1.tac++$3.tac++[BinOp "/" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;
@@ -418,7 +429,8 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "%" $$.tacId $1.tacId $3.tacId]; 
+            $$.tac = $1.tac++$3.tac++[BinOp "%" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;
@@ -439,6 +451,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $2.indexNew) + 1, snd $2.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $2.tac++[UnOp "-" $$.tacId $2.tacId];
+            $$.tacJ = $$.tac;
             where if $2.err == ""
                     then if not $ $2.aType == TInt || $2.aType == TFloat
                            then Bad $ "Type error at "++(pos $1)++": expected numeric type"
@@ -456,6 +469,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $2.indexNew) + 1, snd $2.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $2.tac++[NulOp $$.tacId ("&"++$2.tacId)];
+            $$.tacJ = $$.tac;
             }
 
      | Id '(' ')' {
@@ -472,6 +486,7 @@ RExp : RExp '&&' RExp {
             $$.tac = if $$.aType==TVoid
                        then [FunCall 'p' "" (Id $1.tacId) []]
                        else [FunCall 'f' $$.tacId(Id $1.tacId) []];
+            $$.tacJ = $$.tac;
             where case checkCallProc $1 $$.envFun [] $2 of {
                        "" -> Ok ();
                        x  -> Bad x;
@@ -495,6 +510,7 @@ RExp : RExp '&&' RExp {
             $$.tac = if $$.aType==TVoid
                        then $3.tac++[FunCall 'p' "" (Id $1.tacId) $3.tacIdList] 
                        else $3.tac++[FunCall 'f' $$.tacId (Id $1.tacId) $3.tacIdList];
+            $$.tacJ = $$.tac;
             where case checkCallFun $3.err $1 $$.envFun $3.aTypeList $2 of {
                        "" -> Ok ();
                        x  -> Bad x;
@@ -537,6 +553,7 @@ RExp : RExp '&&' RExp {
             $$.indexNew = $2.indexNew;
             $$.tacId = $2.tacId;
             $$.tac = $2.tac;
+            $$.tacJ = $$.tac;
             }
 
      | 'readInt' '(' ')' {
@@ -546,6 +563,7 @@ RExp : RExp '&&' RExp {
                 $$.indexNew = $$.index;
                 $$.tacId = "t"++(show $ (fst $$.indexNew) + 1 );
                 $$.tac = [FunCall 'f' $$.tacId (Id "readInt") []];
+                $$.tacJ = $$.tac;
                 }
 
      | 'readFloat' '(' ')' {
@@ -555,6 +573,7 @@ RExp : RExp '&&' RExp {
                 $$.indexNew = $$.index;
                 $$.tacId = "t"++(show $ (fst $$.indexNew) + 1 );
                 $$.tac = [FunCall 'f' $$.tacId (Id "readFloat") []];
+                $$.tacJ = $$.tac;
                 }
 
      | 'readChar' '(' ')' {
@@ -564,6 +583,7 @@ RExp : RExp '&&' RExp {
                 $$.indexNew = $$.index;
                 $$.tacId = "t"++(show $ (fst $$.indexNew) + 1 );
                 $$.tac = [FunCall 'f' $$.tacId (Id "readChar") []];
+                $$.tacJ = $$.tac;
                 }
 
      | 'readString' '(' ')' {
@@ -573,6 +593,7 @@ RExp : RExp '&&' RExp {
                 $$.indexNew = $$.index;
                 $$.tacId = "t"++(show $ (fst $$.indexNew) + 1 );
                 $$.tac = [FunCall 'f' $$.tacId (Id "readString") []];
+                $$.tacJ = $$.tac;
                 }
 
 Val : Integer {
