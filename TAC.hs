@@ -9,8 +9,7 @@ data TacLine =
   | UnOp String String String             -- op and 2 types
   | BinOp String String String String     -- op and 3 types
   | UncondJ Int                           -- lblel
-  | CondJFalse String Int                 -- type and lblel
-  | CondJTrue String Int                  -- type and lblel
+  | CondJ String Int                      -- type and lblel
   | FunDecl String Id Int                 -- string, id and int
   | FunCall Char String Id [String]       -- char, type, id and list of types
   | Lbl Int                               -- lblel
@@ -30,8 +29,7 @@ printTac (x:xs) = case x of
                        UnOp op t1 t2      -> "\t" ++ t1 ++ " = " ++ op ++ " " ++ t2
                        BinOp op t1 t2 t3  -> "\t" ++ t1 ++ " = " ++ t2 ++ " " ++ op ++ " " ++ t3
                        UncondJ lbl        -> "\t" ++ "goto label" ++ (show lbl)
-                       CondJFalse t1 lbl  -> "\t" ++ "if !" ++ t1  ++ " goto label" ++ (show lbl)
-                       CondJTrue t1 lbl   -> "\t" ++ "if " ++ t1  ++ " goto label" ++ (show lbl)
+                       CondJ t1 lbl       -> "\t" ++ "if " ++ t1  ++ " goto label" ++ (show lbl)
                        FunDecl str id int -> str ++ " " ++ (idToStr id) ++  "/" ++ (show int)
                        FunCall c t id lt  -> case c of {
                                                  'p' -> "\tcall " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
@@ -90,6 +88,5 @@ setPos ids pos = map (\id -> Id $ (idToStr id) ++ "_" ++ (drop 5 pos)) ids
 shift :: [TacLine] -> Int -> [TacLine]
 shift tacList n = map (\x -> shift1 x n) tacList
           where shift1 tacLine n = case tacLine of
-                                        CondJFalse t1 lbl -> CondJFalse t1 (lbl+n)
-                                        CondJTrue  t1 lbl -> CondJTrue t1 (lbl+n)
-                                        x                 -> x
+                                        CondJ t1 lbl -> CondJ t1 (lbl+n)
+                                        x            -> x
