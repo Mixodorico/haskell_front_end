@@ -104,13 +104,13 @@ L_quoted { PT _ (TL $$) }
 L_Id { PT _ (T_Id $$) }
 
 
+%left '='
+%nonassoc '==' '!=' '<' '<=' '>' '>='  '!'
+%left '&&' '||'
+%left '+' '-'
+%left '*' '/' '%'
 %left NEG
 %left PTR
-%left '='
-%left '&&' '||'
-%nonassoc '==' '!=' '<' '<=' '>' '>='  '!'
-%left '*' '/' '%'
-%left '+' '-' 
 
 
 
@@ -154,7 +154,7 @@ RExp : RExp '&&' RExp {
             $3.false = $$.false;
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "&&" $$.tacId $1.tacId $3.tacId];
-            $$.tacJ = $1.tacJ++[CondJFalse $1.tacId ($1.true+2)]++$3.tacJ++[BinOp "&&" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $1.tacJ++[CondJFalse $1.tacId ($1.true+1)]++$3.tacJ++[BinOp "&&" $$.tacId $1.tacId $3.tacId];
             where case checkBoolOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -178,7 +178,7 @@ RExp : RExp '&&' RExp {
             $3.false = $$.false;
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "||" $$.tacId $1.tacId $3.tacId];
-            $$.tacJ = $1.tacJ++[CondJTrue $1.tacId ($1.true+1)]++$3.tacJ++[BinOp "||" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $1.tacJ++[CondJTrue $1.tacId ($1.true)]++$3.tacJ++[BinOp "||" $$.tacId $1.tacId $3.tacId];
             where case checkBoolOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -887,7 +887,6 @@ Stmt : Decl {
                            ++[CondJFalse $2.tacId ((snd $3.indexNew)+2)]
                            ++[Lbl $ (snd $3.indexNew) + 1]
                            ++$3.tac
-                           ++[UncondJ $ (snd $3.indexNew) + 2]
                            ++[Lbl $ (snd $3.indexNew) + 2];
                     where if $2.err== ""
                             then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (if)"
