@@ -144,21 +144,17 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err = checkBoolOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err= checkBoolOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
-            $$.indexNew = ( (fst $3.indexNew) + 2, snd $3.indexNew );
+            $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $1.true = snd $1.indexNew;
             $1.false = $$.false;
             $3.true = $$.true;
             $3.false = $$.false;
-            $$.tacId = "t"++(show $ (fst $$.indexNew) - 1);
-            $$.tac = $1.tac++$3.tac++[BinOp "&&" ("t"++(show $ (fst $$.indexNew)-1)) $1.tacId $3.tacId];
-            $$.tacJ = $1.tacJ
-                    ++[UnOp "!" $$.tacId $1.tacId]
-                    ++[CondJ $$.tacId ($1.true+2)]
-                    ++$3.tacJ
-                    ++[BinOp "&&" ("t"++(show $ fst $$.indexNew)) $1.tacId $3.tacId];
+            $$.tacId = "t"++(show $ fst $$.indexNew);
+            $$.tac = $1.tac++$3.tac++[BinOp "&&" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $1.tacJ++[CondJFalse $1.tacId ($1.true+2)]++$3.tacJ++[BinOp "&&" $$.tacId $1.tacId $3.tacId];
             where case checkBoolOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -172,7 +168,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err = checkBoolOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err= checkBoolOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -182,7 +178,7 @@ RExp : RExp '&&' RExp {
             $3.false = $$.false;
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "||" $$.tacId $1.tacId $3.tacId];
-            $$.tacJ = $1.tacJ++[CondJ $1.tacId ($1.true+1)]++$3.tacJ++[BinOp "||" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $1.tacJ++[CondJTrue $1.tacId ($1.true+1)]++$3.tacJ++[BinOp "||" $$.tacId $1.tacId $3.tacId];
             where case checkBoolOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -865,11 +861,9 @@ Stmt : Decl {
                     $3.forLabels = $$.forLabels;
                     $2.index = $$.index;
                     $3.index = $2.indexNew;
-                    $$.indexNew = ( fst $3.indexNew + 1, (snd $3.indexNew) + 2 );
-                    $$.tacId = "t"++(show $ fst $$.indexNew);
+                    $$.indexNew = ( fst $3.indexNew, (snd $3.indexNew) + 2 );
                     $$.tac = shift $2.tacJ (snd $3.indexNew)
-                           ++[UnOp "!" $$.tacId $2.tacId]
-                           ++[CondJ $$.tacId ((snd $3.indexNew)+2)]
+                           ++[CondJFalse $2.tacId ((snd $3.indexNew)+2)]
                            ++[Lbl $ (snd $3.indexNew) + 1]
                            ++$3.tac
                            ++[UncondJ $ (snd $3.indexNew) + 2]
@@ -897,11 +891,9 @@ Stmt : Decl {
                     $2.index = $$.index;
                     $3.index = $2.indexNew;
                     $5.index = $3.indexNew;
-                    $$.indexNew = ( fst $5.indexNew + 1, (snd $5.indexNew) + 3);
-                    $$.tacId = "t"++(show $ fst $$.indexNew);
+                    $$.indexNew = ( fst $5.indexNew, (snd $5.indexNew) + 3);
                     $$.tac = shift $2.tacJ (snd $5.indexNew)
-                           ++[UnOp "!" $$.tacId $2.tacId]
-                           ++[CondJ $$.tacId ((snd $5.indexNew)+2)]
+                           ++[CondJFalse $2.tacId ((snd $5.indexNew)+2)]
                            ++[Lbl $ (snd $5.indexNew) + 1]
                            ++$3.tac
                            ++[UncondJ $ (snd $5.indexNew) + 3]
@@ -926,12 +918,10 @@ Stmt : Decl {
                 $3.forLabels = ( (snd $3.indexNew) + 1, (snd $3.indexNew) + 3 );
                 $2.index = $$.index;
                 $3.index = $2.indexNew;                   
-                $$.indexNew = ( fst $3.indexNew + 1, (snd $3.indexNew) + 3 );
-                $$.tacId = "t"++(show $ fst $$.indexNew);
+                $$.indexNew = ( fst $3.indexNew, (snd $3.indexNew) + 3 );
                 $$.tac = [Lbl $ (snd $3.indexNew) + 1]
                        ++shift $2.tacJ (snd $3.indexNew + 1)
-                       ++[UnOp "!" $$.tacId $2.tacId]
-                       ++[CondJ $$.tacId ((snd $3.indexNew) + 3)]
+                       ++[CondJFalse $2.tacId ((snd $3.indexNew) + 3)]
                        ++[Lbl $ (snd $3.indexNew) + 2]
                        ++$3.tac
                        ++[UncondJ $ (snd $3.indexNew) + 1]
