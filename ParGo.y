@@ -399,8 +399,8 @@ RExp : RExp '&&' RExp {
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "/" $$.tacId $1.tacId $3.tacId]; 
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x  -> Bad x;
+                       "" -> Ok ();
+                       x  -> Bad x;
                   };
             }
 
@@ -420,8 +420,8 @@ RExp : RExp '&&' RExp {
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "%" $$.tacId $1.tacId $3.tacId]; 
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
-                    "" -> Ok ();
-                    x  -> Bad x;
+                       "" -> Ok ();
+                       x  -> Bad x;
                   };
             }
 
@@ -862,9 +862,11 @@ Stmt : Decl {
                     $2.index = $$.index;
                     $3.index = $2.indexNew;
                     $$.indexNew = ( fst $3.indexNew, (snd $3.indexNew) + 2 );
-                    $$.tac = $2.tac++[CondJFalse $2.tacId ((snd $3.indexNew)+2)]
+                    $$.tac = shift $2.tacJ (snd $3.indexNew)
+                           ++[CondJFalse $2.tacId ((snd $3.indexNew)+2)]
                            ++[Lbl $ (snd $3.indexNew) + 1]
                            ++$3.tac
+                           ++[UncondJ $ (snd $3.indexNew) + 2]
                            ++[Lbl $ (snd $3.indexNew) + 2];
                     where if $2.err== ""
                             then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (if)"
@@ -913,16 +915,17 @@ Stmt : Decl {
                 $$.envFunNew = $$.envFun;
                 $3.aTypeFun = $$.aTypeFun;
                 $$.aReturn = False;
-                $3.forLabels = ( (snd $3.indexNew) + 1, (snd $3.indexNew) + 2 );
+                $3.forLabels = ( (snd $3.indexNew) + 1, (snd $3.indexNew) + 3 );
                 $2.index = $$.index;
                 $3.index = $2.indexNew;                   
-                $$.indexNew = ( fst $3.indexNew, (snd $3.indexNew) + 2 );
+                $$.indexNew = ( fst $3.indexNew, (snd $3.indexNew) + 3 );
                 $$.tac = [Lbl $ (snd $3.indexNew) + 1]
-                       ++$2.tac
-                       ++[CondJFalse $2.tacId ((snd $3.indexNew)+2)]
+                       ++shift $2.tacJ (snd $3.indexNew + 1)
+                       ++[CondJFalse $2.tacId ((snd $3.indexNew) + 3)]
+                       ++[Lbl $ (snd $3.indexNew) + 2]
                        ++$3.tac
                        ++[UncondJ $ (snd $3.indexNew) + 1]
-                       ++[Lbl $ (snd $3.indexNew) + 2];
+                       ++[Lbl $ (snd $3.indexNew) + 3];
                 where if $2.err== ""
                     then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (for)"
                     else Bad $2.err ;
@@ -1193,6 +1196,7 @@ ListStmt : {- empty -} {
 {
 -- functions for type checking and other errors handling
 
+checkAritOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                then if (t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat)
                                       then ""
@@ -1201,6 +1205,7 @@ checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                       then e1
                                       else e2
 
+checkRelOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                               then if t1 == t2
                                      then ""
@@ -1211,6 +1216,7 @@ checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                                      then e1
                                      else e2
 
+checkBoolOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
                                 then if t2 == t1
                                        then if t1/=TBool
@@ -1221,16 +1227,19 @@ checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
                                        then e1
                                        else e2
 
+checkCallProc :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkCallProc id envFun tl p  = if not $ searchFun id envFun
                                   then "Error at "++(pos p)++": procedure  "++(idToStr id)++" not in scope"
                                   else checkParams id envFun tl p  
 
+checkCallFun :: [Char] -> Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkCallFun e id envFun tl p  = if e==""
                                    then if not $ searchFun id envFun
                                           then "Error at "++(pos p)++": function  "++(idToStr id)++" not in scope"
                                           else checkParams id envFun tl p  
                                    else e
 
+checkParams :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFun) /= (length tl)
                                  then "Error at "++(pos p)++": wrong number of arguments when calling "++(idToStr id)++", expected: "++(show $ length $ getTypeListFun $ extractFun id envFun)
                                  else case checkTypesList (getTypeListFun $ extractFun id envFun) tl of {
@@ -1238,27 +1247,32 @@ checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFu
                                            Nothing -> "";
                                       };
 
-checkTypesList [] [] = Nothing
-checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = Nothing
-                             | x/=y = Just (x,y)
-                             | otherwise = checkTypesList xs ys
-                
+checkTypes :: Type -> [Type] -> Maybe (Type, Type)
 checkTypes _ [] = Nothing
-checkTypes x (y:ys) | x == TFloat && y == TInt = Nothing
+checkTypes x (y:ys) | x == TFloat && y == TInt = checkTypes x ys
                     | x/=y = Just (x,y)
                     | otherwise = checkTypes x ys
 
+checkTypesList :: [Type] -> [Type] -> Maybe (Type, Type)
+checkTypesList [] [] = Nothing
+checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = checkTypesList xs ys
+                             | x/=y = Just (x,y)
+                             | otherwise = checkTypesList xs ys
+
+checkVarParams :: [ElemVar] -> [ElemVar] -> Maybe Id
 checkVarParams [] ys = Nothing
 checkVarParams (x@(Var a _ _ _):xs) ys
                     | (searchVar a ys) =  Just a
                     | otherwise = (checkVarParams xs ys)
 
+checkSameBlock :: Id -> [ElemVar] -> Maybe Id
 checkSameBlock id [] = Nothing
 checkSameBlock id (Var a _ False _:xs) = checkSameBlock id xs
 checkSameBlock id (Var a _ True _:xs)
                       | id==a = Just a
                       | otherwise = checkSameBlock id xs
 
+checkSameBlockList :: [Id] -> [ElemVar] -> Maybe Id
 checkSameBlockList [] _  = Nothing
 checkSameBlockList (x:xs) ys = case checkSameBlock x ys of
                                     Just a  -> Just a

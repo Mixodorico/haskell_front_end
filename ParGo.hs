@@ -855,7 +855,7 @@ happyReduction_64 happy_x_3
 	case happyOut12 happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn20
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) ++[CondJFalse (tacId happySubAttrs_2) ((snd (indexNew happySubAttrs_3) )+2)] ++[Lbl $ (snd (indexNew happySubAttrs_3) ) + 1] ++ (tac happySubAttrs_3) ++[Lbl $ (snd (indexNew happySubAttrs_3) ) + 2] , indexNew = ( fst (indexNew happySubAttrs_3) , (snd (indexNew happySubAttrs_3) ) + 2 ) , aReturn = False , envFunNew = (envFun happySelfAttrs) , envVarNew = (envVar happySelfAttrs) , value = StIf (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ forLabels = (forLabels happySelfAttrs) , aTypeFun = (aTypeFun happySelfAttrs) , envFun = (envFun happySelfAttrs) , envVar = resetEnvVar (envVar happySelfAttrs) , index = (indexNew happySubAttrs_2)  }; happyConditions = [if (err happySubAttrs_2) =="" then when (not $ (aType happySubAttrs_2) ==TBool) $ Bad $ "Type error at "++(pos happy_var_1 )++": type "++(showType (aType happySubAttrs_2) ) ++" used as condition (if)" else Bad (err happySubAttrs_2) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = shift (tacJ happySubAttrs_2) (snd (indexNew happySubAttrs_3) ) ++[CondJFalse (tacId happySubAttrs_2) ((snd (indexNew happySubAttrs_3) )+2)] ++[Lbl $ (snd (indexNew happySubAttrs_3) ) + 1] ++ (tac happySubAttrs_3) ++[UncondJ $ (snd (indexNew happySubAttrs_3) ) + 2] ++[Lbl $ (snd (indexNew happySubAttrs_3) ) + 2] , indexNew = ( fst (indexNew happySubAttrs_3) , (snd (indexNew happySubAttrs_3) ) + 2 ) , aReturn = False , envFunNew = (envFun happySelfAttrs) , envVarNew = (envVar happySelfAttrs) , value = StIf (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ forLabels = (forLabels happySelfAttrs) , aTypeFun = (aTypeFun happySelfAttrs) , envFun = (envFun happySelfAttrs) , envVar = resetEnvVar (envVar happySelfAttrs) , index = (indexNew happySubAttrs_2)  }; happyConditions = [if (err happySubAttrs_2) =="" then when (not $ (aType happySubAttrs_2) ==TBool) $ Bad $ "Type error at "++(pos happy_var_1 )++": type "++(showType (aType happySubAttrs_2) ) ++" used as condition (if)" else Bad (err happySubAttrs_2) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_65 = happyReduce 5# 16# happyReduction_65
@@ -881,7 +881,7 @@ happyReduction_66 happy_x_3
 	case happyOut12 happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { happy_var_3 -> 
 	happyIn20
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [Lbl $ (snd (indexNew happySubAttrs_3) ) + 1] ++ (tac happySubAttrs_2) ++[CondJFalse (tacId happySubAttrs_2) ((snd (indexNew happySubAttrs_3) )+2)] ++ (tac happySubAttrs_3) ++[UncondJ $ (snd (indexNew happySubAttrs_3) ) + 1] ++[Lbl $ (snd (indexNew happySubAttrs_3) ) + 2] , indexNew = ( fst (indexNew happySubAttrs_3) , (snd (indexNew happySubAttrs_3) ) + 2 ) , aReturn = False , envFunNew = (envFun happySelfAttrs) , envVarNew = (envVar happySelfAttrs) , value = StWhile (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ forLabels = ( (snd (indexNew happySubAttrs_3) ) + 1, (snd (indexNew happySubAttrs_3) ) + 2 ) , aTypeFun = (aTypeFun happySelfAttrs) , envFun = (envFun happySelfAttrs) , envVar = resetEnvVar (envVar happySelfAttrs) , index = (indexNew happySubAttrs_2)  }; happyConditions = [if (err happySubAttrs_2) =="" then when (not $ (aType happySubAttrs_2) ==TBool) $ Bad $ "Type error at "++(pos happy_var_1 )++": type "++(showType (aType happySubAttrs_2) ) ++" used as condition (for)" else Bad (err happySubAttrs_2) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [Lbl $ (snd (indexNew happySubAttrs_3) ) + 1] ++shift (tacJ happySubAttrs_2) (snd (indexNew happySubAttrs_3) + 1) ++[CondJFalse (tacId happySubAttrs_2) ((snd (indexNew happySubAttrs_3) ) + 3)] ++[Lbl $ (snd (indexNew happySubAttrs_3) ) + 2] ++ (tac happySubAttrs_3) ++[UncondJ $ (snd (indexNew happySubAttrs_3) ) + 1] ++[Lbl $ (snd (indexNew happySubAttrs_3) ) + 3] , indexNew = ( fst (indexNew happySubAttrs_3) , (snd (indexNew happySubAttrs_3) ) + 3 ) , aReturn = False , envFunNew = (envFun happySelfAttrs) , envVarNew = (envVar happySelfAttrs) , value = StWhile (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ forLabels = ( (snd (indexNew happySubAttrs_3) ) + 1, (snd (indexNew happySubAttrs_3) ) + 3 ) , aTypeFun = (aTypeFun happySelfAttrs) , envFun = (envFun happySelfAttrs) , envVar = resetEnvVar (envVar happySelfAttrs) , index = (indexNew happySubAttrs_2)  }; happyConditions = [if (err happySubAttrs_2) =="" then when (not $ (aType happySubAttrs_2) ==TBool) $ Bad $ "Type error at "++(pos happy_var_1 )++": type "++(showType (aType happySubAttrs_2) ) ++" used as condition (for)" else Bad (err happySubAttrs_2) ]++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_67 = happySpecReduce_1  16# happyReduction_67
@@ -1156,6 +1156,7 @@ happyEmptyAttrs = HappyAttributes {value = error "invalid reference to attribute
 
 -- functions for type checking and other errors handling
 
+checkAritOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                then if (t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat)
                                       then ""
@@ -1164,6 +1165,7 @@ checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                       then e1
                                       else e2
 
+checkRelOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                               then if t1 == t2
                                      then ""
@@ -1174,6 +1176,7 @@ checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                                      then e1
                                      else e2
 
+checkBoolOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
                                 then if t2 == t1
                                        then if t1/=TBool
@@ -1184,44 +1187,52 @@ checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
                                        then e1
                                        else e2
 
+checkCallProc :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkCallProc id envFun tl p  = if not $ searchFun id envFun
                                   then "Error at "++(pos p)++": procedure  "++(idToStr id)++" not in scope"
                                   else checkParams id envFun tl p  
 
+checkCallFun :: [Char] -> Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkCallFun e id envFun tl p  = if e==""
                                    then if not $ searchFun id envFun
                                           then "Error at "++(pos p)++": function  "++(idToStr id)++" not in scope"
                                           else checkParams id envFun tl p  
                                    else e
 
+checkParams :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFun) /= (length tl)
                                  then "Error at "++(pos p)++": wrong number of arguments when calling "++(idToStr id)++", expected: "++(show $ length $ getTypeListFun $ extractFun id envFun)
                                  else case checkTypesList (getTypeListFun $ extractFun id envFun) tl of {
-                                           Just a  -> "Type Error at "++(pos p)++": Wrong argument type, couldn't match "++(showType $ fst a)++" with "++(showType $ snd a)++" in function "++(idToStr id);
+                                           Just a  -> "Type Error at "++(pos p)++": wrong argument type, couldn't match "++(showType $ fst a)++" with "++(showType $ snd a)++" in function "++(idToStr id);
                                            Nothing -> "";
                                       };
 
-checkTypesList [] [] = Nothing
-checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = Nothing
-                             | x/=y = Just (x,y)
-                             | otherwise = checkTypesList xs ys
-                
+checkTypes :: Type -> [Type] -> Maybe (Type, Type)
 checkTypes _ [] = Nothing
-checkTypes x (y:ys) | x == TFloat && y == TInt = Nothing
+checkTypes x (y:ys) | x == TFloat && y == TInt = checkTypes x ys
                     | x/=y = Just (x,y)
                     | otherwise = checkTypes x ys
 
+checkTypesList :: [Type] -> [Type] -> Maybe (Type, Type)
+checkTypesList [] [] = Nothing
+checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = checkTypesList xs ys
+                             | x/=y = Just (x,y)
+                             | otherwise = checkTypesList xs ys
+
+checkVarParams :: [ElemVar] -> [ElemVar] -> Maybe Id
 checkVarParams [] ys = Nothing
 checkVarParams (x@(Var a _ _ _):xs) ys
                     | (searchVar a ys) =  Just a
                     | otherwise = (checkVarParams xs ys)
 
+checkSameBlock :: Id -> [ElemVar] -> Maybe Id
 checkSameBlock id [] = Nothing
 checkSameBlock id (Var a _ False _:xs) = checkSameBlock id xs
 checkSameBlock id (Var a _ True _:xs)
                       | id==a = Just a
                       | otherwise = checkSameBlock id xs
 
+checkSameBlockList :: [Id] -> [ElemVar] -> Maybe Id
 checkSameBlockList [] _  = Nothing
 checkSameBlockList (x:xs) ys = case checkSameBlock x ys of
                                     Just a  -> Just a
