@@ -682,7 +682,7 @@ LExp : Id {
                                                   else "" ;
                                  otherwise   -> "Type error at "++(pos $2)++": expected array, "++showType ($1.aType)++" found" ;
                             }
-                       else if $1.err==""
+                       else if $1.err ==""
                               then $3.err
                               else $1.err ; 
             $1.index = $$.index;
@@ -697,7 +697,7 @@ LExp : Id {
                                                else Ok () ;
                               otherwise   -> Bad $ "Type error at "++(pos $2)++": expected array, "++showType ($1.aType)++" found" ;
                          }
-                    else if $1.err==""
+                    else if $1.err ==""
                            then Bad $3.err
                            else Bad $1.err; 
             }
@@ -707,7 +707,7 @@ LExp : Id {
             $2.envVar = $$.envVar;
             $2.envFun = $$.envFun;
             $$.aType = getTypePtr $2.aType;
-            $$.err = if $2.err==""
+            $$.err = if $2.err ==""
                        then if not $ isTypePtr $2.aType 
                               then "Type error at "++(pos $1)++": expected pointer, "++showType ($2.aType)++" found"
                               else ""
@@ -716,7 +716,7 @@ LExp : Id {
             $$.indexNew = ( (fst $2.indexNew) + 1, snd $2.indexNew );
             $$.tacId = "*"++($2.tacId);
             $$.tac = $2.tac;
-            where if $2.err==""
+            where if $2.err ==""
                     then if not $ isTypePtr $2.aType
                            then Bad $ "Type error at "++(pos $1)++": expected pointer, "++showType ($2.aType)++" found"
                            else Ok ()
@@ -921,7 +921,7 @@ Stmt : Decl {
                            ++[Lbl $ (snd $3.indexNew) + 1]
                            ++$3.tac
                            ++[Lbl $ (snd $3.indexNew) + 2];
-                    where if $2.err== ""
+                    where if $2.err == ""
                             then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (if)"
                             else Bad $2.err ;
                     }
@@ -953,7 +953,7 @@ Stmt : Decl {
                            ++[Lbl $ (snd $5.indexNew) + 2]
                            ++$5.tac
                            ++[Lbl $ (snd $5.indexNew) + 3];
-                    where if $2.err== ""
+                    where if $2.err == ""
                         then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (if)"
                         else Bad $2.err ;
                     }
@@ -979,9 +979,9 @@ Stmt : Decl {
                        ++$3.tac
                        ++[UncondJ $ (snd $3.indexNew) + 1]
                        ++[Lbl $ (snd $3.indexNew) + 3];
-                where if $2.err== ""
-                    then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (for)"
-                    else Bad $2.err ;
+                where if $2.err == ""
+                        then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (for)"
+                        else Bad $2.err ;
                 }
 
      | 'break' {
@@ -1014,7 +1014,7 @@ Stmt : Decl {
                     $2.index = $$.index;
                     $$.indexNew = $2.indexNew;
                     $$.tac = $2.tac++[Return $2.tacId];
-                    where if $2.err== ""
+                    where if $2.err == ""
                             then case $$.aTypeFun of {
                                       TVoid -> Bad $ "Error at "++(pos $1)++": procedures can't return any value" ;
                                       _ -> when (not $ $2.aType == $$.aTypeFun) $ Bad $ "Type error at "++(pos $1)++": cannot use "++(showType $2.aType)++" as "++(showType $$.aTypeFun)++" in return instruction" ;
@@ -1103,7 +1103,7 @@ StmtSmpl : ShortVarDecl {
                 $1.index = $$.index;
                 $$.indexNew = $1.indexNew;
                 $$.tac = $1.tac;
-                where if $1.err== ""
+                where if $1.err == ""
                         then if $1.tacId == ""
                                then Ok ()
                                else Bad "Error : right expression evaluated but not assigned"
@@ -1122,11 +1122,11 @@ StmtSmpl : ShortVarDecl {
                 $3.index = $1.indexNew;
                 $$.indexNew = $3.indexNew;
                 $$.tac = $1.tac++$3.tac++[NulOp $1.tacId $3.tacId] ;
-                where if $1.err== "" && $3.err== ""
+                where if $1.err == "" && $3.err == ""
                         then if $1.aType == TFloat && $3.aType == TInt
                                then Ok ()
                                else when (not $ $1.aType == $3.aType) $ Bad $ "Type error at "++(pos $2)++": cannot use "++(showType $3.aType)++" as "++(showType $1.aType)++" in assignment"
-                        else if not $ $1.err==""
+                        else if not $ $1.err ==""
                                then Bad $ $1.err
                                else Bad $3.err ; 
                 }
