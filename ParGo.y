@@ -10,35 +10,67 @@ import Env
 import TAC
 }
 
+------------------
+Attributed grammar
+------------------
+
 %attributetype        { MyAttributes a }
 
 %attribute value      { a }
 
+-- actual environment attributes for variables and functions
 %attribute envVar     { [ElemVar] }        
 %attribute envFun     { [ElemFun] }
+
+-- new environment attributes for variables and functions
 %attribute envVarNew  { [ElemVar] }
 %attribute envFunNew  { [ElemFun] }
 
+-- line position used for list of parameters in functions declarations
 %attribute posi       { String }
+
+-- list of variables identifiers (for multiple declaration)
 %attribute idList     { [Id] }
+
+-- type on an expression
 %attribute aType      { Type }
+
+-- type of a list of expressions
 %attribute aTypeList  { [Type] }
+
+-- return type of a function 
 %attribute aTypeFun   { Type }
+
+-- defines if a return instruction is needed (true) or not (false)
 %attribute aReturn    { Bool }
+
+-- used to manage errors and 'break' and 'continue' instructions
 %attribute forLabels  { (Int, Int) }
 
+-- catch (previous) expression's errors 
 %attribute err        { String }
 
+-- used to manage short-cuts (next instruction label value)
 %attribute true       { Int }
 %attribute false      { Int }
 
+
+-- TAC generation attributes --
+
+-- (actual and new) temporal variable and label indexes 
 %attribute index      { (Int, Int) }
 %attribute indexNew   { (Int, Int) }
+
+-- list of TAC operations (tacJ is used to manage short-cut operations)
 %attribute tac        { [TacLine] }
 %attribute tacJ       { [TacLine] }
+
+-- contains actual expression(s) to print
 %attribute tacId      { String }
 %attribute tacIdList  { [String] }
 
+------------------
+------------------
 
 %name pStart Start
 -- no lexer declaration
@@ -1215,8 +1247,12 @@ ListStmt : {- empty -} {
 
 
 {
--- functions for type checking and other errors handling
 
+-----------------------------------------------------------
+-- functions for type checking and other errors handling --
+-----------------------------------------------------------
+
+-- checks for arithmetic operations consistency
 checkAritOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                then if (t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat)
@@ -1226,6 +1262,7 @@ checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                       then e1
                                       else e2
 
+-- checks for relation operations consistency
 checkRelOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                               then if t1 == t2
@@ -1237,6 +1274,7 @@ checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                                      then e1
                                      else e2
 
+-- checks for boolean operations consistency
 checkBoolOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
                                 then if t2 == t1
@@ -1248,11 +1286,13 @@ checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
                                        then e1
                                        else e2
 
+-- checks for procedure declaration before a call
 checkCallProc :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkCallProc id envFun tl p  = if not $ searchFun id envFun
                                   then "Error at "++(pos p)++": procedure  "++(idToStr id)++" not in scope"
                                   else checkParams id envFun tl p  
 
+-- checks for function declaration before a call
 checkCallFun :: [Char] -> Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkCallFun e id envFun tl p  = if e==""
                                    then if not $ searchFun id envFun
@@ -1260,6 +1300,7 @@ checkCallFun e id envFun tl p  = if e==""
                                           else checkParams id envFun tl p  
                                    else e
 
+-- checks parameters correctenss when a function/procedure call occours
 checkParams :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFun) /= (length tl)
                                  then "Error at "++(pos p)++": wrong number of arguments when calling "++(idToStr id)++", expected: "++(show $ length $ getTypeListFun $ extractFun id envFun)
@@ -1268,24 +1309,28 @@ checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFu
                                            Nothing -> "";
                                       };
 
+-- check type correctness in assignment phase
 checkTypes :: Type -> [Type] -> Maybe (Type, Type)
 checkTypes _ [] = Nothing
 checkTypes x (y:ys) | x == TFloat && y == TInt = checkTypes x ys
                     | x/=y = Just (x,y)
                     | otherwise = checkTypes x ys
 
+-- check type correctness in multiple assignment phase
 checkTypesList :: [Type] -> [Type] -> Maybe (Type, Type)
 checkTypesList [] [] = Nothing
 checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = checkTypesList xs ys
                              | x/=y = Just (x,y)
                              | otherwise = checkTypesList xs ys
 
+-- check if a parameter variable is already declared in the scope
 checkVarParams :: [ElemVar] -> [ElemVar] -> Maybe Id
 checkVarParams [] ys = Nothing
 checkVarParams (x@(Var a _ _ _):xs) ys
                     | (searchVar a ys) =  Just a
                     | otherwise = (checkVarParams xs ys)
 
+-- check if a variable is alreay declared in a block
 checkSameBlock :: Id -> [ElemVar] -> Maybe Id
 checkSameBlock id [] = Nothing
 checkSameBlock id (Var a _ False _:xs) = checkSameBlock id xs
@@ -1293,6 +1338,7 @@ checkSameBlock id (Var a _ True _:xs)
                       | id==a = Just a
                       | otherwise = checkSameBlock id xs
 
+-- check if a (list of) variables are already declared in a block
 checkSameBlockList :: [Id] -> [ElemVar] -> Maybe Id
 checkSameBlockList [] _  = Nothing
 checkSameBlockList (x:xs) ys = case checkSameBlock x ys of
