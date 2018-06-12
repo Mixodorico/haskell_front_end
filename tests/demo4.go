@@ -12,13 +12,8 @@ func p() void{
   var g1,g2 bool
   var r1,r2 int
   
-  if g1 == g2 || r2 <= r1 {
-    x = false
-    y = false
-    if g1 == g2 || r2 <= r1 {
-      x = false
-      y = false
-    }
+  func p1 (g int) void{
+    r1 = g
   }
   
 

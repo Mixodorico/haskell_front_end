@@ -1262,7 +1262,7 @@ checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                       then e1
                                       else e2
 
--- checks for relation operations consistency
+-- checks for relational operations consistency
 checkRelOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                               then if t1 == t2
