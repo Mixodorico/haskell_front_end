@@ -19,6 +19,7 @@ import TAC
 %attribute envVarNew  { [ElemVar] }
 %attribute envFunNew  { [ElemFun] }
 
+%attribute posi       { String }
 %attribute idList     { [Id] }
 %attribute aType      { Type }
 %attribute aTypeList  { [Type] }
@@ -105,8 +106,8 @@ L_Id { PT _ (T_Id $$) }
 
 
 %left '='
-%nonassoc '==' '!=' '<' '<=' '>' '>='  '!'
 %left '&&' '||'
+%nonassoc '==' '!=' '<' '<=' '>' '>='  '!'
 %left '+' '-'
 %left '*' '/' '%'
 %left NEG
@@ -125,16 +126,16 @@ Id      : L_Id     { $$ = Id $1}
 Boolean : 'true'  { $$ = Boolean_true; } 
         | 'false' { $$ = Boolean_false; }
 
-Type : 'void'      { $$ = TVoid;}
-     | 'int'       { $$ = TInt;} 
-     | 'bool'      { $$ = TBool;} 
-     | 'float'     { $$ = TFloat;} 
-     | 'char'      { $$ = TChar;} 
-     | 'string'    { $$ = TString;} 
-     | '[' Integer ']' Type    { $$ = TArray $2 $4;} 
-     | '*' Type    %prec PTR   { $$ = TPointer $2;}
+Type : 'void'      { $$ = TVoid; $$.posi = pos $1}
+     | 'int'       { $$ = TInt; $$.posi = pos $1}
+     | 'bool'      { $$ = TBool; $$.posi = pos $1}
+     | 'float'     { $$ = TFloat; $$.posi = pos $1}
+     | 'char'      { $$ = TChar; $$.posi = pos $1}
+     | 'string'    { $$ = TString; $$.posi = pos $1}
+     | '[' Integer ']' Type    { $$ = TArray $2 $4; $$.posi = pos $1}
+     | '*' Type    %prec PTR   { $$ = TPointer $2; $$.posi = pos $1}
 
-Pass : 'val'     { $$ = PassVal; } 
+Pass : 'val'     { $$ = PassVal; }
      | 'ref'     { $$ = PassRef; }
 
 RExp : RExp '&&' RExp {
@@ -178,7 +179,7 @@ RExp : RExp '&&' RExp {
             $3.false = $$.false;
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "||" $$.tacId $1.tacId $3.tacId];
-            $$.tacJ = $1.tacJ++[CondJTrue $1.tacId ($1.true)]++$3.tacJ++[BinOp "||" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $1.tacJ++[CondJTrue $1.tacId ($1.true+1)]++$3.tacJ++[BinOp "||" $$.tacId $1.tacId $3.tacId];
             where case checkBoolOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -633,7 +634,7 @@ LExp : Id {
             where if not $ searchVar $1 $$.envVar
                     then Bad $ "Error : variable  "++(idToStr $1)++" not in scope"
                     else Ok () ;
-            } 
+            }
 
      | LExp '[' RExp ']' {
             $$ = ExpArr $1 $3; 
@@ -807,13 +808,13 @@ ShortVarDecl : ListId ':=' ListRExp {
 
 Param : ListId Type {
                   $$ = Parameter $1 $2; 
-                  $$.envVar = createListType $1 $2 "0";
+                  $$.envVar = createListType $1 $2 $2.posi;
                   $$.aTypeList = replicate (length $1) $2;
-                  } 
+                  }
 
       | Pass ListId Type {
                   $$ = ParameterPass $1 $2 $3; 
-                  $$.envVar = createListType $2 $3 "0";
+                  $$.envVar = createListType $2 $3 $3.posi;
                   $$.aTypeList = replicate (length $2) $3;
                   }
 

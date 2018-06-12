@@ -9,12 +9,17 @@ func p() void{
   
   var a[10] bool
   
-  func f (g char) bool { return true }
+  var g1,g2 bool
+  var r1,r2 int
   
-  for x||y&&z {
-    p()
-    if x||y&&z {
-      p()
+  if g1 == g2 || r2 <= r1 {
+    x = false
+    y = false
+    if g1 == g2 || r2 <= r1 {
+      x = false
+      y = false
     }
   }
+  
+
 }
