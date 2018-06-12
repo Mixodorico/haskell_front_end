@@ -1,7 +1,7 @@
 base = Go
 
 all:
-	happy -gcai ParGo.y
+	happy -gca ParGo.y
 	alex -g LexGo.x
 	ghc --make TestGo.hs -o Go
 

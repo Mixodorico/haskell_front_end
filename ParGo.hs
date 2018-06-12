@@ -1358,8 +1358,11 @@ happySeq = happyDontSeq
 data MyAttributes a = HappyAttributes {value :: a, envVar :: [ElemVar], envFun :: [ElemFun], envVarNew :: [ElemVar], envFunNew :: [ElemFun], posi :: String, idList :: [Id], aType :: Type, aTypeList :: [Type], aTypeFun :: Type, aReturn :: Bool, forLabels :: (Int, Int), err :: String, true :: Int, false :: Int, index :: (Int, Int), indexNew :: (Int, Int), tac :: [TacLine], tacJ :: [TacLine], tacId :: String, tacIdList :: [String]}
 happyEmptyAttrs = HappyAttributes {value = error "invalid reference to attribute 'value'", envVar = error "invalid reference to attribute 'envVar'", envFun = error "invalid reference to attribute 'envFun'", envVarNew = error "invalid reference to attribute 'envVarNew'", envFunNew = error "invalid reference to attribute 'envFunNew'", posi = error "invalid reference to attribute 'posi'", idList = error "invalid reference to attribute 'idList'", aType = error "invalid reference to attribute 'aType'", aTypeList = error "invalid reference to attribute 'aTypeList'", aTypeFun = error "invalid reference to attribute 'aTypeFun'", aReturn = error "invalid reference to attribute 'aReturn'", forLabels = error "invalid reference to attribute 'forLabels'", err = error "invalid reference to attribute 'err'", true = error "invalid reference to attribute 'true'", false = error "invalid reference to attribute 'false'", index = error "invalid reference to attribute 'index'", indexNew = error "invalid reference to attribute 'indexNew'", tac = error "invalid reference to attribute 'tac'", tacJ = error "invalid reference to attribute 'tacJ'", tacId = error "invalid reference to attribute 'tacId'", tacIdList = error "invalid reference to attribute 'tacIdList'"}
 
--- functions for type checking and other errors handling
+-----------------------------------------------------------
+-- functions for type checking and other errors handling --
+-----------------------------------------------------------
 
+-- checks for arithmetic operations consistency
 checkAritOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                then if (t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat)
@@ -1369,6 +1372,7 @@ checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                       then e1
                                       else e2
 
+-- checks for relation operations consistency
 checkRelOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                               then if t1 == t2
@@ -1380,6 +1384,7 @@ checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                                      then e1
                                      else e2
 
+-- checks for boolean operations consistency
 checkBoolOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
                                 then if t2 == t1
@@ -1391,11 +1396,13 @@ checkBoolOp t1 t2 e1 e2 op  = if (e1 == "") && (e2 == "")
                                        then e1
                                        else e2
 
+-- checks for procedure declaration before a call
 checkCallProc :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkCallProc id envFun tl p  = if not $ searchFun id envFun
                                   then "Error at "++(pos p)++": procedure  "++(idToStr id)++" not in scope"
                                   else checkParams id envFun tl p  
 
+-- checks for function declaration before a call
 checkCallFun :: [Char] -> Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkCallFun e id envFun tl p  = if e==""
                                    then if not $ searchFun id envFun
@@ -1403,6 +1410,7 @@ checkCallFun e id envFun tl p  = if e==""
                                           else checkParams id envFun tl p  
                                    else e
 
+-- checks parameters correctenss when a function/procedure call occours
 checkParams :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFun) /= (length tl)
                                  then "Error at "++(pos p)++": wrong number of arguments when calling "++(idToStr id)++", expected: "++(show $ length $ getTypeListFun $ extractFun id envFun)
@@ -1411,24 +1419,28 @@ checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFu
                                            Nothing -> "";
                                       };
 
+-- check type correctness in assignment phase
 checkTypes :: Type -> [Type] -> Maybe (Type, Type)
 checkTypes _ [] = Nothing
 checkTypes x (y:ys) | x == TFloat && y == TInt = checkTypes x ys
                     | x/=y = Just (x,y)
                     | otherwise = checkTypes x ys
 
+-- check type correctness in multiple assignment phase
 checkTypesList :: [Type] -> [Type] -> Maybe (Type, Type)
 checkTypesList [] [] = Nothing
 checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = checkTypesList xs ys
                              | x/=y = Just (x,y)
                              | otherwise = checkTypesList xs ys
 
+-- check if a parameter variable is already declared in the scope
 checkVarParams :: [ElemVar] -> [ElemVar] -> Maybe Id
 checkVarParams [] ys = Nothing
 checkVarParams (x@(Var a _ _ _):xs) ys
                     | (searchVar a ys) =  Just a
                     | otherwise = (checkVarParams xs ys)
 
+-- check if a variable is alreay declared in a block
 checkSameBlock :: Id -> [ElemVar] -> Maybe Id
 checkSameBlock id [] = Nothing
 checkSameBlock id (Var a _ False _:xs) = checkSameBlock id xs
@@ -1436,6 +1448,7 @@ checkSameBlock id (Var a _ True _:xs)
                       | id==a = Just a
                       | otherwise = checkSameBlock id xs
 
+-- check if a (list of) variables are already declared in a block
 checkSameBlockList :: [Id] -> [ElemVar] -> Maybe Id
 checkSameBlockList [] _  = Nothing
 checkSameBlockList (x:xs) ys = case checkSameBlock x ys of

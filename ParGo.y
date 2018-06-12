@@ -10,9 +10,9 @@ import Env
 import TAC
 }
 
-------------------
-Attributed grammar
-------------------
+------------------------
+-- Attributed grammar --
+------------------------
 
 %attributetype        { MyAttributes a }
 
