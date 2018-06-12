@@ -1,15 +1,11 @@
 -------------------
 cose da modificare:
 -------------------
-postinc/dec
-Va assegnato quello che viene restituito dalle funzoni (niente side-effect)
-*=, /= ....
-ordine codice
-errori TC
-output principale
-labels sfasate nelle funzioni (messe dopo la funzione)
-ordine di valutazione dei booleani nelle condizioni
+i parametri delle funzioni non vengono enumerati nel TAC
 il return che jumpi fuori dalla funzione
+inizializzare direttamente gli array
+output principale
+dare a "&&" priorità maggiore di "||"
 
 ----------------------
 scelte implementative
@@ -20,33 +16,13 @@ non si possono inizializzare direttamente gli array, ma prima dichiarazione e po
 la funzione write è una LExp e prende come argomento una RExp (scrive sullo stout il valore) interpretandolo 
 con il giusto tipo mentre la funzione read non prende argomenti e si occupa della lettura da stdin facendo un casting sul tipo.
 casting int a float.
+Ci possono essere più di un return all'interno delle funzioni ma il return deve sempre essere l'ultima istruzione fatta all'interno del blocco
+Le funzioni non ammettono ridefinizione: tutti le etichette devono essere diverse.
 
---------------------------
-Se c'é tempo se c'é voglia
---------------------------
+----------------------
+Se c'è tempo e voglia 
+----------------------
+
+postinc/dec
+*=, /= ....
 ??(modificare TC in maniera da prendere ridefinizione di funzioni)??
-inizializzare direttamente gli array
-togliere l'ultima etichetta stampata
-dare a "&&" priorità maggiore di "||"
-
--------------------------
-Cose spaccate
--------------------------
-Le operazioni -, * non funzionano (errore di TC)
-i parametri delle funzioni non vengono enumerati nel TAC
-chiamate a funzioni esterne (not in scope)
-if then else nel TAC
-
-  
-if b1 && b2 && b3 {
-  s1 := "if_block_AND"
-}else{
-  s1 := "else_block_AND" 
-}
-
---------------------
-Non ho:
-messo modalità di passaggio parametri ref/val
-usato i parametri all'interno del corpo delle funzioni 
-ho evita come la peste tutte le cose che non funzionano.
-
