@@ -3,14 +3,14 @@
 
 \begin{document}
 
-\title{\noindent \Huge Progetto LC2, Parte 3 \\ Gruppo 1}
+\title{\noindent \Huge Progetto Linguaggi e Compilatori 2\\ Parte 3 \\ Gruppo 1}
 \date{}
 \author{Studenti: \\Foschiani Luca\\ Marinato Riccardo \\Passalenti Andrea}
 
 \maketitle
 \newpage
 
-\section*{Assunzioni}
+\section{Assunzioni}
 Nel seguente progetto abbiamo considerato le scelte di sintassi concreta definite dal linguaggio \textit{Go}.
 A seguire vengono riassunte una serie di assunzioni.
 
@@ -19,11 +19,13 @@ A seguire vengono riassunte una serie di assunzioni.
 \item non è consientito dichiarare delle variabili con lo stesso identificatore nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
 \item è stato usato l'operatore `!' nelle condizioni degli if per veicolare correttamente i salti condizionati;
 \item nel corpo delle procedure non deve presentare l'istruzione return, sempre richiesta invece nei corpi delle funzioni;
-\item sono stati implementati solamente i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici}, \textit{iterazione indeterminata});
-\item le guardie booleane dei controlli di sequenza vengono gestite tramite short-cut mentre le altre espressioni booleani vengono gestite senza short-cut.
+\item sono stati implementati solamente i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici}), \textit{iterazione indeterminata});
+\item le guardie booleane dei controlli di sequenza vengono gestite tramite short-cut mentre le altre espressioni booleani vengono gestite senza short-cut;
+\item è consentito effettuare dei passaggi di parametri per valore (\textit{val}) e per riferimento (\textit{ref});
+\item non è possibile definire controlli di sequenza al di fuori delle funzioni/procedure.
 \end{itemize}
 
-\subsection*{Scelte implementative}
+\section{Scelte implementative}
 \begin{itemize}
 \item Abbiamo generato \textit{lexer} e \textit{parser} tramite il tool BNFC, partendo dalla definizione di una gramatica iniziale;
 \item la gestione del \textit{Type Checker} e del \textit{Three Address Code} vengono fatte all'interno del parser;
@@ -31,7 +33,7 @@ A seguire vengono riassunte una serie di assunzioni.
 
 \end{itemize}
 
-\subsection*{Grammatica}
+\section{Grammatica}
 Di seguito viene riportata la grammatica di partenza.
 \begin{verbatim}
 comment "//";
@@ -133,17 +135,24 @@ StExp.            StmtSmpl ::= RExp;
 StAsgn.           StmtSmpl ::= LExp "=" RExp;
 \end{verbatim}
 
-\subsection*{Type Checker}
+\section{Parser}
+Gran parte del progetto è stato sviluppato all'interno del parser. In particolare tutta la parte di \textit{type checking} e \textit{three address code} sono state implementate al suo interno.\\
+All'iterno del parser sono stati definiti tutta una serie di attributi relativi alla \textit{grammatica attributata}.
+Gli enviroment sono gestiti attraverso gli attributi \textit{EnvVar}/\textit{EnvVarNew} e \textit{EnvFun}/\textit{EnvFunNew} e corrispondono a liste di tipi di dato \textit{ElemVar} ed \textit{ElemFun}. In particolare, gli attributi \textit{EnvVar} ed \textit{EnvFun} rappresentano, per ogni nodo, l'ambiente  derivante dal nodo padre, mentre \textit{EnvVarNew} ed \textit{EnvFunNew} definiscono l'ambiente ottenuto da tutti i nodi figli.
+Sono stati inoltre definiti ulteriori atributi per gestire la generazione del three address code (si rimanda al codice).
+
+\subsection{Type Checker}
 Il Type Checker viene gestito interamente all'interno del parser. In particolare per ogni espressione valutata si effettua un controllo diretto attraverso le funzioni \textit{Ok} e \textit{Bad} che, in caso di errore, gestiscono l'errore tramite la stampa di un messaggio a video indicante la linea dell'errore e la causa.\\
-Un errore di lessico viene a distinguersi da uno di tipo direttamente in fase di stampa dello dell'errore, riportando "\textit{Lexical error}" nel primo caso e "\textit{Type error}" nel secondo.\\
+%%%%%%%%%%%%%%%%%%%%% tignilu??
+Un errore di lessico viene a distinguersi da uno di tipo direttamente in fase di stampa dello dell'errore, riportando "\textit{Lexical error}" nel primo caso e "\textit{Type error}" nel secondo. In particolare il type checker si occuperà di intercettare eventuali errori di tipo e di scoping.\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Tutte le funzioni di controllo utilizzate dal type checker sono state definite internamente al parser.\\
 Tra le diverse assunzioni fatte in fase di type checking, abbiamo voluto tenere conto in modo automatico di una conversione dal tipo int al tipo float.
 
-\subsection*{Three Address Code}
+\subsection{Three Address Code}
 Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{TAC.hs}) contenente la struttura dati per gestirne la generazione e le funzioni addette alla stampa. Inoltre ci siamo appoggiati su un ulteriore modulo (\textit{Env.hs}) contenete tutte le funzioni per la gestione dell'environment (inserimento, cancellazione e ricerca di variabili/funzioni).
-In questo modulo sono stati dichiarati i tipi di dati \textit{ElemVar} e \textit{ElemFun} contenenti rispettivamente tutte le informazioni relative alle variabili ed alle funzioni/procedure dichiarate nell'ambiente.
-L'ambiente viene definito come una lista di \textit{ElemVar} ed \textit{ElemFun}
-\subsection*{Test Case}
-Sono stati preparati dei test-case significativi che possono essere eseguiti in sequenza attraverso il comando \textit{make demo}, oppure singolarmente attraverso i comandi \textit{make demo1}, \textit{make demo2}, \textit{make demo3}.
+In questo modulo sono stati dichiarati i tipi di dato \textit{ElemVar} e \textit{ElemFun} contenenti rispettivamente tutte le informazioni relative alle variabili ed alle funzioni/procedure dichiarate nell'ambiente.
+\subsection{Test Case}
+Sono stati preparati dei test-case significativi che possono essere eseguiti in sequenza attraverso il comando \textit{make demo}, oppure singolarmente attraverso i comandi \textit{make demo1}, \textit{make demo2}, \textit{make demo3} e \textit{make demo4}.
 
 \end{document}
