@@ -19,23 +19,30 @@ type ParseFun a = [Token] -> Err a
 
 myLLexer = myLexer
 
+type Verbosity = Int
 
+
+putStrV :: Verbosity -> String -> IO ()
 putStrV v s = if v > 1 then putStrLn s else return ()
 
 
+runFile :: Print a => Verbosity -> ([Token] -> Err (a, [TacLine])) -> String -> IO ()
 runFile v p f = putStrLn f >> readFile f >>= run v p
 
 
+run :: Print a => Verbosity -> ([Token] -> Err (a, [TacLine])) -> String -> IO ()
 run v p s = let ts = myLLexer s in case p ts of
-           Bad s          -> do putStrLn "\nParse              Failed...\n"
+           Bad s          -> do putStrLn "\n------------------------\n  !! Parse Failed !! \n------------------------\n"
                                 putStrV v "Error:"
                                 putStrLn s
-           Ok (tree, tac) -> do putStrLn "\nParse successful"
-                                putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
-                                putStrV v $ "\n[Three Address Code]\n\n" ++ printTac tac
-        
+                                putStrLn "\n"
+           Ok (tree, tac) -> do putStrLn  $ "\n------------------------\n   Parse Successful \n------------------------"
+                                putStrV v $ "------------------------\n    Linearized Tree \n------------------------\n\n" ++ printTree tree
+                                putStrV v $ "------------------------\n  Three Address Code \n------------------------\n\n" ++ printTac tac
 
 
+
+main :: IO ()
 main = do args <- getArgs
           case args of
             [] -> hGetContents stdin >>= run 2 pStart
