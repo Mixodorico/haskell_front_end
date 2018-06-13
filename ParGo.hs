@@ -618,7 +618,7 @@ happyReduction_39 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = [FunCall 'f' (tacId happySelfAttrs) (Id "readInt") []] , tacId = "t"++(show $ (fst (indexNew happySelfAttrs) ) + 1 ) , indexNew = (index happySelfAttrs) , aReturn = False , aType = TInt , value = StRead ReadT_readInt  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = [FunCall 'f' (tacId happySelfAttrs) (Id "readInt") []] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , err = "" , indexNew = ((fst (index happySelfAttrs) )+1,snd (index happySelfAttrs) ) , aReturn = False , aType = TInt , value = StRead ReadT_readInt  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
 happyReduce_40 = happySpecReduce_3  8# happyReduction_40
@@ -626,7 +626,7 @@ happyReduction_40 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = [FunCall 'f' (tacId happySelfAttrs) (Id "readFloat") []] , tacId = "t"++(show $ (fst (indexNew happySelfAttrs) ) + 1 ) , indexNew = (index happySelfAttrs) , aReturn = False , aType = TFloat , value = StRead ReadT_readFloat  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = [FunCall 'f' (tacId happySelfAttrs) (Id "readFloat") []] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , err = "" , indexNew = ((fst (index happySelfAttrs) )+1,snd (index happySelfAttrs) ) , aReturn = False , aType = TFloat , value = StRead ReadT_readFloat  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
 happyReduce_41 = happySpecReduce_3  8# happyReduction_41
@@ -634,7 +634,7 @@ happyReduction_41 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = [FunCall 'f' (tacId happySelfAttrs) (Id "readChar") []] , tacId = "t"++(show $ (fst (indexNew happySelfAttrs) ) + 1 ) , indexNew = (index happySelfAttrs) , aReturn = False , aType = TChar , value = StRead ReadT_readChar  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = [FunCall 'f' (tacId happySelfAttrs) (Id "readChar") []] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , err = "" , indexNew = ((fst (index happySelfAttrs) )+1,snd (index happySelfAttrs) ) , aReturn = False , aType = TChar , value = StRead ReadT_readChar  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
 happyReduce_42 = happySpecReduce_3  8# happyReduction_42
@@ -642,7 +642,7 @@ happyReduction_42 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = [FunCall 'f' (tacId happySelfAttrs) (Id "readString") []] , tacId = "t"++(show $ (fst (indexNew happySelfAttrs) ) + 1 ) , indexNew = (index happySelfAttrs) , aReturn = False , aType = TString , value = StRead ReadT_readString  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = [FunCall 'f' (tacId happySelfAttrs) (Id "readString") []] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , err = "" , indexNew = ((fst (index happySelfAttrs) )+1,snd (index happySelfAttrs) ) , aReturn = False , aType = TString , value = StRead ReadT_readString  }; happyConditions = [] } in (happyConditions,happySelfAttrs)
 	)
 
 happyReduce_43 = happySpecReduce_1  9# happyReduction_43
@@ -697,7 +697,7 @@ happyReduction_49 (happy_x_4 `HappyStk`
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut12 happy_x_3 of { happy_var_3 -> 
 	happyIn14
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "*" ("t"++(show $ (fst (indexNew happySubAttrs_3) ) +1)) (tacId happySubAttrs_3) (show $ size (aType happySelfAttrs) )] , tacId = (tacId happySubAttrs_1) ++"[t"++(show $ (fst (indexNew happySubAttrs_3) ) +1)++"]" , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 2, snd (indexNew happySubAttrs_3) ) , err = if (err happySubAttrs_1) =="" && (err happySubAttrs_3) =="" then case (aType happySubAttrs_1) of { TArray _ _ -> if not $ (aType happySubAttrs_3) ==TInt then "Type error at "++(pos happy_var_2 )++": expected int, "++showType ( (aType happySubAttrs_3) )++" found" else "" ; otherwise -> "Type error at "++(pos happy_var_2 )++": expected array, "++showType ( (aType happySubAttrs_1) )++" found" ; } else if (err happySubAttrs_1) =="" then (err happySubAttrs_3) else (err happySubAttrs_1) , aType = getTypeArr (aType happySubAttrs_1) , value = ExpArr (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = [if (err happySubAttrs_1) =="" && (err happySubAttrs_3) =="" then case (aType happySubAttrs_1) of { TArray _ _ -> if not $ (aType happySubAttrs_3) ==TInt then Bad $ "Type error at "++(pos happy_var_2 )++": expected int, "++showType ( (aType happySubAttrs_3) )++" found" else Ok () ; otherwise -> Bad $ "Type error at "++(pos happy_var_2 )++": expected array, "++showType ( (aType happySubAttrs_1) )++" found" ; } else if (err happySubAttrs_1) =="" then Bad (err happySubAttrs_3) else Bad (err happySubAttrs_1) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "*" ("t"++(show $ (fst (indexNew happySubAttrs_3) ) +1)) (tacId happySubAttrs_3) (show $ size (aType happySelfAttrs) )] , tacId = (tacId happySubAttrs_1) ++"[t"++(show $ (fst (indexNew happySubAttrs_3) ) +1)++"]" , indexNew = ((fst (indexNew happySubAttrs_3) )+1, snd (indexNew happySubAttrs_3) ) , err = if (err happySubAttrs_1) =="" && (err happySubAttrs_3) =="" then case (aType happySubAttrs_1) of { TArray _ _ -> if not $ (aType happySubAttrs_3) ==TInt then "Type error at "++(pos happy_var_2 )++": expected int, "++showType ( (aType happySubAttrs_3) )++" found" else "" ; otherwise -> "Type error at "++(pos happy_var_2 )++": expected array, "++showType ( (aType happySubAttrs_1) )++" found" ; } else if (err happySubAttrs_1) =="" then (err happySubAttrs_3) else (err happySubAttrs_1) , aType = getTypeArr (aType happySubAttrs_1) , value = ExpArr (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = [if (err happySubAttrs_1) =="" && (err happySubAttrs_3) =="" then case (aType happySubAttrs_1) of { TArray _ _ -> if not $ (aType happySubAttrs_3) ==TInt then Bad $ "Type error at "++(pos happy_var_2 )++": expected int, "++showType ( (aType happySubAttrs_3) )++" found" else Ok () ; otherwise -> Bad $ "Type error at "++(pos happy_var_2 )++": expected array, "++showType ( (aType happySubAttrs_1) )++" found" ; } else if (err happySubAttrs_1) =="" then Bad (err happySubAttrs_3) else Bad (err happySubAttrs_1) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	) `HappyStk` happyRest}}}
 
 happyReduce_50 = happySpecReduce_2  10# happyReduction_50
@@ -706,7 +706,7 @@ happyReduction_50 happy_x_2
 	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
 	case happyOut12 happy_x_2 of { happy_var_2 -> 
 	happyIn14
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) , tacId = "*"++( (tacId happySubAttrs_2) ) , indexNew = ( (fst (indexNew happySubAttrs_2) ) + 1, snd (indexNew happySubAttrs_2) ) , err = if (err happySubAttrs_2) =="" then if not $ isTypePtr (aType happySubAttrs_2) then "Type error at "++(pos happy_var_1 )++": expected pointer, "++showType ( (aType happySubAttrs_2) )++" found" else "" else (err happySubAttrs_2) , aType = getTypePtr (aType happySubAttrs_2) , value = ExpDeref (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = [if (err happySubAttrs_2) =="" then if not $ isTypePtr (aType happySubAttrs_2) then Bad $ "Type error at "++(pos happy_var_1 )++": expected pointer, "++showType ( (aType happySubAttrs_2) )++" found" else Ok () else Bad (err happySubAttrs_2) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_2) , tacId = "*"++( (tacId happySubAttrs_2) ) , indexNew = (indexNew happySubAttrs_2) , err = if (err happySubAttrs_2) =="" then if not $ isTypePtr (aType happySubAttrs_2) then "Type error at "++(pos happy_var_1 )++": expected pointer, "++showType ( (aType happySubAttrs_2) )++" found" else "" else (err happySubAttrs_2) , aType = getTypePtr (aType happySubAttrs_2) , value = ExpDeref (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = [if (err happySubAttrs_2) =="" then if not $ isTypePtr (aType happySubAttrs_2) then Bad $ "Type error at "++(pos happy_var_1 )++": expected pointer, "++showType ( (aType happySubAttrs_2) )++" found" else Ok () else Bad (err happySubAttrs_2) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
 	)}}
 
 happyReduce_51 = happySpecReduce_3  11# happyReduction_51
@@ -1269,7 +1269,7 @@ showType TChar   = "char"
 showType TString = "string"
 showType TBool   = "boolean"
 showType (TPointer t) = "*" ++ showType t
-showType (TArray n t) = showType t ++ "[]"
+showType (TArray n t) = showType t ++ "[" ++ (show n) ++ "]"
 
 
 pos tok = tokenPos [tok]
