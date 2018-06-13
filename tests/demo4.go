@@ -10,7 +10,8 @@ func p() void{
   asdasd1 := readChar()
   
   var a[10] *bool
-  var b[10][1] int
+  var b[10] int
+  var c[10][1] int
   
   var g1,g2 bool
   var r1,r2 int
@@ -29,9 +30,11 @@ func p() void{
     return &a
   }
   
-  x = *a[readInt()+readInt()-b[123123123][b[2][1]]]
+  x = *a[readInt()+readInt()-b[1]]
   
   a[1] = xx
+  
+  c[1][2] = 3
   
   asdasd := readChar()
   asdasd2 := readChar()

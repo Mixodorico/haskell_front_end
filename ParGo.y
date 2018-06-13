@@ -689,7 +689,7 @@ LExp : Id {
                               then $3.err
                               else $1.err ; 
             $1.index = $$.index;
-            $3.index = $$.index;
+            $3.index = $1.indexNew;
             $$.indexNew = ((fst $3.indexNew)+1, snd $3.indexNew);
             $$.tacId = $1.tacId++"[t"++(show $ (fst $3.indexNew) +1)++"]";
             $$.tac = $1.tac++$3.tac++[BinOp "*" ("t"++(show $ (fst $3.indexNew) +1)) $3.tacId (show $ size $$.aType)];
