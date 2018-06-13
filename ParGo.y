@@ -539,7 +539,7 @@ RExp : RExp '&&' RExp {
             $1.tacId = (idToStr $1)++getPosF $1 $$.envFun;
             $$.tacId = if $$.aType==TVoid
                          then ""
-                         else "t"++(show $ fst $$.indexNew); 
+                         else "t"++(show $ fst $$.indexNew);
             $$.tac = if $$.aType==TVoid
                        then $3.tac++[FunCall 'p' "" (Id $1.tacId) $3.tacIdList] 
                        else $3.tac++[FunCall 'f' $$.tacId (Id $1.tacId) $3.tacIdList];
@@ -548,7 +548,6 @@ RExp : RExp '&&' RExp {
                        "" -> Ok ();
                        x  -> Bad x;
                   };
-
             }
 
      | Val {
@@ -593,8 +592,9 @@ RExp : RExp '&&' RExp {
                 $$ = StRead ReadT_readInt;
                 $$.aType = TInt;
                 $$.aReturn = False;
-                $$.indexNew = $$.index;
-                $$.tacId = "t"++(show $ (fst $$.indexNew) + 1 );
+                $$.indexNew = ((fst $$.index)+1,snd $$.index);
+                $$.err = "";
+                $$.tacId = "t"++(show $ fst $$.indexNew);
                 $$.tac = [FunCall 'f' $$.tacId (Id "readInt") []];
                 $$.tacJ = $$.tac;
                 }
@@ -603,8 +603,9 @@ RExp : RExp '&&' RExp {
                 $$ = StRead ReadT_readFloat;
                 $$.aType = TFloat;
                 $$.aReturn = False;
-                $$.indexNew = $$.index;
-                $$.tacId = "t"++(show $ (fst $$.indexNew) + 1 );
+                $$.indexNew = ((fst $$.index)+1,snd $$.index);
+                $$.err = "";
+                $$.tacId = "t"++(show $ fst $$.indexNew);
                 $$.tac = [FunCall 'f' $$.tacId (Id "readFloat") []];
                 $$.tacJ = $$.tac;
                 }
@@ -613,8 +614,9 @@ RExp : RExp '&&' RExp {
                 $$ = StRead ReadT_readChar;
                 $$.aType = TChar;
                 $$.aReturn = False;
-                $$.indexNew = $$.index;
-                $$.tacId = "t"++(show $ (fst $$.indexNew) + 1 );
+                $$.indexNew = ((fst $$.index)+1,snd $$.index);
+                $$.err = "";
+                $$.tacId = "t"++(show $ fst $$.indexNew);
                 $$.tac = [FunCall 'f' $$.tacId (Id "readChar") []];
                 $$.tacJ = $$.tac;
                 }
@@ -623,8 +625,9 @@ RExp : RExp '&&' RExp {
                 $$ = StRead ReadT_readString;
                 $$.aType = TString;
                 $$.aReturn = False;
-                $$.indexNew = $$.index;
-                $$.tacId = "t"++(show $ (fst $$.indexNew) + 1 );
+                $$.indexNew = ((fst $$.index)+1,snd $$.index);
+                $$.err = "";
+                $$.tacId = "t"++(show $ fst $$.indexNew);
                 $$.tac = [FunCall 'f' $$.tacId (Id "readString") []];
                 $$.tacJ = $$.tac;
                 }
@@ -686,8 +689,8 @@ LExp : Id {
                               then $3.err
                               else $1.err ; 
             $1.index = $$.index;
-            $3.index = $$.index;
-            $$.indexNew = ( (fst $3.indexNew) + 2, snd $3.indexNew );
+            $3.index = $1.indexNew;
+            $$.indexNew = ((fst $3.indexNew)+1, snd $3.indexNew);
             $$.tacId = $1.tacId++"[t"++(show $ (fst $3.indexNew) +1)++"]";
             $$.tac = $1.tac++$3.tac++[BinOp "*" ("t"++(show $ (fst $3.indexNew) +1)) $3.tacId (show $ size $$.aType)];
             where if $1.err == "" && $3.err == ""
@@ -713,7 +716,7 @@ LExp : Id {
                               else ""
                        else $2.err ;
             $2.index = $$.index;
-            $$.indexNew = ( (fst $2.indexNew) + 1, snd $2.indexNew );
+            $$.indexNew = $2.indexNew;
             $$.tacId = "*"++($2.tacId);
             $$.tac = $2.tac;
             where if $2.err ==""
@@ -1355,7 +1358,7 @@ showType TChar   = "char"
 showType TString = "string"
 showType TBool   = "boolean"
 showType (TPointer t) = "*" ++ showType t
-showType (TArray n t) = showType t ++ "[]"
+showType (TArray n t) = showType t ++ "[" ++ (show n) ++ "]"
 
 
 pos tok = tokenPos [tok]
