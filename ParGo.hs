@@ -1483,7 +1483,7 @@ happyError ts =
   case ts of
     [] -> []
     [Err _] -> " due to lexer error"
-    _ -> " before " ++unwords (map (id . prToken) (take 4 ts))
+    _ -> " before " ++unwords (map (id . prToken) (take 4 ts)) ++ "\n"
 
 myLexer = tokens
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
