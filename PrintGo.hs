@@ -32,31 +32,39 @@ render d = rend 0 (map ($ "") $ d []) "" where
     _            -> id
   new i   = showChar '\n' . replicateS (2*i) (showChar ' ') . dropWhile isSpace
   space t = showString t . (\s -> if null s then "" else (' ':s))
+  
 
 parenth :: Doc -> Doc
 parenth ss = doc (showChar '(') . ss . doc (showChar ')')
 
+
 concatS :: [ShowS] -> ShowS
 concatS = foldr (.) id
+
 
 concatD :: [Doc] -> Doc
 concatD = foldr (.) id
 
+
 replicateS :: Int -> ShowS -> ShowS
 replicateS n f = concatS (replicate n f)
+
 
 -- the printer class does the job
 class Print a where
   prt :: Int -> a -> Doc
   prtList :: Int -> [a] -> Doc
   prtList i = concatD . map (prt i)
+  
 
 instance Print a => Print [a] where
   prt = prtList
+  
 
 instance Print Char where
   prt _ s = doc (showChar '\'' . mkEsc '\'' s . showChar '\'')
   prtList _ s = doc (showChar '"' . concatS (map (mkEsc '"') s) . showChar '"')
+  
 
 mkEsc :: Char -> Char -> ShowS
 mkEsc q s = case s of
@@ -66,12 +74,15 @@ mkEsc q s = case s of
   '\t' -> showString "\\t"
   _ -> showChar s
 
+
 prPrec :: Int -> Int -> Doc -> Doc
 prPrec i j = if j<i then parenth else id
 
 
+
 instance Print Integer where
   prt _ x = doc (shows x)
+
 
 
 instance Print Double where
@@ -85,10 +96,12 @@ instance Print Id where
   prtList _ (x:xs) = (concatD [prt 0 x, doc (showString ","), prt 0 xs])
 
 
+
 instance Print Boolean where
   prt i e = case e of
     Boolean_true -> prPrec i 0 (concatD [doc (showString "true")])
     Boolean_false -> prPrec i 0 (concatD [doc (showString "false")])
+
 
 instance Print RExp where
   prt i e = case e of
@@ -116,6 +129,9 @@ instance Print RExp where
     StRead readt -> prPrec i 0 (concatD [prt 0 readt, doc (showString "("), doc (showString ")")])
   prtList _ [x] = (concatD [prt 0 x])
   prtList _ (x:xs) = (concatD [prt 0 x, doc (showString ","), prt 0 xs])
+  
+  
+  
 instance Print Val where
   prt i e = case e of
     Int n -> prPrec i 0 (concatD [prt 0 n])
@@ -123,6 +139,7 @@ instance Print Val where
     Char c -> prPrec i 0 (concatD [prt 0 c])
     String str -> prPrec i 0 (concatD [prt 0 str])
     Bool boolean -> prPrec i 0 (concatD [prt 0 boolean])
+    
 
 instance Print ReadT where
   prt i e = case e of
@@ -130,6 +147,8 @@ instance Print ReadT where
     ReadT_readFloat -> prPrec i 0 (concatD [doc (showString "readFloat")])
     ReadT_readChar -> prPrec i 0 (concatD [doc (showString "readChar")])
     ReadT_readString -> prPrec i 0 (concatD [doc (showString "readString")])
+    
+    
 
 instance Print LExp where
   prt i e = case e of
@@ -137,22 +156,31 @@ instance Print LExp where
     ExpArr lexp rexp -> prPrec i 0 (concatD [prt 0 lexp, doc (showString "["), prt 0 rexp, doc (showString "]")])
     ExpDeref rexp -> prPrec i 0 (concatD [doc (showString "*"), prt 0 rexp])
 
+
+
 instance Print Start where
   prt i e = case e of
-    Entry id decls -> prPrec i 0 (concatD [doc (showString "package"), prt 0 id, prt 0 decls])
+    Entry id decls -> prPrec i 0 (concatD [doc (showString "package"), prt 0 id, doc (showString "\n"), prt 0 decls])
+
+
 
 instance Print Decl where
   prt i e = case e of
     DeclVar ids type_ -> prPrec i 0 (concatD [doc (showString "var"), prt 0 ids, prt 0 type_])
     DeclVarInit ids rexps -> prPrec i 0 (concatD [doc (showString "var"), prt 0 ids, doc (showString "="), prt 0 rexps])
     DeclVarTypeInit ids type_ rexps -> prPrec i 0 (concatD [doc (showString "var"), prt 0 ids, prt 0 type_, doc (showString "="), prt 0 rexps])
-    DeclFun id params type_ block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 id, doc (showString "("), prt 0 params, doc (showString ")"), prt 0 type_, prt 0 block])
-    DeclProc id params block -> prPrec i 0 (concatD [doc (showString "func"), prt 0 id, doc (showString "("), prt 0 params, doc (showString ")"), doc (showString "void"), prt 0 block])
+    DeclFun id params type_ block -> prPrec i 0 (concatD [doc (showString "\nfunc"), prt 0 id, doc (showString "("), prt 0 params, doc (showString ")"), prt 0 type_, prt 0 block])
+    DeclProc id params block -> prPrec i 0 (concatD [doc (showString "\nfunc"), prt 0 id, doc (showString "("), prt 0 params, doc (showString ")"), doc (showString "void"), prt 0 block])
   prtList _ [] = (concatD [])
-  prtList _ (x:xs) = (concatD [prt 0 x, prt 0 xs])
+  prtList _ (x:xs) = (concatD [prt 0 x,  doc (showString "\n"), prt 0 xs])
+  
+  
+  
 instance Print ShortVarDecl where
   prt i e = case e of
     DeclVarShort ids rexps -> prPrec i 0 (concatD [prt 0 ids, doc (showString ":="), prt 0 rexps])
+
+
 
 instance Print Type where
   prt i e = case e of
@@ -165,6 +193,8 @@ instance Print Type where
     TArray n type_ -> prPrec i 0 (concatD [doc (showString "["), prt 0 n, doc (showString "]"), prt 0 type_])
     TPointer type_ -> prPrec i 0 (concatD [doc (showString "*"), prt 0 type_])
 
+
+
 instance Print Param where
   prt i e = case e of
     Parameter ids type_ -> prPrec i 0 (concatD [prt 0 ids, prt 0 type_])
@@ -172,14 +202,19 @@ instance Print Param where
   prtList _ [] = (concatD [])
   prtList _ [x] = (concatD [prt 0 x])
   prtList _ (x:xs) = (concatD [prt 0 x, doc (showString ","), prt 0 xs])
+  
+  
+  
 instance Print Pass where
   prt i e = case e of
     PassVal -> prPrec i 0 (concatD [doc (showString "val")])
     PassRef -> prPrec i 0 (concatD [doc (showString "ref")])
 
+
 instance Print Block where
   prt i e = case e of
-    BodyBlock stmts -> prPrec i 0 (concatD [doc (showString "{"), prt 0 stmts, doc (showString "}")])
+    BodyBlock stmts -> prPrec i 0 (concatD [doc (showString "{\n"), prt 0 stmts, doc (showString "}\n")])
+
 
 instance Print Stmt where
   prt i e = case e of
@@ -194,13 +229,17 @@ instance Print Stmt where
     StReturn rexp -> prPrec i 0 (concatD [doc (showString "return"), prt 0 rexp])
     StWrite writet rexp -> prPrec i 0 (concatD [prt 0 writet, doc (showString "("), prt 0 rexp, doc (showString ")")])
   prtList _ [] = (concatD [])
-  prtList _ (x:xs) = (concatD [prt 0 x, prt 0 xs])
+  prtList _ (x:xs) = (concatD [prt 0 x,  doc (showString "\n"), prt 0 xs])
+  
+  
+  
 instance Print WriteT where
   prt i e = case e of
     WriteT_writeInt -> prPrec i 0 (concatD [doc (showString "writeInt")])
     WriteT_writeFloat -> prPrec i 0 (concatD [doc (showString "writeFloat")])
     WriteT_writeChar -> prPrec i 0 (concatD [doc (showString "writeChar")])
     WriteT_writeString -> prPrec i 0 (concatD [doc (showString "writeString")])
+    
 
 instance Print StmtSmpl where
   prt i e = case e of
