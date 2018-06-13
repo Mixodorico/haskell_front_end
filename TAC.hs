@@ -59,17 +59,6 @@ size aType = case aType of
         (TPointer t) -> 8
         (TArray d t) -> d * (size t)
 
--- type print functions
-showType :: Type -> String
-showType TVoid   = "void"
-showType TInt    = "int"
-showType TFloat  = "float"
-showType TChar   = "char"
-showType TString = "string"
-showType TBool   = "boolean"
-showType (TPointer t) = "*" ++ showType t
-showType (TArray n t) = showType t ++ "[]"
-
 -- value print functions
 showVal :: Val -> String
 showVal (Int x)    = show x

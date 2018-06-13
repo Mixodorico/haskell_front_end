@@ -1260,6 +1260,18 @@ checkSameBlockList (x:xs) ys = case checkSameBlock x ys of
                                     Nothing -> checkSameBlockList xs ys
 
 
+-- type print functions
+showType :: Type -> String
+showType TVoid   = "void"
+showType TInt    = "int"
+showType TFloat  = "float"
+showType TChar   = "char"
+showType TString = "string"
+showType TBool   = "boolean"
+showType (TPointer t) = "*" ++ showType t
+showType (TArray n t) = showType t ++ "[]"
+
+
 pos tok = tokenPos [tok]
 
 

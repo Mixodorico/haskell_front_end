@@ -16,5 +16,5 @@ func p() void{
     r1 = g
   }
   
-
+  a = 0
 }
