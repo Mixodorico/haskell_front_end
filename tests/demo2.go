@@ -8,7 +8,7 @@ func arithmetic_function () float {
 	f1 := rexp + i1 + 6.0   
     
 	rexp = rexp+i1*2
-  mod := 5 % i1
+    mod := 5 % i1
 
   f1 = arithmetic_function () / mod
   

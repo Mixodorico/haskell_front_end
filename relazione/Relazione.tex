@@ -15,22 +15,32 @@ Nel seguente progetto abbiamo considerato le scelte di sintassi concreta definit
 A seguire vengono riassunte una serie di assunzioni.
 
 \begin{itemize}
-\item Non è possibile dichiarare più di una funzione con lo stesso identificatore;
-\item non è consientito dichiarare delle variabili con lo stesso identificatore nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
-\item è stato usato l'operatore `!' nelle condizioni degli if per veicolare correttamente i salti condizionati;
-\item nel corpo delle procedure non deve presentare l'istruzione return, sempre richiesta invece nei corpi delle funzioni;
-\item sono stati implementati solamente i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici}), \textit{iterazione indeterminata});
-\item le guardie booleane dei controlli di sequenza vengono gestite tramite short-cut mentre le altre espressioni booleani vengono gestite senza short-cut;
-\item è consentito effettuare dei passaggi di parametri per valore (\textit{val}) e per riferimento (\textit{ref});
-\item non è possibile definire controlli di sequenza al di fuori delle funzioni/procedure.
+\item Variabili:
+	\begin{itemize}
+		\item non è consientito dichiarare delle variabili con lo stesso identificatore nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
+		\item non è possibile utilizzare delle right-expression isolate;
+		\item è consentita la dichiarazione di variabili globali al di fuori delle funzioni, ma non tramite la sintassi ":=".
+	\end{itemize}
+\item Funzioni e procedure:
+	\begin{itemize}
+		\item non è possibile dichiarare più di una funzione/procedura con lo stesso identificatore;
+		\item nel corpo delle procedure non deve presentare l'istruzione return, sempre richiesta invece nei corpi delle funzioni;
+		\item è consentito effettuare dei passaggi di parametri per valore (\textit{val}) e per riferimento (\textit{ref}).
+	\end{itemize}
+\item Comandi di controllo sequenza:
+	\begin{itemize}
+		\item è stato usato l'operatore `!' nelle condizioni degli if per veicolare correttamente i salti condizionati;
+		\item sono stati implementati solamente i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici} e \textit{iterazione indeterminata});
+		\item le guardie booleane dei controlli di sequenza vengono gestite tramite short-cut mentre le altre espressioni booleane vengono gestite senza short-cut;
+		\item non è possibile definire controlli di sequenza al di fuori delle funzioni/procedure.
+	\end{itemize}
 \end{itemize}
 
 \section{Scelte implementative}
 \begin{itemize}
 \item Abbiamo generato \textit{lexer} e \textit{parser} tramite il tool BNFC, partendo dalla definizione di una gramatica iniziale;
 \item la gestione del \textit{Type Checker} e del \textit{Three Address Code} vengono fatte all'interno del parser;
-\item le funzioni \textit{write} sono trattate come statements che prendendono come argomento una right expression, mentre le funzioni \textit{read} vengono viste come right expressions e hanno una lista di parametri di input vuota.
-
+\item le funzioni \textit{write} sono trattate come statement che prendendono come argomento una right-expression, mentre le funzioni \textit{read} vengono viste come right-expressions e hanno una lista di parametri di input vuota.
 \end{itemize}
 
 \section{Grammatica}
@@ -138,20 +148,22 @@ StAsgn.           StmtSmpl ::= LExp "=" RExp;
 \section{Parser}
 Gran parte del progetto è stato sviluppato all'interno del parser. In particolare tutta la parte di \textit{type checking} e \textit{three address code} sono state implementate al suo interno.\\
 All'iterno del parser sono stati definiti tutta una serie di attributi relativi alla \textit{grammatica attributata}.
-Gli enviroment sono gestiti attraverso gli attributi \textit{EnvVar}/\textit{EnvVarNew} e \textit{EnvFun}/\textit{EnvFunNew} e corrispondono a liste di tipi di dato \textit{ElemVar} ed \textit{ElemFun}. In particolare, gli attributi \textit{EnvVar} ed \textit{EnvFun} rappresentano, per ogni nodo, l'ambiente  derivante dal nodo padre, mentre \textit{EnvVarNew} ed \textit{EnvFunNew} definiscono l'ambiente ottenuto da tutti i nodi figli.
-Sono stati inoltre definiti ulteriori attributi per gestire la generazione del three address code (si rimanda al codice).
+Gli enviroment sono gestiti attraverso gli attributi \textit{EnvVar}/\textit{EnvVarNew} ed \textit{EnvFun}/\textit{EnvFunNew} e corrispondono a liste di tipi di dato \textit{ElemVar} ed \textit{ElemFun}. In particolare, gli attributi \textit{EnvVar} ed \textit{EnvFun} rappresentano, per ogni nodo, l'ambiente  derivante dal nodo padre, mentre \textit{EnvVarNew} ed \textit{EnvFunNew} definiscono l'ambiente ottenuto da tutti i nodi figli.
+Sono stati inoltre definiti ulteriori attributi per gestire la generazione del three address code (si rimanda al codice).\\
+Per quanto riguarda la dichiarazione delle precedenze e l'associatività degli operatori, sono tutte state gestite a livello di parser.
 
 \subsection{Type Checker}
 Il Type Checker viene gestito interamente all'interno del parser. In particolare per ogni espressione valutata si effettua un controllo diretto attraverso le funzioni \textit{Ok} e \textit{Bad} che, in caso di errore, gestiscono l'errore tramite la stampa di un messaggio a video indicante la linea dell'errore e la causa.\\
 %%%%%%%%%%%%%%%%%%%%% tignilu??
 Un errore di lessico viene a distinguersi da uno di tipo direttamente in fase di stampa dello dell'errore, riportando "\textit{Lexical error}" nel primo caso e "\textit{Type error}" nel secondo. In particolare il type checker si occuperà di intercettare eventuali errori di tipo e di scoping.\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Tutte le funzioni di controllo utilizzate dal type checker sono state definite internamente al parser.\\
+Tutte le funzioni di controllo utilizzate dal Type Checker sono state definite internamente al parser.\\
 Tra le diverse assunzioni fatte in fase di type checking, abbiamo voluto tenere conto in modo automatico di una conversione dal tipo int al tipo float.
 
 \subsection{Three Address Code}
 Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{TAC.hs}) contenente la struttura dati per gestirne la generazione e le funzioni addette alla stampa. Inoltre ci siamo appoggiati su un ulteriore modulo (\textit{Env.hs}) contenete tutte le funzioni per la gestione dell'environment (inserimento, cancellazione e ricerca di variabili/funzioni).
 In questo modulo sono stati dichiarati i tipi di dato \textit{ElemVar} e \textit{ElemFun} contenenti rispettivamente tutte le informazioni relative alle variabili ed alle funzioni/procedure dichiarate nell'ambiente.
+
 \subsection{Test Case}
 Sono stati preparati dei test-case significativi che possono essere eseguiti in sequenza attraverso il comando \textit{make demo}, oppure singolarmente attraverso i comandi \textit{make demo1}, \textit{make demo2}, \textit{make demo3} e \textit{make demo4}.
 
