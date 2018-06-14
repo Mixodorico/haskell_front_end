@@ -19,12 +19,12 @@ A seguire vengono riassunte una serie di assunzioni.
 	\begin{itemize}
 		\item non è consientito dichiarare delle variabili con lo stesso identificatore nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
 		\item non è possibile utilizzare delle right-expression isolate;
-		\item è consentita la dichiarazione di variabili globali al di fuori delle funzioni, ma non tramite la sintassi ":=".
+		\item è consentita la dichiarazione di variabili globali al di fuori delle funzioni, ma non tramite la sintassi ``:=".
 	\end{itemize}
 \item Funzioni e procedure:
 	\begin{itemize}
 		\item non è possibile dichiarare più di una funzione/procedura con lo stesso identificatore;
-		\item nel corpo delle procedure non deve presentare l'istruzione return, sempre richiesta invece nei corpi delle funzioni;
+		\item nel corpo delle procedure non deve essere presente l'istruzione return, sempre richiesta invece nei corpi delle funzioni;
 		\item è consentito effettuare dei passaggi di parametri per valore (\textit{val}) e per riferimento (\textit{ref}).
 	\end{itemize}
 \item Comandi di controllo sequenza:
@@ -154,9 +154,6 @@ Per quanto riguarda la dichiarazione delle precedenze e l'associatività degli o
 
 \subsection{Type Checker}
 Il Type Checker viene gestito interamente all'interno del parser. In particolare per ogni espressione valutata si effettua un controllo diretto attraverso le funzioni \textit{Ok} e \textit{Bad} che, in caso di errore, gestiscono l'errore tramite la stampa di un messaggio a video indicante la linea dell'errore e la causa.\\
-%%%%%%%%%%%%%%%%%%%%% tignilu??
-Un errore di lessico viene a distinguersi da uno di tipo direttamente in fase di stampa dello dell'errore, riportando "\textit{Lexical error}" nel primo caso e "\textit{Type error}" nel secondo. In particolare il type checker si occuperà di intercettare eventuali errori di tipo e di scoping.\\
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Tutte le funzioni di controllo utilizzate dal Type Checker sono state definite internamente al parser per praticità.\\
 Tra le diverse assunzioni fatte in fase di type checking, abbiamo voluto tenere conto in modo automatico di una conversione dal tipo int al tipo float.
 
@@ -176,16 +173,17 @@ A seguire il \textit{Type System} relativo al linguaggio implementato.
 \begin{center}
 $\Gamma$ è un ambiente ben formato:\\
 $\Gamma \vdash \diamond$\\[0.1in]
-\textit{Basic Type} è un tipo ben formato in $\Gamma$\\
-$\Gamma \vdash $\textit{Basic Type}\\[0.1in]
+\textit{Type} è un tipo ben formato in $\Gamma$\\
+$\Gamma \vdash $\textit{Type}\\[0.1in]
 \textit{Stmt} è un tipo ben formato in $\Gamma$\\
 $\Gamma \vdash $\textit{Stmt}\\[0.1in]
 \textit{RExp} è un tipo ben formato in $\Gamma$\\
-$\Gamma \vdash $\textit{RExp}\\[0.1in]
+$\Gamma \vdash $\textit{RExp : Type}\\[0.1in]
 \end{center}
 
 \subsection*{Rules}
 \begin{center}
+\noindent (\textbf{empty})
 $\dfrac{}{\emptyset \vdash \diamond}$\\[0.2in]
 %\noindent(Entry)
 %$\dfrac{}{}$\\[0.1in]
@@ -193,22 +191,112 @@ $\dfrac{}{\emptyset \vdash \diamond}$\\[0.2in]
 $\dfrac{\Gamma \vdash \diamond , Ident \not\in dom(\Gamma)}{\Gamma , Ident \vdash \diamond}$\\[0.1in]
 \end{center}
 
-\subsubsection*{Base Types}
+\subsubsection*{Basic Types}
 \begin{center}
 \noindent(\textbf{Int})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash integer : Integer}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash n : Int}$\\[0.1in]
 \noindent(\textbf{Float})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash float : Double}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash f : Float}$\\[0.1in]
 \noindent(\textbf{Char})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash char : Char}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash c : Char}$\\[0.1in]
 \noindent(\textbf{String})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash string : String}$\\[0.1in]
-\noindent(\textbf{Boolean})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash boolean : Boolean}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash s : String}$\\[0.1in]
+\noindent(\textbf{True})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash true : Boolean}$\\[0.1in]
+\noindent(\textbf{False})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash false : Boolean}$\\[0.1in]
 \end{center}
 
 \subsubsection*{Functions}
+\begin{center}
+\noindent(\textbf{And})
+$\dfrac{\Gamma \vdash RExp1:Boolean\ \ \ \Gamma \vdash RExp2:Boolean}{\Gamma \vdash RExp1\ and\ RExp2:Boolean}$\\[0.1in]
+\noindent(\textbf{Or})
+$\dfrac{\Gamma \vdash RExp1:Boolean\ \ \ \Gamma \vdash RExp2:Boolean}{\Gamma \vdash RExp1\ or\ RExp2:Boolean}$\\[0.1in]
+\noindent(\textbf{Not})
+$\dfrac{\Gamma \vdash RExp:Boolean}{\Gamma \vdash not\  RExp:Boolean}$\\[0.1in]
 
+\noindent(\textbf{Eq})
+$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ ==\ RExp2:Boolean}$\\[0.1in]
+\noindent(\textbf{Neq})
+$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ !=\ RExp2:Boolean}$\\[0.1in]
+\noindent(\textbf{Lt})
+$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ <\ RExp2:Boolean}$\\[0.1in]
+\noindent(\textbf{LtE})
+$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ <=\ RExp2:Boolean}$\\[0.1in]
+\noindent(\textbf{Gt})
+$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ >\ RExp2:Boolean}$\\[0.1in]
+\noindent(\textbf{GtE})
+$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ >=\ RExp2:Boolean}$\\[0.1in]
+
+\noindent(\textbf{Add 1})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ +\ RExp2:Int}$\\[0.1in]
+\noindent(\textbf{Add 2})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ +\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Add 3})
+$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ +\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Add 4})
+$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ +\ RExp2:Float}$\\[0.1in]
+
+\noindent(\textbf{Sub 1})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ -\ RExp2:Int}$\\[0.1in]
+\noindent(\textbf{Sub 2})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ -\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Sub 3})
+$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ -\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Sub 4})
+$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ -\ RExp2:Float}$\\[0.1in]
+
+\noindent(\textbf{Mul 1})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ *\ RExp2:Int}$\\[0.1in]
+\noindent(\textbf{Mul 2})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ *\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Mul 3})
+$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ *\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Mul 4})
+$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ *\ RExp2:Float}$\\[0.1in]
+
+\noindent(\textbf{Div 1})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ /\ RExp2:Int}$\\[0.1in]
+\noindent(\textbf{Div 2})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ /\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Div 3})
+$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ /\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Div 4})
+$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ /\ RExp2:Float}$\\[0.1in]
+\noindent(\textbf{Mod})
+$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ \%\ RExp2:Int}$\\[0.1in]
+\noindent(\textbf{Neg 1})
+$\dfrac{\Gamma \vdash RExp:Int}{\Gamma \vdash -RExp:Int}$\\[0.1in]
+\noindent(\textbf{Neg 2})
+$\dfrac{\Gamma \vdash RExp:Float}{\Gamma \vdash -RExp:Float}$\\[0.1in]
+
+\noindent(\textbf{Ref})
+$\dfrac{\Gamma \vdash Ident}{\Gamma \vdash \text{\&} Ident}$\\[0.1in]
+\noindent(\textbf{Deref})
+$\dfrac{\Gamma \vdash Type}{\Gamma \vdash \text{*} Type}$\\[0.1in]
+
+\noindent(\textbf{Asgn})
+$\dfrac{\Gamma \vdash LExp:Type\ \ \ \Gamma \vdash RExp:Type}{\Gamma \vdash LExp = RExp}$\\[0.1in]
+
+\noindent(\textbf{If})
+$\dfrac{\Gamma \vdash RExp:Boolean\ \ \ \Gamma \vdash Block}{\Gamma \vdash if\ RExp\ \{ Block\}}$\\[0.1in]
+\noindent(\textbf{IfElse})
+$\dfrac{\Gamma \vdash RExp:Boolean\ \ \ \Gamma \vdash Block1\ \ \ \Gamma \vdash Block2}{\Gamma \vdash if\ RExp\ \{ Block1\}\ else\ \{ Block1\}}$\\[0.1in]
+\noindent(\textbf{While})
+$\dfrac{\Gamma \vdash RExp:Boolean\ \ \ \Gamma \vdash Block}{\Gamma \vdash for\ RExp\ \{ Block\}}$\\[0.1in]
+
+\noindent(\textbf{DeclFun})
+$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash Params:[Type]\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ Ident ([Type])\ Type\ \{Block\}}$\\[0.1in]
+\noindent(\textbf{DeclProc})
+$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash Params:[Type]\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ Ident ([Type])\ void\ \{Block\}}$\\[0.1in]
+\end{center}
+
+
+
+
+
+\pagebreak
 \section{Test Case}
 Sono stati preparati dei test-case significativi che possono essere eseguiti in sequenza attraverso il comando \textit{make demo}, oppure singolarmente attraverso i comandi \textit{make demo1}, \textit{make demo2}, \textit{make demo3} e \textit{make demo4}.
 
