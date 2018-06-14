@@ -191,7 +191,6 @@ $\dfrac{}{\emptyset \vdash \diamond}$\\[0.2in]
 $\dfrac{\Gamma \vdash \diamond , Ident \not\in dom(\Gamma)}{\Gamma , Ident \vdash \diamond}$\\[0.1in]
 \end{center}
 
-\subsubsection*{Basic Types}
 \begin{center}
 \noindent(\textbf{Int})
 $\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash n : Int}$\\[0.1in]
@@ -207,12 +206,11 @@ $\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash true : Boolean}$\\[0.1in]
 $\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash false : Boolean}$\\[0.1in]
 \end{center}
 
-\subsubsection*{Functions}
 \begin{center}
 \noindent(\textbf{And})
-$\dfrac{\Gamma \vdash RExp1:Boolean\ \ \ \Gamma \vdash RExp2:Boolean}{\Gamma \vdash RExp1\ and\ RExp2:Boolean}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp1:Boolean\ \ \ \Gamma \vdash RExp2:Boolean}{\Gamma \vdash RExp1\ \&\&\ RExp2:Boolean}$\\[0.1in]
 \noindent(\textbf{Or})
-$\dfrac{\Gamma \vdash RExp1:Boolean\ \ \ \Gamma \vdash RExp2:Boolean}{\Gamma \vdash RExp1\ or\ RExp2:Boolean}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp1:Boolean\ \ \ \Gamma \vdash RExp2:Boolean}{\Gamma \vdash RExp1\ ||\ RExp2:Boolean}$\\[0.1in]
 \noindent(\textbf{Not})
 $\dfrac{\Gamma \vdash RExp:Boolean}{\Gamma \vdash not\  RExp:Boolean}$\\[0.1in]
 
@@ -275,6 +273,8 @@ $\dfrac{\Gamma \vdash RExp:Float}{\Gamma \vdash -RExp:Float}$\\[0.1in]
 $\dfrac{\Gamma \vdash Ident}{\Gamma \vdash \text{\&} Ident}$\\[0.1in]
 \noindent(\textbf{Deref})
 $\dfrac{\Gamma \vdash Type}{\Gamma \vdash \text{*} Type}$\\[0.1in]
+\noindent(\textbf{Arr})
+$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash RExp:Int}{\Gamma \vdash Ident\ [\ RExp\ ]}$\\[0.1in]
 
 \noindent(\textbf{Asgn})
 $\dfrac{\Gamma \vdash LExp:Type\ \ \ \Gamma \vdash RExp:Type}{\Gamma \vdash LExp = RExp}$\\[0.1in]
@@ -287,9 +287,26 @@ $\dfrac{\Gamma \vdash RExp:Boolean\ \ \ \Gamma \vdash Block1\ \ \ \Gamma \vdash 
 $\dfrac{\Gamma \vdash RExp:Boolean\ \ \ \Gamma \vdash Block}{\Gamma \vdash for\ RExp\ \{ Block\}}$\\[0.1in]
 
 \noindent(\textbf{DeclFun})
-$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash Params:[Type]\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ Ident ([Type])\ Type\ \{Block\}}$\\[0.1in]
+$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash Params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ Ident\ (TypeList)\ Type\ \{Block\}}$\\[0.1in]
 \noindent(\textbf{DeclProc})
-$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash Params:[Type]\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ Ident ([Type])\ void\ \{Block\}}$\\[0.1in]
+$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash Params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ Ident\ (TypeList)\ void\ \{Block\}}$\\[0.1in]
+
+\noindent(\textbf{WriteInt})
+$\dfrac{\Gamma \vdash RExp:Int}{\Gamma \vdash writeInt\ (\ RExp\ )}$\\[0.1in]
+\noindent(\textbf{WriteFloat})
+$\dfrac{\Gamma \vdash RExp:Float}{\Gamma \vdash writeFloat\ (\ RExp\ )}$\\[0.1in]
+\noindent(\textbf{WriteChar})
+$\dfrac{\Gamma \vdash RExp:Char}{\Gamma \vdash writeChar\ (\ RExp\ )}$\\[0.1in]
+\noindent(\textbf{WriteString})
+$\dfrac{\Gamma \vdash RExp:String}{\Gamma \vdash writeString\ (\ RExp\ )}$\\[0.1in]
+\noindent(\textbf{ReadInt})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readInt\ (\ )\ :\ Int}$\\[0.1in]
+\noindent(\textbf{ReadFloat})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readFloat\ (\ )\ :\ Float}$\\[0.1in]
+\noindent(\textbf{ReadChar})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readChar\ (\ )\ :\ Char}$\\[0.1in]
+\noindent(\textbf{ReadString})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readString\ (\ )\ :\ String}$\\[0.1in]
 \end{center}
 
 

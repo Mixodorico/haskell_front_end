@@ -464,7 +464,7 @@ RExp : RExp '&&' RExp {
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "%" $$.tacId $1.tacId $3.tacId];
             $$.tacJ = $$.tac;
-            where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
+            where case checkModOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;
                   };
@@ -1265,6 +1265,16 @@ checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                       then e1
                                       else e2
 
+-- checks for mod operation consistency
+checkModOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
+checkModOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
+                              then if t1 == TInt && t2 == TInt
+                                     then ""
+                                     else "Type error at "++(pos op)++": expected int as mod operand"
+                              else if e1/=""
+                                     then e1
+                                     else e2
+
 -- checks for relational operations consistency
 checkRelOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
@@ -1303,7 +1313,7 @@ checkCallFun e id envFun tl p  = if e==""
                                           else checkParams id envFun tl p  
                                    else e
 
--- checks parameters correctenss when a function/procedure call occours
+-- checks parameters type correctness when a function/procedure is called
 checkParams :: Id -> [ElemFun] -> [Type] -> Token -> [Char]
 checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFun) /= (length tl)
                                  then "Error at "++(pos p)++": wrong number of arguments when calling "++(idToStr id)++", expected: "++(show $ length $ getTypeListFun $ extractFun id envFun)
@@ -1312,14 +1322,14 @@ checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFu
                                            Nothing -> "";
                                       };
 
--- check type correctness in assignment phase
+-- check type correctness in assignment
 checkTypes :: Type -> [Type] -> Maybe (Type, Type)
 checkTypes _ [] = Nothing
 checkTypes x (y:ys) | x == TFloat && y == TInt = checkTypes x ys
                     | x/=y = Just (x,y)
                     | otherwise = checkTypes x ys
 
--- check type correctness in multiple assignment phase
+-- check type correctness in multiple assignment
 checkTypesList :: [Type] -> [Type] -> Maybe (Type, Type)
 checkTypesList [] [] = Nothing
 checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = checkTypesList xs ys
@@ -1341,7 +1351,7 @@ checkSameBlock id (Var a _ True _:xs)
                       | id==a = Just a
                       | otherwise = checkSameBlock id xs
 
--- check if a (list of) variables are already declared in a block
+-- check if any member of a list of variables is already declared in a block
 checkSameBlockList :: [Id] -> [ElemVar] -> Maybe Id
 checkSameBlockList [] _  = Nothing
 checkSameBlockList (x:xs) ys = case checkSameBlock x ys of

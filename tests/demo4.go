@@ -39,4 +39,8 @@ func p() void{
   asdasd := readChar()
   asdasd2 := readChar()
   asdasd3 := readChar()
+  
+  
+  var v = 3%2
+  
 }
