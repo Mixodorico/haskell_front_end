@@ -3,9 +3,7 @@ cose da modificare:
 -------------------
 il return che jumpi fuori dalla funzione -- difficile implementazione
 inizializzare direttamente gli array
-output principale
 dare a "&&" priorità maggiore di "||"
-prettyPrinter del codice (non TAC)
 
 ----------------------
 scelte implementative
