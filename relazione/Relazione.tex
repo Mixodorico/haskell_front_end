@@ -139,7 +139,7 @@ StAsgn.           StmtSmpl ::= LExp "=" RExp;
 Gran parte del progetto è stato sviluppato all'interno del parser. In particolare tutta la parte di \textit{type checking} e \textit{three address code} sono state implementate al suo interno.\\
 All'iterno del parser sono stati definiti tutta una serie di attributi relativi alla \textit{grammatica attributata}.
 Gli enviroment sono gestiti attraverso gli attributi \textit{EnvVar}/\textit{EnvVarNew} e \textit{EnvFun}/\textit{EnvFunNew} e corrispondono a liste di tipi di dato \textit{ElemVar} ed \textit{ElemFun}. In particolare, gli attributi \textit{EnvVar} ed \textit{EnvFun} rappresentano, per ogni nodo, l'ambiente  derivante dal nodo padre, mentre \textit{EnvVarNew} ed \textit{EnvFunNew} definiscono l'ambiente ottenuto da tutti i nodi figli.
-Sono stati inoltre definiti ulteriori atributi per gestire la generazione del three address code (si rimanda al codice).
+Sono stati inoltre definiti ulteriori attributi per gestire la generazione del three address code (si rimanda al codice).
 
 \subsection{Type Checker}
 Il Type Checker viene gestito interamente all'interno del parser. In particolare per ogni espressione valutata si effettua un controllo diretto attraverso le funzioni \textit{Ok} e \textit{Bad} che, in caso di errore, gestiscono l'errore tramite la stampa di un messaggio a video indicante la linea dell'errore e la causa.\\
