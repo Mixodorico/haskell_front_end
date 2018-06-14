@@ -1,6 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage[utf8x]{inputenc}
-
+\usepackage{amsmath} 
 \begin{document}
 
 \title{\noindent \Huge Progetto Linguaggi e Compilatori 2\\ Parte 3 \\ Gruppo 1}
@@ -164,7 +164,52 @@ Tra le diverse assunzioni fatte in fase di type checking, abbiamo voluto tenere 
 Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{TAC.hs}) contenente la struttura dati per gestirne la generazione e le funzioni addette alla stampa. Inoltre ci siamo appoggiati su un ulteriore modulo (\textit{Env.hs}) contenete tutte le funzioni per la gestione dell'environment (inserimento, cancellazione e ricerca di variabili/funzioni).
 In questo modulo sono stati dichiarati i tipi di dato \textit{ElemVar} e \textit{ElemFun} contenenti rispettivamente tutte le informazioni relative alle variabili ed alle funzioni/procedure dichiarate nell'ambiente.
 
-\subsection{Test Case}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% le etichette davanti al dfrac non so se occorrono o meno...
+% per evitare errori si potrebbero omettere forse?
+% ho considerato prevalentemente pruteanu, de nart(si, si anche lui) e martu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Type System}
+A seguire il \textit{Type System} relativo al linguaggio implementato.
+\subsection*{Basic Judgments}
+\begin{center}
+$\Gamma$ è un ambiente ben formato:\\
+$\Gamma \vdash \diamond$\\[0.1in]
+\textit{Basic Type} è un tipo ben formato in $\Gamma$\\
+$\Gamma \vdash $\textit{Basic Type}\\[0.1in]
+\textit{Stmt} è un tipo ben formato in $\Gamma$\\
+$\Gamma \vdash $\textit{Stmt}\\[0.1in]
+\textit{RExp} è un tipo ben formato in $\Gamma$\\
+$\Gamma \vdash $\textit{RExp}\\[0.1in]
+\end{center}
+
+\subsection*{Rules}
+\begin{center}
+$\dfrac{}{\emptyset \vdash \diamond}$\\[0.2in]
+%\noindent(Entry)
+%$\dfrac{}{}$\\[0.1in]
+\noindent (\textbf{Id})
+$\dfrac{\Gamma \vdash \diamond , Ident \not\in dom(\Gamma)}{\Gamma , Ident \vdash \diamond}$\\[0.1in]
+\end{center}
+
+\subsubsection*{Base Types}
+\begin{center}
+\noindent(\textbf{Int})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash integer : Integer}$\\[0.1in]
+\noindent(\textbf{Float})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash float : Double}$\\[0.1in]
+\noindent(\textbf{Char})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash char : Char}$\\[0.1in]
+\noindent(\textbf{String})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash string : String}$\\[0.1in]
+\noindent(\textbf{Boolean})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash boolean : Boolean}$\\[0.1in]
+\end{center}
+
+\subsubsection*{Functions}
+
+\section{Test Case}
 Sono stati preparati dei test-case significativi che possono essere eseguiti in sequenza attraverso il comando \textit{make demo}, oppure singolarmente attraverso i comandi \textit{make demo1}, \textit{make demo2}, \textit{make demo3} e \textit{make demo4}.
 
 \end{document}
