@@ -59,10 +59,11 @@ func p() void{
     x := 0
   }
   
-  ggg := 12 + -true
+  var ggg float = true % true
   
   var a[10] int
-  a[ggg] = ggg
+  
+  ggg = true % true
   
   var y bool = true
   
