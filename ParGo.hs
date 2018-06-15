@@ -514,7 +514,7 @@ happyReduction_27 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut12 happy_x_3 of { happy_var_3 -> 
 	happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "+" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , aType = if (aType happySubAttrs_1) ==TInt && (aType happySubAttrs_3) ==TInt then TInt else TFloat , value = ExpAdd (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = ( (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ (if (aType happySelfAttrs) ==TFloat then if (aType happySubAttrs_1) / =TFloat then [BinOp "+" (tacId happySelfAttrs) ("(float)"++ (tacId happySubAttrs_1) ) (tacId happySubAttrs_3) ] else if (aType happySubAttrs_3) / =TFloat then [BinOp "+" (tacId happySelfAttrs) (tacId happySubAttrs_1) ("(float)"++ (tacId happySubAttrs_3) )] else [BinOp "+" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] else [BinOp "+" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ])) , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , aType = if (aType happySubAttrs_1) ==TFloat || (aType happySubAttrs_3) ==TFloat then TFloat else TInt , value = ExpAdd (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_28 = happySpecReduce_3  8# happyReduction_28
@@ -525,7 +525,7 @@ happyReduction_28 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut12 happy_x_3 of { happy_var_3 -> 
 	happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "-" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , aType = if (aType happySubAttrs_1) ==TInt && (aType happySubAttrs_3) ==TInt then TInt else TFloat , value = ExpSub (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "-" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , aType = if (aType happySubAttrs_1) ==TFloat || (aType happySubAttrs_3) ==TFloat then TFloat else TInt , value = ExpSub (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_29 = happySpecReduce_3  8# happyReduction_29
@@ -536,7 +536,7 @@ happyReduction_29 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut12 happy_x_3 of { happy_var_3 -> 
 	happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "*" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = (checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , aType = if (aType happySubAttrs_1) ==TInt && (aType happySubAttrs_3) ==TInt then TInt else TFloat , value = ExpMul (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "*" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = (checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , aType = if (aType happySubAttrs_1) ==TFloat || (aType happySubAttrs_3) ==TFloat then TFloat else TInt , value = ExpMul (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_30 = happySpecReduce_3  8# happyReduction_30
@@ -547,7 +547,7 @@ happyReduction_30 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut12 happy_x_3 of { happy_var_3 -> 
 	happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "/" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , aType = if (aType happySubAttrs_1) ==TInt && (aType happySubAttrs_3) ==TInt then TInt else TFloat , value = ExpDiv (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "/" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 , aType = TFloat , value = ExpDiv (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_31 = happySpecReduce_3  8# happyReduction_31
@@ -558,7 +558,7 @@ happyReduction_31 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut12 happy_x_3 of { happy_var_3 -> 
 	happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "%" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = (checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , aType = if (aType happySubAttrs_1) ==TInt && (aType happySubAttrs_3) ==TInt then TInt else TFloat , value = ExpMod (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkModOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[BinOp "%" (tacId happySelfAttrs) (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) ) + 1, snd (indexNew happySubAttrs_3) ) , err = (checkAritOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 ) , aType = TInt , value = ExpMod (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [case checkModOp (aType happySubAttrs_1) (aType happySubAttrs_3) (err happySubAttrs_1) (err happySubAttrs_3) happy_var_2 of { "" -> Ok () ; x -> Bad x ; } ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_32 = happySpecReduce_2  8# happyReduction_32
@@ -567,7 +567,7 @@ happyReduction_32 happy_x_2
 	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
 	case happyOut12 happy_x_2 of { happy_var_2 -> 
 	happyIn12
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_2) ++[UnOp "-" (tacId happySelfAttrs) (tacId happySubAttrs_2) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_2) ) + 1, snd (indexNew happySubAttrs_2) ) , err = if (err happySubAttrs_2) =="" then if not $ (aType happySubAttrs_2) ==TInt || (aType happySubAttrs_2) ==TFloat then "Type error at "++(pos happy_var_1 )++": expected numeric type" else "" else (err happySubAttrs_2) , aType = (aType happySubAttrs_2) , value = ExpNeg (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = [if (err happySubAttrs_2) =="" then if not $ (aType happySubAttrs_2) ==TInt || (aType happySubAttrs_2) ==TFloat then Bad $ "Type error at "++(pos happy_var_1 )++": expected numeric type" else Ok () else Bad $ (err happySubAttrs_2) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tacJ = (tac happySelfAttrs) , tac = (tac happySubAttrs_2) ++[UnOp "-" (tacId happySelfAttrs) (tacId happySubAttrs_2) ] , tacId = "t"++(show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_2) ) + 1, snd (indexNew happySubAttrs_2) ) , err = if (err happySubAttrs_2) =="" then if not $ (aType happySubAttrs_2) ==TBool || (aType happySubAttrs_2) ==TInt || (aType happySubAttrs_2) ==TFloat then "Type error at "++(pos happy_var_1 )++": expected numeric type (or boolean)" else "" else (err happySubAttrs_2) , aType = (aType happySubAttrs_2) , value = ExpNeg (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = [if (err happySubAttrs_2) =="" then Ok () else Bad (err happySubAttrs_2) ]++happyConditions_2 } in (happyConditions,happySelfAttrs)
 	)}}
 
 happyReduce_33 = happySpecReduce_2  8# happyReduction_33
@@ -833,7 +833,7 @@ happyReduction_59 happy_x_3
 	case happyOut24 happy_x_2 of { happy_var_2 -> 
 	case happyOut10 happy_x_3 of { happy_var_3 -> 
 	happyIn18
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ aTypeList = replicate (length (value happySubAttrs_2) ) (value happySubAttrs_3) , envVar = if (value happySubAttrs_1) ==PassRef then createListType (value happySubAttrs_2) (TPointer (value happySubAttrs_3) ) (posi happySubAttrs_3) else createListType (value happySubAttrs_2) (value happySubAttrs_3) (posi happySubAttrs_3) , value = ParameterPass (value happySubAttrs_1) (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = []++happyConditions_1++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ aTypeList = replicate (length (value happySubAttrs_2) ) (value happySubAttrs_3) , envVar = if (value happySubAttrs_1) ==PassRef then createListType (value happySubAttrs_2) (value happySubAttrs_3) (posi happySubAttrs_3) else createListType (value happySubAttrs_2) (value happySubAttrs_3) (posi happySubAttrs_3) , value = ParameterPass (value happySubAttrs_1) (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = []++happyConditions_1++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_60 = happySpecReduce_3  15# happyReduction_60
@@ -1039,7 +1039,7 @@ happyReduction_79 happy_x_3
 	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut12 happy_x_3 of { happy_var_3 -> 
 	happyIn21
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++[NulOp (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] , indexNew = (indexNew happySubAttrs_3) , envFunNew = (envFun happySelfAttrs) , envVarNew = (envVar happySelfAttrs) , value = StAsgn (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [if (err happySubAttrs_1) =="" && (err happySubAttrs_3) =="" then if (aType happySubAttrs_1) ==TFloat && (aType happySubAttrs_3) ==TInt then Ok () else when (not $ (aType happySubAttrs_1) ==(aType happySubAttrs_3) ) $ Bad $ "Type error at "++(pos happy_var_2 )++": cannot use "++(showType (aType happySubAttrs_3) )++" as "++(showType (aType happySubAttrs_1) )++" in assignment" else if not $ (err happySubAttrs_1) =="" then Bad $ (err happySubAttrs_1) else Bad (err happySubAttrs_3) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) ++ (tac happySubAttrs_3) ++ case (value happySubAttrs_3) of { ExpVal _ -> [NulOp (tacId happySubAttrs_1) (tacId happySubAttrs_3) ] ; _ -> [NulOp (tacId happySelfAttrs) (tacId happySubAttrs_3) ]++[NulOp (tacId happySubAttrs_1) (tacId happySelfAttrs) ] ; } , tacId = "t" ++ (show $ fst (indexNew happySelfAttrs) ) , indexNew = ( (fst (indexNew happySubAttrs_3) )+1, snd (indexNew happySubAttrs_3) ) , envFunNew = (envFun happySelfAttrs) , envVarNew = (envVar happySelfAttrs) , value = StAsgn (value happySubAttrs_1) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (indexNew happySubAttrs_1)  }; happyConditions = [if (err happySubAttrs_1) =="" && (err happySubAttrs_3) =="" then if (aType happySubAttrs_1) ==TFloat && (aType happySubAttrs_3) ==TInt then Ok () else when (not $ (aType happySubAttrs_1) ==(aType happySubAttrs_3) ) $ Bad $ "Type error at "++(pos happy_var_2 )++": cannot use "++(showType (aType happySubAttrs_3) )++" as "++(showType (aType happySubAttrs_1) )++" in assignment" else if not $ (err happySubAttrs_1) =="" then Bad $ (err happySubAttrs_1) else Bad (err happySubAttrs_3) ]++happyConditions_1++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_80 = happySpecReduce_1  18# happyReduction_80
@@ -1239,7 +1239,7 @@ happyEmptyAttrs = HappyAttributes {value = error "invalid reference to attribute
 -- checks for arithmetic operations consistency
 checkAritOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
-                               then if (t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat)
+                               then if (t1 == TBool || t1 == TInt || t1 == TFloat) && (t2 == TBool || t2 == TInt || t2 == TFloat)
                                       then ""
                                       else "Type error at "++(pos op)++": expected numeric type"
                                else if e1/=""
@@ -1249,9 +1249,9 @@ checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
 -- checks for mod operation consistency
 checkModOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkModOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
-                              then if t1 == TInt && t2 == TInt
+                              then if (t1 == TBool || t1 == TInt) || (t2 == TBool && t2 == TInt)
                                      then ""
-                                     else "Type error at "++(pos op)++": expected int as mod operand"
+                                     else "Type error at "++(pos op)++": expected int (or bool) as mod operand"
                               else if e1/=""
                                      then e1
                                      else e2
@@ -1261,7 +1261,7 @@ checkRelOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                               then if t1 == t2
                                      then ""
-                                     else if (t1 == TInt && t2 == TFloat) || (t1 == TFloat && t2 == TInt)
+                                     else if (t1 == TBool || t1 == TInt || t1 == TFloat) && (t2 == TBool || t2 == TInt || t2 == TFloat)
                                             then ""
                                             else "Type error at "++(pos op)++": can't match type "++(showType t1)++" with type "++(showType t2)
                               else if e1/=""
@@ -1306,14 +1306,14 @@ checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFu
 -- check type correctness in assignment
 checkTypes :: Type -> [Type] -> Maybe (Type, Type)
 checkTypes _ [] = Nothing
-checkTypes x (y:ys) | x == TFloat && y == TInt = checkTypes x ys
+checkTypes x (y:ys) | (x == TFloat && y == TInt) || (x == TFloat && y == TBool) || (x == TInt && y == TBool) = checkTypes x ys
                     | x/=y = Just (x,y)
                     | otherwise = checkTypes x ys
 
 -- check type correctness in multiple assignment
 checkTypesList :: [Type] -> [Type] -> Maybe (Type, Type)
 checkTypesList [] [] = Nothing
-checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = checkTypesList xs ys
+checkTypesList (x:xs) (y:ys) | (x == TFloat && y == TInt) || (x == TFloat && y == TBool) || (x == TInt && y == TBool) = checkTypesList xs ys
                              | x/=y = Just (x,y)
                              | otherwise = checkTypesList xs ys
 
@@ -1334,7 +1334,7 @@ checkSameBlock id (Var a _ True _:xs)
 
 -- check if any member of a list of variables is already declared in a block
 checkSameBlockList :: [Id] -> [ElemVar] -> Maybe Id
-checkSameBlockList [] _  = Nothing
+checkSameBlockList [] _ = Nothing
 checkSameBlockList (x:xs) ys = case checkSameBlock x ys of
                                     Just a  -> Just a
                                     Nothing -> checkSameBlockList xs ys

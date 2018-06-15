@@ -54,13 +54,18 @@ func p() void{
   try g := b[1] catch dfgdfgdfg := x
   */
   
-  func ff (i int, ref r int) void {
-    *r = 0
+  func ff (i int, ref r float) void {
+    r = i
     x := 0
   }
   
-  y := 89
+  ggg := 12 + -true
   
-  ff(1,1)
+  var a[10] int
+  a[ggg] = ggg
+  
+  var y bool = true
+  
+  ff(1,y)
   
 }

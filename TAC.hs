@@ -39,7 +39,7 @@ printTac (x:xs) = case x of
                                                  'p' -> "\tcall " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
                                                  'f' ->"\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
                                                   _  -> "Compiler error" ;}
-                       ExcpJ lab -> "\tonexceptiongoto "  ++  "label" ++  (show lab);
+                       ExcpJ lab          -> "\tonexceptiongoto "  ++  "label" ++  (show lab);
                        Lbl lbl            -> "label" ++ (show lbl) ++ " :"
                        Return t           -> "\treturn " ++ t
                   ++ "\n"
@@ -53,12 +53,12 @@ tacAssign (x:xs) (y:ys) = (NulOp (idToStr x) y) : (tacAssign xs ys)
 -- types bit dimensions (used for array allocation)
 size :: Type -> Integer
 size aType = case aType of
-        TInt    -> 4
-        TFloat  -> 8
-        TChar   -> 1
-        TString -> 64
+        TInt    -> 16
+        TFloat  -> 32
+        TChar   -> 8
+        TString -> 32
         TBool   -> 1
-        (TPointer t) -> 8
+        (TPointer t) -> 16
         (TArray d t) -> d * (size t)
 
 -- value print functions

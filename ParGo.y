@@ -251,7 +251,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err= checkRelOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err = checkRelOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -271,7 +271,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err= checkRelOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err = checkRelOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -291,7 +291,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err= checkRelOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err = checkRelOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -311,7 +311,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err= checkRelOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err = checkRelOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -331,7 +331,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err= checkRelOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err = checkRelOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -351,7 +351,7 @@ RExp : RExp '&&' RExp {
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
             $$.aType = TBool;
-            $$.err= checkRelOp $1.aType $3.aType $1.err $3.err $2;
+            $$.err = checkRelOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -370,15 +370,24 @@ RExp : RExp '&&' RExp {
             $1.envFun = $$.envFun;
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
-            $$.aType = if $1.aType == TInt && $3.aType == TInt
-                         then TInt
-                         else TFloat ;
+            $$.aType = if $1.aType == TFloat || $3.aType == TFloat
+                         then TFloat
+                         else TInt ;
             $$.err = checkAritOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "+" $$.tacId $1.tacId $3.tacId];
+            $$.tac = ($1.tac++$3.tac++
+                     (if $$.aType == TFloat
+                        then if $1.aType /= TFloat
+                               then [BinOp "+" $$.tacId ("(float)"++$1.tacId) $3.tacId]
+                               else if $3.aType /= TFloat
+                                      then [BinOp "+" $$.tacId $1.tacId ("(float)"++$3.tacId)]
+                                      else [BinOp "+" $$.tacId $1.tacId $3.tacId]
+                        else [BinOp "+" $$.tacId $1.tacId $3.tacId]));
+                      
+                       
             $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -392,9 +401,9 @@ RExp : RExp '&&' RExp {
             $1.envFun = $$.envFun;
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
-            $$.aType = if $1.aType == TInt && $3.aType == TInt
-                         then TInt
-                         else TFloat ;
+            $$.aType = if $1.aType == TFloat || $3.aType == TFloat
+                         then TFloat
+                         else TInt ;
             $$.err = checkAritOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
@@ -414,9 +423,9 @@ RExp : RExp '&&' RExp {
             $1.envFun = $$.envFun;
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
-            $$.aType = if $1.aType == TInt && $3.aType == TInt
-                         then TInt
-                         else TFloat ;
+            $$.aType = if $1.aType == TFloat || $3.aType == TFloat
+                         then TFloat
+                         else TInt ;
             $$.err = (checkAritOp $1.aType $3.aType $1.err $3.err $2);
             $1.index = $$.index;
             $3.index = $1.indexNew;
@@ -436,9 +445,7 @@ RExp : RExp '&&' RExp {
             $1.envFun = $$.envFun;
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
-            $$.aType = if $1.aType == TInt && $3.aType == TInt
-                         then TInt
-                         else TFloat ;
+            $$.aType = TFloat ;
             $$.err = checkAritOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
@@ -458,10 +465,8 @@ RExp : RExp '&&' RExp {
             $1.envFun = $$.envFun;
             $3.envVar = $$.envVar;
             $3.envFun = $$.envFun;
-            $$.aType = if $1.aType == TInt && $3.aType == TInt
-                         then TInt 
-                         else TFloat ;
-            $$.err= (checkAritOp $1.aType $3.aType $1.err $3.err $2);
+            $$.aType = TInt;
+            $$.err = (checkAritOp $1.aType $3.aType $1.err $3.err $2);
             $1.index = $$.index;
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
@@ -480,8 +485,8 @@ RExp : RExp '&&' RExp {
             $2.envFun = $$.envFun;
             $$.aType = $2.aType;
             $$.err = if $2.err == ""
-                       then if not $ $2.aType == TInt || $2.aType == TFloat
-                              then "Type error at "++(pos $1)++": expected numeric type"
+                       then if not $ $2.aType == TBool || $2.aType == TInt || $2.aType == TFloat
+                              then "Type error at "++(pos $1)++": expected numeric type (or boolean)"
                               else ""
                        else $2.err;
             $2.index = $$.index;
@@ -490,10 +495,8 @@ RExp : RExp '&&' RExp {
             $$.tac = $2.tac++[UnOp "-" $$.tacId $2.tacId];
             $$.tacJ = $$.tac;
             where if $2.err == ""
-                    then if not $ $2.aType == TInt || $2.aType == TFloat
-                           then Bad $ "Type error at "++(pos $1)++": expected numeric type"
-                           else Ok ()
-                    else Bad $ $2.err ;
+                    then Ok ()
+                    else Bad $2.err ;
             }
 
      | '&' LExp {
@@ -555,7 +558,7 @@ RExp : RExp '&&' RExp {
             }
 
      | Val {
-            $$ = ExpVal $1; 
+            $$ = ExpVal $1;
             $1.envVar = $$.envVar;
             $1.envFun = $$.envFun;
             $$.aType = $1.aType;
@@ -854,7 +857,7 @@ Param : ListId Type {
       | Pass ListId Type {
                   $$ = ParameterPass $1 $2 $3; 
                   $$.envVar = if $1 == PassRef
-                                then createListType $2 (TPointer $3) $3.posi
+                                then createListType $2 $3 $3.posi
                                 else createListType $2 $3 $3.posi;
                   $$.aTypeList = replicate (length $2) $3;
                   }
@@ -1214,8 +1217,13 @@ StmtSmpl : ShortVarDecl {
                 $$.envFunNew = $$.envFun;
                 $1.index = $$.index;
                 $3.index = $1.indexNew;
-                $$.indexNew = $3.indexNew;
-                $$.tac = $1.tac++$3.tac++[NulOp $1.tacId $3.tacId] ;
+                $$.indexNew = ( (fst $3.indexNew)+1, snd $3.indexNew);
+                $$.tacId = "t" ++ (show $ fst $$.indexNew);
+                $$.tac = $1.tac++$3.tac++
+                         case $3 of {
+                              ExpVal _ -> [NulOp $1.tacId $3.tacId];
+                              _        -> [NulOp $$.tacId $3.tacId]++[NulOp $1.tacId $$.tacId];
+                         };
                 where if $1.err == "" && $3.err == ""
                         then if $1.aType == TFloat && $3.aType == TInt
                                then Ok ()
@@ -1372,7 +1380,7 @@ ListStmtSmpl : {- empty -} {
 -- checks for arithmetic operations consistency
 checkAritOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
-                               then if (t1 == TInt || t1 == TFloat) && (t2 == TInt || t2 == TFloat)
+                               then if (t1 == TBool || t1 == TInt || t1 == TFloat) && (t2 == TBool || t2 == TInt || t2 == TFloat)
                                       then ""
                                       else "Type error at "++(pos op)++": expected numeric type"
                                else if e1/=""
@@ -1382,9 +1390,9 @@ checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
 -- checks for mod operation consistency
 checkModOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkModOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
-                              then if t1 == TInt && t2 == TInt
+                              then if (t1 == TBool || t1 == TInt) || (t2 == TBool && t2 == TInt)
                                      then ""
-                                     else "Type error at "++(pos op)++": expected int as mod operand"
+                                     else "Type error at "++(pos op)++": expected int (or bool) as mod operand"
                               else if e1/=""
                                      then e1
                                      else e2
@@ -1394,7 +1402,7 @@ checkRelOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkRelOp t1 t2 e1 e2 op = if (e1 == "") && (e2 == "")
                               then if t1 == t2
                                      then ""
-                                     else if (t1 == TInt && t2 == TFloat) || (t1 == TFloat && t2 == TInt)
+                                     else if (t1 == TBool || t1 == TInt || t1 == TFloat) && (t2 == TBool || t2 == TInt || t2 == TFloat)
                                             then ""
                                             else "Type error at "++(pos op)++": can't match type "++(showType t1)++" with type "++(showType t2)
                               else if e1/=""
@@ -1439,14 +1447,14 @@ checkParams id envFun tl p  =  if (length $ getTypeListFun $ extractFun id envFu
 -- check type correctness in assignment
 checkTypes :: Type -> [Type] -> Maybe (Type, Type)
 checkTypes _ [] = Nothing
-checkTypes x (y:ys) | x == TFloat && y == TInt = checkTypes x ys
+checkTypes x (y:ys) | (x == TFloat && y == TInt) || (x == TFloat && y == TBool) || (x == TInt && y == TBool) = checkTypes x ys
                     | x/=y = Just (x,y)
                     | otherwise = checkTypes x ys
 
 -- check type correctness in multiple assignment
 checkTypesList :: [Type] -> [Type] -> Maybe (Type, Type)
 checkTypesList [] [] = Nothing
-checkTypesList (x:xs) (y:ys) | x == TFloat && y == TInt = checkTypesList xs ys
+checkTypesList (x:xs) (y:ys) | (x == TFloat && y == TInt) || (x == TFloat && y == TBool) || (x == TInt && y == TBool) = checkTypesList xs ys
                              | x/=y = Just (x,y)
                              | otherwise = checkTypesList xs ys
 
@@ -1467,7 +1475,7 @@ checkSameBlock id (Var a _ True _:xs)
 
 -- check if any member of a list of variables is already declared in a block
 checkSameBlockList :: [Id] -> [ElemVar] -> Maybe Id
-checkSameBlockList [] _  = Nothing
+checkSameBlockList [] _ = Nothing
 checkSameBlockList (x:xs) ys = case checkSameBlock x ys of
                                     Just a  -> Just a
                                     Nothing -> checkSameBlockList xs ys
