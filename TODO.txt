@@ -1,9 +1,17 @@
 -------------------
 cose da modificare:
 -------------------
-il return che jumpi fuori dalla funzione -- difficile implementazione
-inizializzare direttamente gli array
-dare a "&&" priorità maggiore di "||"
+- casting livello TAC (int float bool)
+- (mantenimento traduzione fatte)
+- + * ... separato tra float int 
+- passaggio reference (passaggio LExp) -> sintassi TAC *x = 2
+-----------------------
+- schema (disegnetto comini)
+- (se c'è tempo data type separato int float)
+- separazione tra i tipi e le variabili nel type system (maiuscolo = tipi, minuscolo = var)
+- segnare le compatibilità: var e puntatore a.e. non sono compatibili
+- no stringhe in word
+
 
 ----------------------
 scelte implementative
@@ -24,3 +32,6 @@ Se c'è tempo e voglia
 postinc/dec
 *=, /= ....
 ??(modificare TC in maniera da prendere ridefinizione di funzioni)??
+il return che jumpi fuori dalla funzione -- difficile implementazione
+inizializzare direttamente gli array
+dare a "&&" priorità maggiore di "||"
