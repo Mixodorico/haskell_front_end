@@ -2,7 +2,7 @@ package main
 
 
 func p() void{
-  
+  /*
   x,y,z := true,true,true
   
   xx := &x
@@ -42,8 +42,9 @@ func p() void{
   
   var v = 3%2
   
-  for ; b[1]<10; {
-    //writeInt(iii)
+  for iiiiii:=0 ; r1<10;  {
+    continue
+    writeInt(r1)
   }
   
   do {
@@ -51,6 +52,15 @@ func p() void{
   } for x
   
   try g := b[1] catch dfgdfgdfg := x
+  */
   
+  func ff (i int, ref r int) void {
+    *r = 0
+    x := 0
+  }
+  
+  y := 89
+  
+  ff(1,1)
   
 }

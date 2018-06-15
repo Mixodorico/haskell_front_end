@@ -833,7 +833,7 @@ happyReduction_59 happy_x_3
 	case happyOut24 happy_x_2 of { happy_var_2 -> 
 	case happyOut10 happy_x_3 of { happy_var_3 -> 
 	happyIn18
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ aTypeList = replicate (length (value happySubAttrs_2) ) (value happySubAttrs_3) , envVar = createListType (value happySubAttrs_2) (value happySubAttrs_3) (posi happySubAttrs_3) , value = ParameterPass (value happySubAttrs_1) (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = []++happyConditions_1++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ aTypeList = replicate (length (value happySubAttrs_2) ) (value happySubAttrs_3) , envVar = if (value happySubAttrs_1) ==PassRef then createListType (value happySubAttrs_2) (TPointer (value happySubAttrs_3) ) (posi happySubAttrs_3) else createListType (value happySubAttrs_2) (value happySubAttrs_3) (posi happySubAttrs_3) , value = ParameterPass (value happySubAttrs_1) (value happySubAttrs_2) (value happySubAttrs_3)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs; (happyConditions_3,happySubAttrs_3) = happy_var_3 happyEmptyAttrs; happyConditions = []++happyConditions_1++happyConditions_2++happyConditions_3 } in (happyConditions,happySelfAttrs)
 	)}}}
 
 happyReduce_60 = happySpecReduce_3  15# happyReduction_60
@@ -913,7 +913,7 @@ happyReduction_67 (happy_x_4 `HappyStk`
 	case happyOut19 happy_x_2 of { happy_var_2 -> 
 	case happyOut12 happy_x_4 of { happy_var_4 -> 
 	happyIn20
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [Lbl $ (snd (indexNew happySubAttrs_2) ) + 1] ++shift (tacJ happySubAttrs_4) (snd (indexNew happySubAttrs_2) + 1) ++[Lbl $ (snd (indexNew happySubAttrs_2) ) + 2] ++ (tac happySubAttrs_2) ++[CondJTrue (tacId happySubAttrs_4) ((snd (indexNew happySubAttrs_2) ) + 2)] ++[Lbl $ (snd (indexNew happySubAttrs_2) ) + 3] , indexNew = ( fst (indexNew happySubAttrs_2) , (snd (indexNew happySubAttrs_2) ) + 3 ) , aReturn = False , envFunNew = (envFun happySelfAttrs) , envVarNew = (envVar happySelfAttrs) , value = StWhile (value happySubAttrs_4) (value happySubAttrs_2)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ forLabels = ( (snd (indexNew happySubAttrs_2) ) + 1, (snd (indexNew happySubAttrs_2) ) + 3 ) , aTypeFun = (aTypeFun happySelfAttrs) , envFun = (envFun happySelfAttrs) , envVar = resetEnvVar (envVar happySelfAttrs) , index = (indexNew happySubAttrs_4)  }; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = [if (err happySubAttrs_4) =="" then when (not $ (aType happySubAttrs_4) ==TBool) $ Bad $ "Type error at "++(pos happy_var_1 )++": type "++(showType (aType happySubAttrs_4) ) ++" used as condition (for)" else Bad (err happySubAttrs_4) ]++happyConditions_2++happyConditions_4 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = [Lbl $ (snd (indexNew happySubAttrs_2) ) + 1] ++shift (tacJ happySubAttrs_4) (snd (indexNew happySubAttrs_2) + 1) ++[Lbl $ (snd (indexNew happySubAttrs_2) ) + 2] ++ (tac happySubAttrs_2) ++[CondJTrue (tacId happySubAttrs_4) ((snd (indexNew happySubAttrs_2) ) + 2)] ++[Lbl $ (snd (indexNew happySubAttrs_2) ) + 3] , indexNew = ( fst (indexNew happySubAttrs_2) , (snd (indexNew happySubAttrs_2) ) + 3 ) , aReturn = False , envFunNew = (envFun happySelfAttrs) , envVarNew = (envVar happySelfAttrs) , value = StDoWhile (value happySubAttrs_2) (value happySubAttrs_4)  }; (happyConditions_2,happySubAttrs_2) = happy_var_2 happyEmptyAttrs{ forLabels = ( (snd (indexNew happySubAttrs_2) ) + 1, (snd (indexNew happySubAttrs_2) ) + 3 ) , aTypeFun = (aTypeFun happySelfAttrs) , envFun = (envFun happySelfAttrs) , envVar = resetEnvVar (envVar happySelfAttrs) , index = (indexNew happySubAttrs_4)  }; (happyConditions_4,happySubAttrs_4) = happy_var_4 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = [if (err happySubAttrs_4) =="" then when (not $ (aType happySubAttrs_4) ==TBool) $ Bad $ "Type error at "++(pos happy_var_1 )++": type "++(showType (aType happySubAttrs_4) ) ++" used as condition (for)" else Bad (err happySubAttrs_4) ]++happyConditions_2++happyConditions_4 } in (happyConditions,happySelfAttrs)
 	) `HappyStk` happyRest}}}
 
 happyReduce_68 = happyReduce 7# 16# happyReduction_68
@@ -1046,7 +1046,7 @@ happyReduce_80 = happySpecReduce_1  18# happyReduction_80
 happyReduction_80 happy_x_1
 	 =  case happyOut12 happy_x_1 of { happy_var_1 -> 
 	happyIn22
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tacIdList = [ (tacId happySubAttrs_1) ] , indexNew = (indexNew happySubAttrs_1) , err = (err happySubAttrs_1) , aTypeList = [ (aType happySubAttrs_1) ] , value = (:[]) (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , tacIdList = [ (tacId happySubAttrs_1) ] , indexNew = (indexNew happySubAttrs_1) , err = (err happySubAttrs_1) , aTypeList = [ (aType happySubAttrs_1) ] , value = [ (value happySubAttrs_1) ]  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
 happyReduce_81 = happySpecReduce_3  18# happyReduction_81
@@ -1077,7 +1077,7 @@ happyReduce_84 = happySpecReduce_1  20# happyReduction_84
 happyReduction_84 happy_x_1
 	 =  case happyOut8 happy_x_1 of { happy_var_1 -> 
 	happyIn24
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ idList = [ (value happySubAttrs_1) ] , value = (:[]) (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ idList = [ (value happySubAttrs_1) ] , value = [ (value happySubAttrs_1) ]  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
 happyReduce_85 = happySpecReduce_3  20# happyReduction_85
@@ -1100,7 +1100,7 @@ happyReduce_87 = happySpecReduce_1  21# happyReduction_87
 happyReduction_87 happy_x_1
 	 =  case happyOut18 happy_x_1 of { happy_var_1 -> 
 	happyIn25
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ aTypeList = (aTypeList happySubAttrs_1) , envVar = (envVar happySubAttrs_1) , value = (:[]) (value happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ aTypeList = (aTypeList happySubAttrs_1) , envVar = (envVar happySubAttrs_1) , value = [ (value happySubAttrs_1) ]  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
 happyReduce_88 = happySpecReduce_3  21# happyReduction_88
@@ -1137,7 +1137,7 @@ happyReduce_92 = happySpecReduce_1  23# happyReduction_92
 happyReduction_92 happy_x_1
 	 =  case happyOut21 happy_x_1 of { happy_var_1 -> 
 	happyIn27
-		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , indexNew = (indexNew happySubAttrs_1) , aReturn = (aReturn happySubAttrs_1) , envFunNew = (envFunNew happySubAttrs_1) , envVarNew = (envVarNew happySubAttrs_1)  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ forLabels = (forLabels happySelfAttrs) , aTypeFun = (aTypeFun happySelfAttrs) , envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
+		 (\happyInhAttrs -> let { happySelfAttrs = happyInhAttrs{ tac = (tac happySubAttrs_1) , indexNew = (indexNew happySubAttrs_1) , aReturn = (aReturn happySubAttrs_1) , envFunNew = (envFunNew happySubAttrs_1) , envVarNew = (envVarNew happySubAttrs_1) , value = [ (value happySubAttrs_1) ]  }; (happyConditions_1,happySubAttrs_1) = happy_var_1 happyEmptyAttrs{ forLabels = (forLabels happySelfAttrs) , aTypeFun = (aTypeFun happySelfAttrs) , envFun = (envFun happySelfAttrs) , envVar = (envVar happySelfAttrs) , index = (index happySelfAttrs)  }; happyConditions = []++happyConditions_1 } in (happyConditions,happySelfAttrs)
 	)}
 
 happyNewToken action sts stk [] =

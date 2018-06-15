@@ -853,7 +853,9 @@ Param : ListId Type {
 
       | Pass ListId Type {
                   $$ = ParameterPass $1 $2 $3; 
-                  $$.envVar = createListType $2 $3 $3.posi;
+                  $$.envVar = if $1 == PassRef
+                                then createListType $2 (TPointer $3) $3.posi
+                                else createListType $2 $3 $3.posi;
                   $$.aTypeList = replicate (length $2) $3;
                   }
 
@@ -992,7 +994,7 @@ Stmt : Decl {
                 }
 
      | 'do' Block 'for' RExp {
-                $$ = StWhile $4 $2;
+                $$ = StDoWhile $2 $4;
                 $4.envVar = $$.envVar;
                 $4.envFun = $$.envFun;
                 $2.envVar = resetEnvVar $$.envVar;
@@ -1039,14 +1041,14 @@ Stmt : Decl {
 									$7.index = $6.indexNew;
 									$$.indexNew = ( fst $7.indexNew, (snd $7.indexNew)+3 );
 									$$.tac = $2.tac ++ [Lbl $ (snd $7.indexNew)+1] 
-											++ $4.tac
-											++ [CondJFalse $4.tacId ((snd $7.indexNew)+3)] 
-											++ $7.tac
-											++ [Lbl $ (snd $7.indexNew)+2]
-											++ $6.tac
-											++ [UncondJ $ (snd $7.indexNew)+1] 
-											++ [Lbl $ (snd $7.indexNew)+3];
-									where if $4.err== ""
+                        ++ $4.tac
+                        ++ [CondJFalse $4.tacId ((snd $7.indexNew)+3)] 
+                        ++ $7.tac
+                        ++ [Lbl $ (snd $7.indexNew)+2]
+                        ++ $6.tac
+                        ++ [UncondJ $ (snd $7.indexNew)+1] 
+                        ++ [Lbl $ (snd $7.indexNew)+3];
+									where if $4.err == ""
                           then if $4.aType == TBool
                                  then Ok ()
                                  else Bad $ "Type error at "++(pos $1)++": type "++ (showType $4.aType) ++" used condition (for)"
@@ -1225,7 +1227,7 @@ StmtSmpl : ShortVarDecl {
 
 
 ListRExp : RExp {
-            $$ = (:[]) $1;
+            $$ = [$1];
             $1.envVar = $$.envVar;
             $1.envFun = $$.envFun;
             $$.aTypeList = [$1.aType];
@@ -1274,7 +1276,7 @@ ListDecl : {- empty -} {
                 }
 
 ListId : Id {
-            $$ = (:[]) $1;
+            $$ = [$1];
             $$.idList = [$1];
             } 
 
@@ -1291,7 +1293,7 @@ ListParam : {- empty -} {
                     } 
 
           | Param {
-                    $$ = (:[]) $1;
+                    $$ = [$1];
                     $$.envVar = $1.envVar;
                     $$.aTypeList = $1.aTypeList;            
                     }
@@ -1316,7 +1318,7 @@ ListStmt : {- empty -} {
                         }
  
          | ListStmt Stmt {
-                        $$ = flip (:) $1 $2; 
+                        $$ = flip (:) $1 $2;
                         $1.envVar = $$.envVar;
                         $1.envFun = $$.envFun;
                         $2.envVar = $1.envVarNew;
@@ -1344,6 +1346,7 @@ ListStmtSmpl : {- empty -} {
                         }
 
          | StmtSmpl {
+                        $$ = [$1];
                         $1.envVar = $$.envVar;
                         $1.envFun = $$.envFun;
                         $$.envVarNew = $1.envVarNew;
