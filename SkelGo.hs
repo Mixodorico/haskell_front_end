@@ -100,9 +100,12 @@ transStmt x = case x of
   StIf rexp block -> failure x
   StIfElse rexp block1 block2 -> failure x
   StWhile rexp block -> failure x
+  StDoWhile block rexp -> failure x
+  StFor stmtsmpls1 rexp stmtsmpls2 block -> failure x
   StBreak -> failure x
   StContinue -> failure x
   StReturn rexp -> failure x
+  StTryCatch stmt1 stmt2 -> failure x
   StWrite writet rexp -> failure x
 transWriteT :: WriteT -> Result
 transWriteT x = case x of

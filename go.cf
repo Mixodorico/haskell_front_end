@@ -84,9 +84,12 @@ StSmpl.           Stmt ::= StmtSmpl;
 StIf.             Stmt ::= "if" RExp Block;
 StIfElse.         Stmt ::= "if" RExp Block "else" Block;
 StWhile.          Stmt ::= "for" RExp Block;
+StDoWhile.        Stmt ::= "do" Block "for" RExp;
+StFor.            Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
 StBreak.          Stmt ::= "break"; 
 StContinue.       Stmt ::= "continue";
 StReturn.         Stmt ::= "return" RExp;
+StTryCatch.       Stmt ::= "try" Stmt "catch" Stmt;
 StWrite.          Stmt ::= WriteT "(" RExp ")";
 
 rules     WriteT ::= "writeInt" | "writeFloat" | "writeChar" | "writeString" ;
@@ -96,7 +99,7 @@ StExp.            StmtSmpl ::= RExp;          -- non possiamo toglierlo,
                                               -- altrimenti il parser non funziona
 StAsgn.           StmtSmpl ::= LExp "=" RExp;
 
-
+separator StmtSmpl "";
 
 
 
@@ -108,8 +111,6 @@ StAsgn.           StmtSmpl ::= LExp "=" RExp;
 
 --StIfStm.          Stmt ::= "if" StmtSmpl ";" RExp Block;
 --StIfElseStm.      Stmt ::= "if" StmtSmpl ";" RExp Block "else" Block;
---StFor.            Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
---StTryCatch.       Stmt ::= "try" Block "catch" Block;
 --StWrite.          Stmt ::= "write" "(" RExp ")";
 --StRead.           Stmt ::= "read" "(" RExp ")";
 

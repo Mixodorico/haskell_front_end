@@ -40,7 +40,15 @@ func p() void{
   asdasd2 := readChar()
   asdasd3 := readChar()
   
-  
   var v = 3%2
+  
+  for ; x ; {
+  }
+  
+  do {
+  } for x
+  
+  try x == 0 catch x
+  
   
 }

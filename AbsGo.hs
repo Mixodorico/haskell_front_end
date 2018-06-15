@@ -95,9 +95,12 @@ data Stmt
     | StIf RExp Block
     | StIfElse RExp Block Block
     | StWhile RExp Block
+    | StDoWhile Block RExp
+    | StFor [StmtSmpl] RExp [StmtSmpl] Block
     | StBreak
     | StContinue
     | StReturn RExp
+    | StTryCatch Stmt Stmt
     | StWrite WriteT RExp
   deriving (Eq, Ord, Show, Read)
 

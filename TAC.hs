@@ -13,6 +13,7 @@ data TacLine =
   | CondJTrue String Int                  -- type and label
   | FunDecl String Id Int                 -- string, id and int
   | FunCall Char String Id [String]       -- char, type, id and list of types
+  | ExcpJ Int                             -- label
   | Lbl Int                               -- label
   | Return String                         -- type
     deriving (Eq,Ord,Show)
@@ -38,6 +39,7 @@ printTac (x:xs) = case x of
                                                  'p' -> "\tcall " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
                                                  'f' ->"\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
                                                   _  -> "Compiler error" ;}
+                       ExcpJ lab -> "\tonexceptiongoto "  ++  "label" ++  (show lab);
                        Lbl lbl            -> "label" ++ (show lbl) ++ " :"
                        Return t           -> "\treturn " ++ t
                   ++ "\n"

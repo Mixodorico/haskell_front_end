@@ -90,44 +90,48 @@ import TAC
   '-' { PT _ (TS _ 11) }
   '/' { PT _ (TS _ 12) }
   ':=' { PT _ (TS _ 13) }
-  '<' { PT _ (TS _ 14) }
-  '<=' { PT _ (TS _ 15) }
-  '=' { PT _ (TS _ 16) }
-  '==' { PT _ (TS _ 17) }
-  '>' { PT _ (TS _ 18) }
-  '>=' { PT _ (TS _ 19) }
-  '[' { PT _ (TS _ 20) }
-  ']' { PT _ (TS _ 21) }
-  'bool' { PT _ (TS _ 22) }
-  'break' { PT _ (TS _ 23) }
-  'char' { PT _ (TS _ 24) }
-  'continue' { PT _ (TS _ 25) }
-  'else' { PT _ (TS _ 26) }
-  'false' { PT _ (TS _ 27) }
-  'float' { PT _ (TS _ 28) }
-  'for' { PT _ (TS _ 29) }
-  'func' { PT _ (TS _ 30) }
-  'if' { PT _ (TS _ 31) }
-  'int' { PT _ (TS _ 32) }
-  'package' { PT _ (TS _ 33) }
-  'readChar' { PT _ (TS _ 34) }
-  'readFloat' { PT _ (TS _ 35) }
-  'readInt' { PT _ (TS _ 36) }
-  'readString' { PT _ (TS _ 37) }
-  'ref' { PT _ (TS _ 38) }
-  'return' { PT _ (TS _ 39) }
-  'string' { PT _ (TS _ 40) }
-  'true' { PT _ (TS _ 41) }
-  'val' { PT _ (TS _ 42) }
-  'var' { PT _ (TS _ 43) }
-  'void' { PT _ (TS _ 44) }
-  'writeChar' { PT _ (TS _ 45) }
-  'writeFloat' { PT _ (TS _ 46) }
-  'writeInt' { PT _ (TS _ 47) }
-  'writeString' { PT _ (TS _ 48) }
-  '{' { PT _ (TS _ 49) }
-  '||' { PT _ (TS _ 50) }
-  '}' { PT _ (TS _ 51) }
+  ';' { PT _ (TS _ 14) }
+  '<' { PT _ (TS _ 15) }
+  '<=' { PT _ (TS _ 16) }
+  '=' { PT _ (TS _ 17) }
+  '==' { PT _ (TS _ 18) }
+  '>' { PT _ (TS _ 19) }
+  '>=' { PT _ (TS _ 20) }
+  '[' { PT _ (TS _ 21) }
+  ']' { PT _ (TS _ 22) }
+  'bool' { PT _ (TS _ 23) }
+  'break' { PT _ (TS _ 24) }
+  'catch' { PT _ (TS _ 25) }
+  'char' { PT _ (TS _ 26) }
+  'continue' { PT _ (TS _ 27) }
+  'do' { PT _ (TS _ 28) }
+  'else' { PT _ (TS _ 29) }
+  'false' { PT _ (TS _ 30) }
+  'float' { PT _ (TS _ 31) }
+  'for' { PT _ (TS _ 32) }
+  'func' { PT _ (TS _ 33) }
+  'if' { PT _ (TS _ 34) }
+  'int' { PT _ (TS _ 35) }
+  'package' { PT _ (TS _ 36) }
+  'readChar' { PT _ (TS _ 37) }
+  'readFloat' { PT _ (TS _ 38) }
+  'readInt' { PT _ (TS _ 39) }
+  'readString' { PT _ (TS _ 40) }
+  'ref' { PT _ (TS _ 41) }
+  'return' { PT _ (TS _ 42) }
+  'string' { PT _ (TS _ 43) }
+  'true' { PT _ (TS _ 44) }
+  'try' { PT _ (TS _ 45) }
+  'val' { PT _ (TS _ 46) }
+  'var' { PT _ (TS _ 47) }
+  'void' { PT _ (TS _ 48) }
+  'writeChar' { PT _ (TS _ 49) }
+  'writeFloat' { PT _ (TS _ 50) }
+  'writeInt' { PT _ (TS _ 51) }
+  'writeString' { PT _ (TS _ 52) }
+  '{' { PT _ (TS _ 53) }
+  '||' { PT _ (TS _ 54) }
+  '}' { PT _ (TS _ 55) }
 
 
 L_integ  { PT _ (TI $$) }
@@ -987,6 +991,58 @@ Stmt : Decl {
                         else Bad $2.err ;
                 }
 
+     | 'do' Block 'for' RExp {
+                $$ = StWhile $4 $2;
+                $4.envVar = $$.envVar;
+                $4.envFun = $$.envFun;
+                $2.envVar = resetEnvVar $$.envVar;
+                $2.envFun = $$.envFun;
+                $$.envVarNew = $$.envVar;
+                $$.envFunNew = $$.envFun;
+                $2.aTypeFun = $$.aTypeFun;
+                $$.aReturn = False;
+                $2.forLabels = ( (snd $2.indexNew) + 1, (snd $2.indexNew) + 3 );
+                $4.index = $$.index;
+                $2.index = $4.indexNew;                   
+                $$.indexNew = ( fst $2.indexNew, (snd $2.indexNew) + 3 );
+                $$.tac = [Lbl $ (snd $2.indexNew) + 1]
+                       ++shift $4.tacJ (snd $2.indexNew + 1)
+                       ++[CondJFalse $4.tacId ((snd $2.indexNew) + 3)]
+                       ++[Lbl $ (snd $2.indexNew) + 2]
+                       ++$2.tac
+                       ++[UncondJ $ (snd $2.indexNew) + 1]
+                       ++[Lbl $ (snd $2.indexNew) + 3];
+                where if $4.err == ""
+                        then when (not $ $4.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $4.aType) ++" used as condition (for)"
+                        else Bad $4.err ;
+                }
+
+     | 'for' ListStmtSmpl ';' RExp ';' ListStmtSmpl Block {
+                $$ = StWhile $4 $7;
+                $4.envVar = $$.envVar;
+                $4.envFun = $$.envFun;
+                $7.envVar = resetEnvVar $$.envVar;
+                $7.envFun = $$.envFun;
+                $$.envVarNew = $$.envVar;
+                $$.envFunNew = $$.envFun;
+                $7.aTypeFun = $$.aTypeFun;
+                $$.aReturn = False;
+                $7.forLabels = ( (snd $7.indexNew) + 1, (snd $7.indexNew) + 3 );
+                $4.index = $$.index;
+                $7.index = $4.indexNew;                   
+                $$.indexNew = ( fst $7.indexNew, (snd $7.indexNew) + 3 );
+                $$.tac = [Lbl $ (snd $7.indexNew) + 1]
+                       ++shift $4.tacJ (snd $7.indexNew + 1)
+                       ++[CondJFalse $4.tacId ((snd $7.indexNew) + 3)]
+                       ++[Lbl $ (snd $7.indexNew) + 2]
+                       ++$7.tac
+                       ++[UncondJ $ (snd $7.indexNew) + 1]
+                       ++[Lbl $ (snd $7.indexNew) + 3];
+                where if $4.err == ""
+                        then when (not $ $4.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $4.aType) ++" used as condition (for)"
+                        else Bad $4.err ;
+                }
+
      | 'break' {
                 $$ = StBreak; 
                 $$.envVarNew = $$.envVar;
@@ -1025,6 +1081,29 @@ Stmt : Decl {
                                  }
                             else Bad $2.err ;
                     }
+
+     | 'try' Stmt 'catch' Stmt 	{ 
+          $$ = StTryCatch $2 $4;
+          $2.envVar = (resetEnvVar $$.envVar);
+          $2.envFun = $$.envFun;
+          $4.envVar = (resetEnvVar $$.envVar);
+          $4.envFun = $$.envFun; 
+          $$.envVarNew = $$.envVar;
+          $$.envFunNew = $$.envFun;
+          $2.aTypeFun = $$.aTypeFun;
+          $4.aTypeFun = $$.aTypeFun;
+          $$.aReturn = False;
+          $2.forLabels = $$.forLabels;
+          $4.forLabels = $$.forLabels;
+          $2.index = $$.index;
+          $4.index = $2.indexNew;					
+          $$.indexNew = ( (fst $4.indexNew) , ((snd $4.indexNew)+2) );
+          $$.tac = [ExcpJ ((snd $4.indexNew)+1)] ++ $2.tac 
+            ++ [UncondJ ((snd $4.indexNew)+2)] 
+            ++ [Lbl ((snd $4.indexNew)+1)]
+            ++ $4.tac 
+            ++ [Lbl ((snd $4.indexNew)+2)];
+          }
 
      | 'writeInt' '(' RExp ')' {
                     $$ = StWrite WriteT_writeInt $3;
@@ -1227,6 +1306,34 @@ ListStmt : {- empty -} {
                         }
  
          | ListStmt Stmt {
+                        $$ = flip (:) $1 $2; 
+                        $1.envVar = $$.envVar;
+                        $1.envFun = $$.envFun;
+                        $2.envVar = $1.envVarNew;
+                        $2.envFun = $1.envFunNew;
+                        $$.envVarNew = $2.envVarNew;
+                        $$.envFunNew = $2.envFunNew;
+                        $1.aTypeFun = $$.aTypeFun;
+                        $2.aTypeFun = $$.aTypeFun;
+                        $$.aReturn = $2.aReturn;
+                        $1.forLabels = $$.forLabels;
+                        $2.forLabels = $$.forLabels;
+                        $1.index = $$.index;
+                        $2.index = $1.indexNew;
+                        $$.indexNew = $2.indexNew;
+                        $$.tac = $1.tac++$2.tac;
+                        }
+
+ListStmtSmpl : {- empty -} {
+                        $$ = [];
+                        $$.envVarNew = $$.envVar;
+                        $$.envFunNew = $$.envFun;
+                        $$.aReturn = False;
+                        $$.indexNew = $$.index;
+                        $$.tac = [];
+                        }
+
+         | ListStmtSmpl StmtSmpl {
                         $$ = flip (:) $1 $2; 
                         $1.envVar = $$.envVar;
                         $1.envFun = $$.envFun;

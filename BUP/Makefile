@@ -1,7 +1,7 @@
 base = Go
 
 all:
-	happy -gcai ParGo.y
+	happy -gca ParGo.y
 	alex -g LexGo.x
 	ghc --make TestGo.hs -o Go
 
@@ -32,8 +32,12 @@ demo2: $(base)
 	
 .PHONY : demo3
 demo3: $(base)
-	-./$(base) ./tests/demo3.go 
+	-./$(base) ./tests/demo3.go
+
+.PHONY : demo4
+demo4: $(base)
+	-./$(base) ./tests/demo4.go
 
 .PHONY : demo
 demo: $(base)
-	-./$(base) ./tests/demo1.go ./tests/demo2.go ./tests/demo3.go
+	-./$(base) ./tests/demo1.go ./tests/demo2.go ./tests/demo3.go ./tests/demo4.go
