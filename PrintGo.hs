@@ -22,9 +22,9 @@ render d = rend 0 (map ($ "") $ d []) "" where
     "["      :ts -> showChar '[' . rend i ts
     "("      :ts -> showChar '(' . rend i ts
     "{"      :ts -> showChar '{' . new (i+1) . rend (i+1) ts
-  -- "}" : ";":ts -> new (i-1) . space "}" . showChar ';' . new (i-1) . rend (i-1) ts
+    "}" : ";":ts -> new (i-1) . space "}" . showChar ';' . new (i-1) . rend (i-1) ts
     "}"      :ts -> shiftBack (i-1) . showChar '}' . rend (i-1) ts
-  -- ";"      :ts -> showChar ';' .space "" . rend i ts
+    ";"      :ts -> showChar ';' .space "" . rend i ts
     str  : "," :ts -> showString str . space "," . rend i ts
     str  : ")" :ts -> showString str . showChar ')' . rend i ts
     str  : "]" :ts -> showString str . showChar ']' . rend i ts
@@ -165,8 +165,10 @@ instance Print Stmt where
    StIfElse expr block0 block -> prPrec i 0 (concatD [doc (showString "if") , prt 0 str expr , prt 0 str  block0 , doc (showString "else") , prt 0 str block])
    StWhile expr block -> prPrec i 0 (concatD [doc (showString "for") , prt 0 str  expr , prt 0 str  block])
    StBreak  -> prPrec i 0 (concatD [doc (showString "break")])
+   StFor statementsmpls0 expr statementsmpls block -> prPrec i 0 (concatD [doc (showString "for"), prt 0 str statementsmpls0 , doc (showString ";"), prt 0 str expr, doc (showString ";"), prt 0 str statementsmpls, prt 0 str block])
    StContinue  -> prPrec i 0 (concatD [doc (showString "continue")])
    StReturn expr -> prPrec i 0 (concatD [doc (showString "return") , prt 0 str expr])
+   StTryCatch statement0 statement -> prPrec i 0 (concatD [doc (showString "try"), prt 0 str statement0, doc (showString "catch"), prt 0 str statement])
    StWrite writet rexp -> prPrec i 0 (concatD [prt 0 str writet, doc (showString "("), prt 0 str rexp, doc (showString ")")])
 
   prtList str [] = (concatD [])

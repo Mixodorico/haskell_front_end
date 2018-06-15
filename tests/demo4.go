@@ -42,13 +42,15 @@ func p() void{
   
   var v = 3%2
   
-  for ; x ; {
+  for ; b[1]<10; {
+    //writeInt(iii)
   }
   
   do {
+    z = false
   } for x
   
-  try x == 0 catch x
+  try g := b[1] catch dfgdfgdfg := x
   
   
 }

@@ -86,7 +86,7 @@ StIfElse.         Stmt ::= "if" RExp Block "else" Block;
 StWhile.          Stmt ::= "for" RExp Block;
 StDoWhile.        Stmt ::= "do" Block "for" RExp;
 StFor.            Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
-StBreak.          Stmt ::= "break"; 
+StBreak.          Stmt ::= "break";
 StContinue.       Stmt ::= "continue";
 StReturn.         Stmt ::= "return" RExp;
 StTryCatch.       Stmt ::= "try" Stmt "catch" Stmt;
@@ -99,8 +99,8 @@ StExp.            StmtSmpl ::= RExp;          -- non possiamo toglierlo,
                                               -- altrimenti il parser non funziona
 StAsgn.           StmtSmpl ::= LExp "=" RExp;
 
-separator StmtSmpl "";
-
+[].     [StmtSmpl] ::= ;
+(:[]).  [StmtSmpl] ::= StmtSmpl;
 
 
 
@@ -128,9 +128,6 @@ separator StmtSmpl "";
 
 --(:[]).  [RExp] ::= RExp;
 --(:).  [RExp] ::= RExp "," [RExp];
-
--- [].  [StmtSmpl] ::= ;
---(:[]).  [StmtSmpl] ::= StmtSmpl;
 
 
 --

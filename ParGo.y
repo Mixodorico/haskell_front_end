@@ -961,8 +961,8 @@ Stmt : Decl {
                            ++$5.tac
                            ++[Lbl $ (snd $5.indexNew) + 3];
                     where if $2.err == ""
-                        then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (if)"
-                        else Bad $2.err ;
+                            then when (not $ $2.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $2.aType) ++" used as condition (if)"
+                            else Bad $2.err ;
                     }
 
      | 'for' RExp Block {
@@ -1007,41 +1007,51 @@ Stmt : Decl {
                 $$.indexNew = ( fst $2.indexNew, (snd $2.indexNew) + 3 );
                 $$.tac = [Lbl $ (snd $2.indexNew) + 1]
                        ++shift $4.tacJ (snd $2.indexNew + 1)
-                       ++[CondJFalse $4.tacId ((snd $2.indexNew) + 3)]
                        ++[Lbl $ (snd $2.indexNew) + 2]
                        ++$2.tac
-                       ++[UncondJ $ (snd $2.indexNew) + 1]
+                       ++[CondJTrue $4.tacId ((snd $2.indexNew) + 2)]
                        ++[Lbl $ (snd $2.indexNew) + 3];
                 where if $4.err == ""
                         then when (not $ $4.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $4.aType) ++" used as condition (for)"
                         else Bad $4.err ;
                 }
 
-     | 'for' ListStmtSmpl ';' RExp ';' ListStmtSmpl Block {
-                $$ = StWhile $4 $7;
-                $4.envVar = $$.envVar;
-                $4.envFun = $$.envFun;
-                $7.envVar = resetEnvVar $$.envVar;
-                $7.envFun = $$.envFun;
-                $$.envVarNew = $$.envVar;
-                $$.envFunNew = $$.envFun;
-                $7.aTypeFun = $$.aTypeFun;
-                $$.aReturn = False;
-                $7.forLabels = ( (snd $7.indexNew) + 1, (snd $7.indexNew) + 3 );
-                $4.index = $$.index;
-                $7.index = $4.indexNew;                   
-                $$.indexNew = ( fst $7.indexNew, (snd $7.indexNew) + 3 );
-                $$.tac = [Lbl $ (snd $7.indexNew) + 1]
-                       ++shift $4.tacJ (snd $7.indexNew + 1)
-                       ++[CondJFalse $4.tacId ((snd $7.indexNew) + 3)]
-                       ++[Lbl $ (snd $7.indexNew) + 2]
-                       ++$7.tac
-                       ++[UncondJ $ (snd $7.indexNew) + 1]
-                       ++[Lbl $ (snd $7.indexNew) + 3];
-                where if $4.err == ""
-                        then when (not $ $4.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $4.aType) ++" used as condition (for)"
-                        else Bad $4.err ;
-                }
+     | 'for' ListStmtSmpl ';' RExp ';' ListStmtSmpl Block 	{ 
+									$$ = StFor $2 $4 $6 $7; 
+									$2.envVar = (resetEnvVar $$.envVar);
+									$2.envFun = $$.envFun;
+									$4.envVar = $2.envVarNew;
+									$4.envFun = $2.envFunNew;
+									$5.envVar = $2.envVarNew;
+									$5.envFun = $2.envFunNew;
+									$6.envVar = $2.envVarNew;
+									$6.envFun = $2.envFunNew;
+									$7.envVar = resetEnvVar $2.envVarNew;
+									$7.envFun = $6.envFunNew;
+									$$.envVarNew = $$.envVar;
+									$$.envFunNew = $$.envFun;
+									$7.aTypeFun = $$.aTypeFun;
+									$$.aReturn = False;
+									$7.forLabels = ( (snd $7.indexNew)+2, (snd $7.indexNew)+3 );
+									$2.index = $$.index;
+									$4.index = $2.indexNew;
+									$6.index = $4.indexNew;
+									$7.index = $6.indexNew;
+									$$.indexNew = ( fst $7.indexNew, (snd $7.indexNew)+3 );
+									$$.tac = $2.tac ++ [Lbl $ (snd $7.indexNew)+1] 
+											++ $4.tac
+											++ [CondJFalse $4.tacId ((snd $7.indexNew)+3)] 
+											++ $7.tac
+											++ [Lbl $ (snd $7.indexNew)+2]
+											++ $6.tac
+											++ [UncondJ $ (snd $7.indexNew)+1] 
+											++ [Lbl $ (snd $7.indexNew)+3];
+									where if $4.err== ""
+                          then if $4.aType == TBool
+                                 then Ok ()
+                                 else Bad $ "Type error at "++(pos $1)++": type "++ (showType $4.aType) ++" used condition (for)"
+                          else Bad $4.err ;
+									}
 
      | 'break' {
                 $$ = StBreak; 
@@ -1333,23 +1343,17 @@ ListStmtSmpl : {- empty -} {
                         $$.tac = [];
                         }
 
-         | ListStmtSmpl StmtSmpl {
-                        $$ = flip (:) $1 $2; 
+         | StmtSmpl {
                         $1.envVar = $$.envVar;
                         $1.envFun = $$.envFun;
-                        $2.envVar = $1.envVarNew;
-                        $2.envFun = $1.envFunNew;
-                        $$.envVarNew = $2.envVarNew;
-                        $$.envFunNew = $2.envFunNew;
+                        $$.envVarNew = $1.envVarNew;
+                        $$.envFunNew = $1.envFunNew;
                         $1.aTypeFun = $$.aTypeFun;
-                        $2.aTypeFun = $$.aTypeFun;
-                        $$.aReturn = $2.aReturn;
+                        $$.aReturn = $1.aReturn;
                         $1.forLabels = $$.forLabels;
-                        $2.forLabels = $$.forLabels;
                         $1.index = $$.index;
-                        $2.index = $1.indexNew;
-                        $$.indexNew = $2.indexNew;
-                        $$.tac = $1.tac++$2.tac;
+                        $$.indexNew = $1.indexNew;
+                        $$.tac = $1.tac;
                         }
 
 
