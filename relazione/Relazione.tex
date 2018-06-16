@@ -58,46 +58,46 @@ comment "/*" "*/";
 
 entrypoints Start;
 
-rules     Boolean ::= "true" | "false" ;
+rules Boolean ::= "true" | "false";
 
-ExpAnd.        RExp ::= RExp "&&" RExp ;
-ExpOr.         RExp ::= RExp "||" RExp ;
-ExpNot.        RExp ::= "!" RExp ;        
-ExpEq.         RExp ::= RExp "==" RExp ;
-ExpNeq.        RExp ::= RExp "!=" RExp ;
-ExpLt.         RExp ::= RExp "<" RExp ;
-ExpLtE.        RExp ::= RExp "<=" RExp ;
-ExpGt.         RExp ::= RExp ">" RExp ;
-ExpGtE.        RExp ::= RExp ">=" RExp ;
-ExpAdd.        RExp ::= RExp "+" RExp ;
-ExpSub.        RExp ::= RExp "-" RExp ;
-ExpMul.        RExp ::= RExp "*" RExp ;
-ExpDiv.        RExp ::= RExp "/" RExp ;
-ExpMod.        RExp ::= RExp "%" RExp ;
-ExpNeg.        RExp ::= "-" RExp ;
-ExpRef.        RExp ::= "&" LExp ;
-ExpFuncEmpty.  RExp ::= Id "(" ")" ;
-ExpFunc.       RExp ::= Id "(" [RExp] ")" ;
-ExpVal.        RExp ::= Val ;
-ExpLExp.       RExp ::= LExp ;
-ExpPar.        RExp ::= "(" RExp ")";
-StRead.        RExp ::= ReadT "(" ")";
+ExpAnd.          RExp ::= RExp "&&" RExp;
+ExpOr.           RExp ::= RExp "||" RExp;
+ExpNot.          RExp ::= "!" RExp; 
+ExpEq.           RExp ::= RExp "==" RExp;
+ExpNeq.          RExp ::= RExp "!=" RExp;
+ExpLt.           RExp ::= RExp "<" RExp;
+ExpLtE.          RExp ::= RExp "<=" RExp;
+ExpGt.           RExp ::= RExp ">" RExp;
+ExpGtE.          RExp ::= RExp ">=" RExp;
+ExpAdd.          RExp ::= RExp "+" RExp;
+ExpSub.          RExp ::= RExp "-" RExp;
+ExpMul.          RExp ::= RExp "*" RExp;
+ExpDiv.          RExp ::= RExp "/" RExp;
+ExpMod.          RExp ::= RExp "%" RExp;
+ExpNeg.          RExp ::= "-" RExp;
+ExpRef.          RExp ::= "&" LExp;
+ExpFuncEmpty.    RExp ::= Id "(" ")";
+ExpFunc.         RExp ::= Id "(" [RExp] ")";
+ExpVal.          RExp ::= Val;
+ExpLExp.         RExp ::= LExp;
+ExpPar.          RExp ::= "(" RExp ")";
+StRead.          RExp ::= ReadT "(" ")";
 
-Int .          Val ::= Integer ;
-Float .        Val ::= Double ;
-Char .         Val  ::= Char ;
-String .       Val ::= String ;
-Bool .         Val  ::= Boolean ;
+Int .            Val ::= Integer;
+Float .          Val ::= Double;
+Char .           Val  ::= Char;
+String .         Val ::= String;
+Bool .           Val  ::= Boolean;
 
-rules     ReadT  ::= "readInt" | "readFloat" | "readChar" | "readString" ;
+rules ReadT  ::= "readInt" | "readFloat" | "readChar" | "readString";
 
-ExpId.    LExp ::= Id ;
-ExpArr.   LExp ::= LExp "[" RExp "]" ;
-ExpDeref. LExp ::= "*" RExp ;
+ExpId.           LExp ::= Id;
+ExpArr.          LExp ::= LExp "[" RExp "]";
+ExpDeref.        LExp ::= "*" RExp;
 
-separator nonempty RExp "," ;
+separator nonempty RExp ",";
 
-Entry.          Start ::= "package" Id [Decl];
+Entry.           Start ::= "package" Id [Decl];
 
 separator Decl "";
 
@@ -116,40 +116,45 @@ TArray.          Type ::=  "[" Integer "]" Type;
 TPointer.        Type ::= "*" Type; 
 
 token Id (letter | '_')(letter | digit | '_')*;
-
-separator Param ",";
+separator nonempty Id "," ;
 
 DeclFun.         Decl ::= "func" Id "(" [Param] ")" Type Block;
 DeclProc.        Decl ::= "func" Id "(" [Param] ")" "void" Block;
 
-separator nonempty Id ",";
+separator Param ",";
 
-Parameter.        Param ::=  [Id] Type;
-ParameterPass.    Param ::=  Pass [Id] Type;
+Parameter.       Param ::=  [Id] Type;
+ParameterPass.   Param ::=  Pass [Id] Type;
 
-PassVal.          Pass  ::=  "val";
-PassRef.          Pass  ::=  "ref";
+PassVal.         Pass  ::=  "val";
+PassRef.         Pass  ::=  "ref";
 
 separator Stmt "";
 
-BodyBlock. Block ::= "{" [Stmt] "}";
+BodyBlock.       Block ::= "{" [Stmt] "}";
 
-StDecl.           Stmt ::= Decl;
-StBlock.          Stmt ::= Block;
-StSmpl.           Stmt ::= StmtSmpl;
-StIf.             Stmt ::= "if" RExp Block;
-StIfElse.         Stmt ::= "if" RExp Block "else" Block;
-StWhile.          Stmt ::= "for" RExp Block;
-StBreak.          Stmt ::= "break"; 
-StContinue.       Stmt ::= "continue";
-StReturn.         Stmt ::= "return" RExp;
-StWrite.          Stmt ::= WriteT "(" RExp ")";
+StDecl.          Stmt ::= Decl;
+StBlock.         Stmt ::= Block;
+StSmpl.          Stmt ::= StmtSmpl;
+StIf.            Stmt ::= "if" RExp Block;
+StIfElse.        Stmt ::= "if" RExp Block "else" Block;
+StWhile.         Stmt ::= "for" RExp Block;
+StDoWhile.       Stmt ::= "do" Block "for" RExp;
+StFor.           Stmt ::= "for" [StmtSmpl] ";" RExp ";" [StmtSmpl] Block;
+StBreak.         Stmt ::= "break";
+StContinue.      Stmt ::= "continue";
+StReturn.        Stmt ::= "return" RExp;
+StTryCatch.      Stmt ::= "try" Stmt "catch" Stmt;
+StWrite.         Stmt ::= WriteT "(" RExp ")";
 
 rules WriteT ::= "writeInt" | "writeFloat" | "writeChar" | "writeString";
 
-StShortVarDecl.   StmtSmpl ::= ShortVarDecl;
-StExp.            StmtSmpl ::= RExp;
-StAsgn.           StmtSmpl ::= LExp "=" RExp;
+StShortVarDecl.  StmtSmpl ::= ShortVarDecl;
+StExp.           StmtSmpl ::= RExp;
+StAsgn.          StmtSmpl ::= LExp "=" RExp;
+
+[].             [StmtSmpl] ::= ;
+(:[]).          [StmtSmpl] ::= StmtSmpl;
 \end{verbatim}
 
 \section{Parser}
@@ -169,8 +174,13 @@ Il Three Address Code viene generato interamente nel parser, utilizzando un modu
 In questo modulo sono stati dichiarati i tipi di dato \textit{ElemVar} e \textit{ElemFun} contenenti rispettivamente tutte le informazioni relative alle variabili ed alle funzioni/procedure dichiarate nell'ambiente.\\
 I casting vengono stampati a video in fase di asegnamento.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% andrebbe bool e non boolean?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Type System}
-A seguire il \textit{Type System} relativo al linguaggio implementato.
+A seguire il \textit{Type System} relativo al linguaggio implementato. Si è posta particolare attenzione è quello di definire un type system il più possibile vicino a quello del linguaggio \textit{Go}, integrando ulteriori specifiche presenti nella consegna del progetto.
+Definiamo $\Gamma$ essere l'ambiente e $\tau$ essere l'insieme dei tipi di base da noi considerati: \texttt{int, float, char, string} e \texttt{boolean}.
+
 \subsection*{Basic Judgments}
 \begin{center}
 $\Gamma$ è un ambiente ben formato:\\
@@ -183,132 +193,353 @@ RExp è un tipo ben formato in $\Gamma$\\
 $\Gamma \vdash $ RExp : Type\\[0.1in]
 \end{center}
 
-\subsection*{Rules}
+\subsection*{Regole}
 \begin{center}
 \noindent (\textbf{empty})
 $\dfrac{}{\emptyset \vdash \diamond}$\\[0.2in]
 %\noindent(Entry)
 %$\dfrac{}{}$\\[0.1in]
 \noindent (\textbf{Id})
-$\dfrac{\Gamma \vdash \diamond , Ident \not\in dom(\Gamma)}{\Gamma, Ident \vdash \diamond}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond , \texttt{\texttt{ident}} \not\in dom(\Gamma)}{\Gamma, \texttt{\texttt{ident}} \vdash \diamond}$\\[0.1in]
 \end{center}
-
+\subsection*{Tipi Base}
+Vediamo di seguito in maniera esplicita tutti i tipi considerati.
 \begin{center}
 \noindent(\textbf{Int})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash n : Int}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash n : \texttt{int}}$\\[0.1in]
 \noindent(\textbf{Float})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash f : Float}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash f : \texttt{float}}$\\[0.1in]
 \noindent(\textbf{Char})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash c : Char}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash c : \texttt{char}}$\\[0.1in]
 \noindent(\textbf{String})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash s : String}$\\[0.1in]
-\noindent(\textbf{True})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash true : Boolean}$\\[0.1in]
-\noindent(\textbf{False})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash false : Boolean}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash s : \texttt{string}}$\\[0.1in]
+\noindent(\textbf{Boolean})
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash b : \texttt{boolean}}$\\[0.1in]
+%$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash true : Boolean}$\\[0.1in]
+%\noindent(\textbf{False})
+%$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash false : Boolean}$\\[0.1in]
 \end{center}
 
+\subsection*{Tipi Composti}
+
 \begin{center}
-\noindent(\textbf{And})
-$\dfrac{\Gamma \vdash RExp1:Boolean\ \ \ \Gamma \vdash RExp2:Boolean}{\Gamma \vdash RExp1\ \&\&\ RExp2:Boolean}$\\[0.1in]
-\noindent(\textbf{Or})
-$\dfrac{\Gamma \vdash RExp1:Boolean\ \ \ \Gamma \vdash RExp2:Boolean}{\Gamma \vdash RExp1\ ||\ RExp2:Boolean}$\\[0.1in]
-\noindent(\textbf{Not})
-$\dfrac{\Gamma \vdash RExp:Boolean}{\Gamma \vdash not\  RExp:Boolean}$\\[0.1in]
-
-\noindent(\textbf{Eq})
-$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ ==\ RExp2:Boolean}$\\[0.1in]
-\noindent(\textbf{Neq})
-$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ !=\ RExp2:Boolean}$\\[0.1in]
-\noindent(\textbf{Lt})
-$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ <\ RExp2:Boolean}$\\[0.1in]
-\noindent(\textbf{LtE})
-$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ <=\ RExp2:Boolean}$\\[0.1in]
-\noindent(\textbf{Gt})
-$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ >\ RExp2:Boolean}$\\[0.1in]
-\noindent(\textbf{GtE})
-$\dfrac{\Gamma \vdash RExp1:Type\ \ \ \Gamma \vdash RExp2:Type}{\Gamma \vdash RExp1\ >=\ RExp2:Boolean}$\\[0.1in]
-
-\noindent(\textbf{Add 1})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ +\ RExp2:Int}$\\[0.1in]
-\noindent(\textbf{Add 2})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ +\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Add 3})
-$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ +\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Add 4})
-$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ +\ RExp2:Float}$\\[0.1in]
-
-\noindent(\textbf{Sub 1})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ -\ RExp2:Int}$\\[0.1in]
-\noindent(\textbf{Sub 2})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ -\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Sub 3})
-$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ -\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Sub 4})
-$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ -\ RExp2:Float}$\\[0.1in]
-
-\noindent(\textbf{Mul 1})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ *\ RExp2:Int}$\\[0.1in]
-\noindent(\textbf{Mul 2})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ *\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Mul 3})
-$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ *\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Mul 4})
-$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ *\ RExp2:Float}$\\[0.1in]
-
-\noindent(\textbf{Div 1})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ /\ RExp2:Int}$\\[0.1in]
-\noindent(\textbf{Div 2})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ /\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Div 3})
-$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ /\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Div 4})
-$\dfrac{\Gamma \vdash RExp1:Float\ \ \ \Gamma \vdash RExp2:Float}{\Gamma \vdash RExp1\ /\ RExp2:Float}$\\[0.1in]
-\noindent(\textbf{Mod})
-$\dfrac{\Gamma \vdash RExp1:Int\ \ \ \Gamma \vdash RExp2:Int}{\Gamma \vdash RExp1\ \%\ RExp2:Int}$\\[0.1in]
-\noindent(\textbf{Neg 1})
-$\dfrac{\Gamma \vdash RExp:Int}{\Gamma \vdash -RExp:Int}$\\[0.1in]
-\noindent(\textbf{Neg 2})
-$\dfrac{\Gamma \vdash RExp:Float}{\Gamma \vdash -RExp:Float}$\\[0.1in]
-
 \noindent(\textbf{Ref})
-$\dfrac{\Gamma \vdash Ident}{\Gamma \vdash \text{\&} Ident}$\\[0.1in]
+$\dfrac{\Gamma \vdash \texttt{\texttt{ident}}}{\Gamma \vdash \text{\&} \texttt{\texttt{ident}}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int, float, char, string, boolean} \}
+\end{itemize}
 \noindent(\textbf{Deref})
-$\dfrac{\Gamma \vdash Type}{\Gamma \vdash \text{*} Type}$\\[0.1in]
+$\dfrac{\Gamma \vdash \tau}{\Gamma \vdash \text{*} \tau}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int} \}
+\end{itemize}
 \noindent(\textbf{Arr})
-$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash RExp:Int}{\Gamma \vdash Ident\ [\ RExp\ ]}$\\[0.1in]
+$\dfrac{\Gamma \vdash \texttt{\texttt{ident}}\ \ \ \Gamma \vdash RExp:\tau}{\Gamma \vdash \texttt{ident}\ [\ RExp\ ]}$\\[0.1in]
+\end{center}
 
-\noindent(\textbf{Asgn})
-$\dfrac{\Gamma \vdash LExp:Type\ \ \ \Gamma \vdash RExp:Type}{\Gamma \vdash LExp = RExp}$\\[0.1in]
+\subsection*{Operazioni Relazionali}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
+\noindent(\textbf{And})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{\&\&} \ RExp2:\tau}$\\[0.1in]
+\noindent(\textbf{Or})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{||} \ RExp2:\tau}$\\[0.1in]
+\noindent(\textbf{Not})
+$\dfrac{\Gamma \vdash RExp:\tau}{\Gamma \vdash \texttt{not}\  RExp:\tau}$\\[0.1in]
 
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int, float, char, string, boolean} \}
+\end{itemize}
+\noindent(\textbf{Eq})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{==}\ RExp2:\texttt{boolean}}$\\[0.1in]
+\noindent(\textbf{Neq})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{!=}\ RExp2:\texttt{boolean}}$\\[0.1in]
+\noindent(\textbf{Lt})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{<}\ RExp2:\texttt{boolean}}$\\[0.1in]
+\noindent(\textbf{LtE})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{<=}\ RExp2:\texttt{boolean}}$\\[0.1in]
+\noindent(\textbf{Gt})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{>}\ RExp2:\texttt{boolean}}$\\[0.1in]
+\noindent(\textbf{GtE})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{>=}\ RExp2:\texttt{boolean}}$\\[0.1in]
+\end{center}
+
+\subsection*{Operazioni Aritmetiche}
+\subsubsection*{Addizione}
+
+\begin{center}
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
+\noindent(\textbf{Add 1})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\tau}$\\[0.1in]
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int} \}
+\end{itemize}
+\noindent(\textbf{Add 2})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\tau}$\\[0.1in]
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{float} \}
+\end{itemize}
+\noindent(\textbf{Add 3})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\tau}$\\[0.1in]
+\end{center}
+\subsubsection*{Addizione con casting implicito}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} e almeno uno delle due espressioni \texttt{int}
+\end{itemize}
+\noindent(\textbf{Add 4})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\texttt{int}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} e almeno uno delle due espressioni \texttt{float}
+\end{itemize}
+
+\noindent(\textbf{Add 5})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\texttt{float}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int, float} \} e almeno uno delle due espressioni \texttt{float}
+\end{itemize}
+\noindent(\textbf{Add 6})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\texttt{float}}$\\[0.1in]
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection*{Sottrazione}
+
+\begin{center}
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
+\noindent(\textbf{Sub 1})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\tau}$\\[0.1in]
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int} \}
+\end{itemize}
+\noindent(\textbf{Sub 2})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\tau}$\\[0.1in]
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{float} \}
+\end{itemize}
+\noindent(\textbf{Sub 3})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\tau}$\\[0.1in]
+\end{center}
+\subsubsection*{Sottrazione con casting implicito}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} e almeno uno delle due espressioni \texttt{int}
+\end{itemize}
+\noindent(\textbf{Sub 4})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\texttt{int}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} e almeno uno delle due espressioni \texttt{float}
+\end{itemize}
+
+\noindent(\textbf{Sub 5})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\texttt{float}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int, float} \} e almeno uno delle due espressioni \texttt{float}
+\end{itemize}
+\noindent(\textbf{Sub 6})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\texttt{float}}$\\[0.1in]
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\subsubsection*{Moltiplicazione}
+\begin{center}
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
+\noindent(\textbf{Mul 1})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\tau}$\\[0.1in]
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int} \}
+\end{itemize}
+\noindent(\textbf{Mul 2})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\tau}$\\[0.1in]
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{float} \}
+\end{itemize}
+\noindent(\textbf{Mul 3})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\tau}$\\[0.1in]
+\end{center}
+
+\subsubsection*{Moltiplicazione con casting implicito}
+
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} e almeno uno delle due espressioni \texttt{int}
+\end{itemize}
+\noindent(\textbf{Mul 4})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\texttt{int}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} e almeno uno delle due espressioni \texttt{float}
+\end{itemize}
+
+\noindent(\textbf{Mul 5})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\texttt{float}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int, float} \} e almeno uno delle due espressioni \texttt{float}
+\end{itemize}
+\noindent(\textbf{Mul 6})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\texttt{float}}$\\[0.1in]
+\end{center}
+
+\subsubsection*{Divisione}
+\begin{center}
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
+\noindent(\textbf{Div 1})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\tau}$\\[0.1in]
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int} \}
+\end{itemize}
+\noindent(\textbf{Div 2})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\tau}$\\[0.1in]
+
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{float} \}
+\end{itemize}
+\noindent(\textbf{Div 3})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\tau}$\\[0.1in]
+\end{center}
+
+\subsubsection*{Divisione con casting implicito}
+
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} e almeno uno delle due espressioni \texttt{int}
+\end{itemize}
+\noindent(\textbf{Div 4})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\texttt{int}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} e almeno uno delle due espressioni \texttt{float}
+\end{itemize}
+
+\noindent(\textbf{Div 5})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\texttt{float}}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int, float} \} e almeno uno delle due espressioni \texttt{float}
+\end{itemize}
+\noindent(\textbf{Div 6})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\texttt{float}}$
+\end{center}
+\subsubsection*{Modulo}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int} \}
+\end{itemize}
+\noindent(\textbf{Mod})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{\%}\ RExp2:\tau}$
+\end{center}
+\subsubsection*{Interi Negativi}
+
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int} \}
+\end{itemize}
+\noindent(\textbf{Neg 1})
+$\dfrac{\Gamma \vdash RExp:\tau}{\Gamma \vdash \texttt{-}RExp:\tau}$\\[0.1in]
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{float} \}
+\end{itemize}
+\noindent(\textbf{Neg 2})
+$\dfrac{\Gamma \vdash RExp:\tau}{\Gamma \vdash \texttt{-}RExp:\tau}$
+\end{center}
+
+\subsection*{Controlli di sequenza}
+
+
+\subsubsection*{If-then}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
 \noindent(\textbf{If})
-$\dfrac{\Gamma \vdash RExp:Boolean\ \ \ \Gamma \vdash Block}{\Gamma \vdash if\ RExp\ \{ Block\}}$\\[0.1in]
-\noindent(\textbf{IfElse})
-$\dfrac{\Gamma \vdash RExp:Boolean\ \ \ \Gamma \vdash Block1\ \ \ \Gamma \vdash Block2}{\Gamma \vdash if\ RExp\ \{ Block1\}\ else\ \{ Block1\}}$\\[0.1in]
-\noindent(\textbf{While})
-$\dfrac{\Gamma \vdash RExp:Boolean\ \ \ \Gamma \vdash Block}{\Gamma \vdash for\ RExp\ \{ Block\}}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp:\tau\ \ \ \Gamma \vdash Block}{\Gamma \vdash \texttt{if}\ RExp\ \{ Block\}}$\\[0.1in]
+\end{center}
 
+\subsubsection*{If-then-else}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
+\noindent(\textbf{IfElse})
+$\dfrac{\Gamma \vdash RExp:\tau\ \ \ \Gamma \vdash Block1\ \ \ \Gamma \vdash Block2}{\Gamma \vdash \texttt{if}\ RExp\ \{ Block1\}\ \texttt{else}\ \{ Block1\}}$\\[0.1in]
+\end{center}
+
+\subsubsection*{While-do}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
+\noindent(\textbf{WhileDo})
+$\dfrac{\Gamma \vdash RExp:\tau\ \ \ \Gamma \vdash Block}{\Gamma \vdash \texttt{for}\ RExp\ \{ Block\}}$\\[0.1in]
+\end{center}
+
+\subsubsection*{Do-while}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\end{itemize}
+\noindent(\textbf{DoWhile})
+$\dfrac{\Gamma \vdash RExp:\tau\ \ \ \Gamma \vdash Block}{\Gamma \vdash \texttt{do} \ \{ Block\} \ \texttt{for} \ RExp\ }$\\[0.1in]
+\end{center}
+
+\subsubsection*{For}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int,float,char,string, boolean} \}
+\end{itemize}
+\noindent(\textbf{For})
+$\dfrac{\Gamma \vdash StatementSimple \ \ \Gamma \vdash RExp:\texttt{boolean} \ \ \Gamma \vdash StatementSimple \ \ \ \Gamma \vdash Block}{\Gamma \vdash  \texttt{for} \ \ StatementSimple \ RExp \ StatementSimple \ \{ Block\}}$\\[0.1in]
+\end{center}
+
+\subsubsection*{Assegnemento}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int, float, char, string, boolean} \}
+\end{itemize}
+\noindent(\textbf{Asgn})
+$\dfrac{\Gamma \vdash LExp:\tau\ \ \ \Gamma \vdash RExp:\tau}{\Gamma \vdash LExp \ \texttt{=} \ RExp}$\\[0.1in]
+\end{center}
+
+\subsection*{Funzioni e procedure}
+\begin{center}
 \noindent(\textbf{DeclFun})
-$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash Params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ Ident\ (TypeList)\ Type\ \{Block\}}$\\[0.1in]
+$\dfrac{\Gamma \vdash \texttt{ident}\ \ \ \Gamma \vdash Params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ \texttt{ident}\ (TypeList)\ Type\ \{Block\}}$\\[0.1in]
 \noindent(\textbf{DeclProc})
-$\dfrac{\Gamma \vdash Ident\ \ \ \Gamma \vdash Params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ Ident\ (TypeList)\ void\ \{Block\}}$\\[0.1in]
+$\dfrac{\Gamma \vdash \texttt{ident}\ \ \ \Gamma \vdash Params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ \texttt{ident}\ (TypeList)\ void\ \{Block\}}$\\[0.1in]
 
 \noindent(\textbf{WriteInt})
-$\dfrac{\Gamma \vdash RExp:Int}{\Gamma \vdash writeInt\ (\ RExp\ )}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp:\texttt{int}}{\Gamma \vdash \texttt{writeInt}\ (\ RExp\ )}$\\[0.1in]
 \noindent(\textbf{WriteFloat})
-$\dfrac{\Gamma \vdash RExp:Float}{\Gamma \vdash writeFloat\ (\ RExp\ )}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp:\texttt{float}}{\Gamma \vdash \texttt{writeFloat}\ (\ RExp\ )}$\\[0.1in]
 \noindent(\textbf{WriteChar})
-$\dfrac{\Gamma \vdash RExp:Char}{\Gamma \vdash writeChar\ (\ RExp\ )}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp:\texttt{char}}{\Gamma \vdash \texttt{writeChar}\ (\ RExp\ )}$\\[0.1in]
 \noindent(\textbf{WriteString})
-$\dfrac{\Gamma \vdash RExp:String}{\Gamma \vdash writeString\ (\ RExp\ )}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp:\texttt{string}}{\Gamma \vdash \texttt{writeString}\ (\ RExp\ )}$\\[0.1in]
 \noindent(\textbf{ReadInt})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readInt\ (\ )\ :\ Int}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash \texttt{readInt}\ (\ )\ :\ \texttt{int}}$\\[0.1in]
 \noindent(\textbf{ReadFloat})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readFloat\ (\ )\ :\ Float}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash \texttt{readFloat}\ (\ )\ :\ \texttt{float}}$\\[0.1in]
 \noindent(\textbf{ReadChar})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readChar\ (\ )\ :\ Char}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash\texttt{readChar}\ (\ )\ :\ \texttt{char}}$\\[0.1in]
 \noindent(\textbf{ReadString})
-$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readString\ (\ )\ :\ String}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash \texttt{readString}\ (\ )\ :\ \texttt{string}}$\\[0.1in]
 \end{center}
 
 

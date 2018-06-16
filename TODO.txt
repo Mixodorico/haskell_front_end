@@ -1,11 +1,21 @@
--------------------
-cose da modificare:
--------------------
+TYPE SYSTEM:
 
-- sistemare array (aggiungere puntatore)
+-- cose che ha detto comini ---
+- separazione tra i tipi e le variabili nel type system (tipo maiuscolo = tipi, minuscolo = var) -> le ho distinte usando un carattere diverso..
+- segnare le compatibilità: var e puntatore a.e. non sono compatibili                            -> non ho capito cosa intendesse
+-------------------------------
 
-- separazione tra i tipi e le variabili nel type system (maiuscolo = tipi, minuscolo = var)
-- segnare le compatibilità: var e puntatore a.e. non sono compatibili
+------------------------------------------
+-- attuali cose da fare sul type system --
+------------------------------------------
+- mancano il try catch da inserire più qualcos'altro...
+- Igne gestisce anche le label..le gestiamo anche noi??
+- controllare il nome delle etichette delle regole, per vedere se sono tutte corrette
+- si potrebbe aggiungere tau1 e tau2 nelal sezione dei casting impliciti e mettere in OR: 
+            se (tau1 = int && tau2 = float ) OR (tau1 = float && tau2 = int)
+- sarebbe da dividere bene le sezioni : statement, left/ righ expressions / ecc...
+
+NOTA: ti ho aggiunto la relazione di Igne nella cartella dei Type systems
 
 ----------------------
 scelte implementative
@@ -22,7 +32,7 @@ Le funzioni non ammettono ridefinizione: tutti le etichette devono essere divers
 ----------------------
 Se c'è tempo e voglia 
 ----------------------
-
+- sistemare array (aggiungere puntatore)
 postinc/dec
 *=, /= ....
 ??(modificare TC in maniera da prendere ridefinizione di funzioni)??
