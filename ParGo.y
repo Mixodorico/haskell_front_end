@@ -599,7 +599,7 @@ RExp : RExp '&&' RExp {
                          else "t"++(show $ fst $$.indexNew);
             $$.tac = if $$.aType==TVoid
                        then $3.tac++[FunCall 'p' "" (Id $1.tacId) (paramCast $1 $$.envFun $3.aTypeList $3.tacIdList)]
-                       else $3.tac++[FunCall 'f' $$.tacId (Id $1.tacId) $3.tacIdList];
+                       else $3.tac++[FunCall 'f' $$.tacId (Id $1.tacId) (paramCast $1 $$.envFun $3.aTypeList $3.tacIdList)];
             $$.tacJ = $$.tac;
             where case checkCallFun $3.err $1 $$.envFun $3.aTypeList $2 of {
                        "" -> Ok ();

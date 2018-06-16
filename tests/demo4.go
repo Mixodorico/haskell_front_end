@@ -54,9 +54,10 @@ func p() void{
   try g := b[1] catch dfgdfgdfg := x
   */
   
-  func ff (i int, ref r float) void {
+  func ff (i int, ref r float) int {
     r = i
     x := 0
+    return 1
   }
   
   var ggg float = true % true
@@ -67,6 +68,6 @@ func p() void{
   
   var y bool = true
   
-  ff(true,y)
+  var sdf float = ff(true,y)
   
 }
