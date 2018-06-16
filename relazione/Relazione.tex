@@ -15,11 +15,17 @@ Nel seguente progetto abbiamo considerato le scelte di sintassi concreta definit
 A seguire vengono riassunte una serie di assunzioni.
 
 \begin{itemize}
-\item Variabili:
+\item Variabili e operazioni:
 	\begin{itemize}
 		\item non è consientito dichiarare delle variabili con lo stesso identificatore nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
 		\item non è possibile utilizzare delle right-expression isolate;
-		\item è consentita la dichiarazione di variabili globali al di fuori delle funzioni, ma non tramite la sintassi ``:=".
+		\item è consentita la dichiarazione di variabili globali al di fuori delle funzioni, ma non tramite la sintassi ``:=";
+		\item sono resi compatibili i seguenti tipi:
+		\begin{itemize}
+			\item \textit{float} $\leftarrow$ \textit{interi}
+			\item \textit{interi} $\leftarrow$ \textit{booleani}
+			\item \textit{float} $\leftarrow$ \textit{booleani}
+		\end{itemize}
 	\end{itemize}
 \item Funzioni e procedure:
 	\begin{itemize}
@@ -30,9 +36,10 @@ A seguire vengono riassunte una serie di assunzioni.
 \item Comandi di controllo sequenza:
 	\begin{itemize}
 		\item è stato usato l'operatore `!' nelle condizioni degli if per veicolare correttamente i salti condizionati;
-		\item sono stati implementati solamente i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici} e \textit{iterazione indeterminata});
+		\item sono stati implementati i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici}, \textit{iterazione determinata} (costrutto for) \textit{e indeterminata} (nelle sue due forme:  while-do e do-while)). Per riferirci ai costrutti di iterazione useremo sempre l'etichetta "\textit{for}";
 		\item le guardie booleane dei controlli di sequenza vengono gestite tramite short-cut mentre le altre espressioni booleane vengono gestite senza short-cut;
-		\item non è possibile definire controlli di sequenza al di fuori delle funzioni/procedure.
+		\item non è possibile definire controlli di sequenza al di fuori delle funzioni/procedure;
+		\item è stato implementato il costrutto \textit{try-catch} che nei suoi argomenti accetta una lista di statement.
 	\end{itemize}
 \end{itemize}
 
@@ -159,13 +166,8 @@ Tra le diverse assunzioni fatte in fase di type checking, abbiamo voluto tenere 
 
 \subsection{Three Address Code}
 Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{TAC.hs}) contenente la struttura dati per gestirne la generazione e le funzioni addette alla stampa. Inoltre ci siamo appoggiati su un ulteriore modulo (\textit{Env.hs}) contenete tutte le funzioni per la gestione dell'environment (inserimento, cancellazione e ricerca di variabili/funzioni).
-In questo modulo sono stati dichiarati i tipi di dato \textit{ElemVar} e \textit{ElemFun} contenenti rispettivamente tutte le informazioni relative alle variabili ed alle funzioni/procedure dichiarate nell'ambiente.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% le etichette davanti al dfrac non so se occorrono o meno...
-% per evitare errori si potrebbero omettere forse?
-% ho considerato prevalentemente pruteanu, de nart(si, si anche lui) e martu
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In questo modulo sono stati dichiarati i tipi di dato \textit{ElemVar} e \textit{ElemFun} contenenti rispettivamente tutte le informazioni relative alle variabili ed alle funzioni/procedure dichiarate nell'ambiente.\\
+I casting vengono stampati a video in fase di asegnamento.
 
 \section{Type System}
 A seguire il \textit{Type System} relativo al linguaggio implementato.
@@ -173,12 +175,12 @@ A seguire il \textit{Type System} relativo al linguaggio implementato.
 \begin{center}
 $\Gamma$ è un ambiente ben formato:\\
 $\Gamma \vdash \diamond$\\[0.1in]
-\textit{Type} è un tipo ben formato in $\Gamma$\\
-$\Gamma \vdash $\textit{Type}\\[0.1in]
-\textit{Stmt} è un tipo ben formato in $\Gamma$\\
-$\Gamma \vdash $\textit{Stmt}\\[0.1in]
-\textit{RExp} è un tipo ben formato in $\Gamma$\\
-$\Gamma \vdash $\textit{RExp : Type}\\[0.1in]
+Type è un tipo ben formato in $\Gamma$\\
+$\Gamma \vdash $ Type\\[0.1in]
+Stmt è un tipo ben formato in $\Gamma$\\
+$\Gamma \vdash $ Stmt\\[0.1in]
+RExp è un tipo ben formato in $\Gamma$\\
+$\Gamma \vdash $ RExp : Type\\[0.1in]
 \end{center}
 
 \subsection*{Rules}
@@ -188,7 +190,7 @@ $\dfrac{}{\emptyset \vdash \diamond}$\\[0.2in]
 %\noindent(Entry)
 %$\dfrac{}{}$\\[0.1in]
 \noindent (\textbf{Id})
-$\dfrac{\Gamma \vdash \diamond , Ident \not\in dom(\Gamma)}{\Gamma , Ident \vdash \diamond}$\\[0.1in]
+$\dfrac{\Gamma \vdash \diamond , Ident \not\in dom(\Gamma)}{\Gamma, Ident \vdash \diamond}$\\[0.1in]
 \end{center}
 
 \begin{center}
@@ -308,9 +310,6 @@ $\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readChar\ (\ )\ :\ Char}$\\[0.1in]
 \noindent(\textbf{ReadString})
 $\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash readString\ (\ )\ :\ String}$\\[0.1in]
 \end{center}
-
-
-
 
 
 \pagebreak

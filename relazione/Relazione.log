@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2017.12.26)  14 JUN 2018 21:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.6.8)  16 JUN 2018 09:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Relazione.tex
 (./Relazione.tex
 LaTeX2e <2017-04-15>
-Babel <3.12> and hyphenation patterns for 5 language(s) loaded.
+Babel <3.18> and hyphenation patterns for 5 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
@@ -43,7 +43,7 @@ File: uni-global.def 2013/05/13 UCS: Unicode global data
 \uc@temptokena=\toks18
 )
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2016/11/05 v2.16a AMS math features
+Package: amsmath 2017/09/02 v2.17a AMS math features
 \@mathmargin=\skip43
 
 For additional information on amsmath, use the `?' option.
@@ -130,56 +130,56 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (/usr/share/texlive/texmf-dist/tex/latex/ucs/data/uni-0.def
 File: uni-0.def 2013/05/13 UCS: Unicode data U+0000..U+00FF
 )
-Overfull \hbox (5.44862pt too wide) in paragraph at lines 34--35
+Overfull \hbox (5.44862pt too wide) in paragraph at lines 40--41
 []\OT1/cmr/m/n/12 le guardie booleane dei con-trolli di se-quenza ven-gono gest
 ite tramite
  []
 
 
-Overfull \hbox (2.11949pt too wide) in paragraph at lines 34--35
+Overfull \hbox (2.11949pt too wide) in paragraph at lines 40--41
 \OT1/cmr/m/n/12 short-cut men-tre le al-tre espres-sioni booleane ven-gono gest
 ite senza
  []
 
 [2] [3]
-Overfull \hbox (66.95023pt too wide) in paragraph at lines 146--146
+Overfull \hbox (66.95023pt too wide) in paragraph at lines 153--153
 []\OT1/cmtt/m/n/12 rules     ReadT  ::= "readInt" | "readFloat" | "readChar" | 
 "readString" ;[] 
  []
 
 [4]
-Overfull \hbox (11.3752pt too wide) in paragraph at lines 146--146
+Overfull \hbox (11.3752pt too wide) in paragraph at lines 153--153
 []\OT1/cmtt/m/n/12 DeclProc.        Decl ::= "func" Id "(" [Param] ")" "void" B
 lock;[] 
  []
 
-
-Overfull \hbox (60.77522pt too wide) in paragraph at lines 146--146
+[5]
+Overfull \hbox (60.77522pt too wide) in paragraph at lines 153--153
 []\OT1/cmtt/m/n/12 rules WriteT ::= "writeInt" | "writeFloat" | "writeChar" | "
 writeString";[] 
  []
 
-[5] [6] [7] [8] [9] [10] [11] (./Relazione.aux) ) 
+[6] [7] [8] [9] [10] [11] [12] (./Relazione.aux) ) 
 Here is how much of TeX's memory you used:
- 1629 strings out of 494888
- 20078 string characters out of 6179709
- 78376 words of memory out of 5000000
- 4976 multiletter control sequences out of 15000+600000
+ 1630 strings out of 494880
+ 20102 string characters out of 6179602
+ 78485 words of memory out of 5000000
+ 4985 multiletter control sequences out of 15000+600000
  10748 words of font info for 39 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  27i,6n,20p,471b,601s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12
-.pfb>
-Output written on Relazione.pdf (11 pages, 112962 bytes).
+</usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt1
+2.pfb>
+Output written on Relazione.pdf (12 pages, 114546 bytes).
 PDF statistics:
- 68 PDF objects out of 1000 (max. 8388607)
- 47 compressed objects within 1 object stream
+ 71 PDF objects out of 1000 (max. 8388607)
+ 49 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
