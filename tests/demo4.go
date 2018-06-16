@@ -67,6 +67,6 @@ func p() void{
   
   var y bool = true
   
-  ff(1,y)
+  ff(true,y)
   
 }

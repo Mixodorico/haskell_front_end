@@ -35,10 +35,9 @@ printTac (x:xs) = case x of
                        CondJFalse t1 lbl  -> "\t" ++ "if !" ++ t1  ++ " goto label" ++ (show lbl)
                        CondJTrue t1 lbl   -> "\t" ++ "if " ++ t1  ++ " goto label" ++ (show lbl)
                        FunDecl str id int -> str ++ " " ++ (idToStr id) ++  "/" ++ (show int)
-                       FunCall c t id lt  -> case c of {
-                                                 'p' -> "\tcall " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
-                                                 'f' ->"\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")" ;
-                                                  _  -> "Compiler error" ;}
+                       FunCall c t id lt  -> case c of
+                                                 'p' -> "\tcall " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")"
+                                                 'f' -> "\t" ++ t ++ " = " ++ (idToStr id) ++  " (" ++ (printParam lt) ++ ")"
                        ExcpJ lab          -> "\tonexceptiongoto "  ++  "label" ++  (show lab);
                        Lbl lbl            -> "label" ++ (show lbl) ++ " :"
                        Return t           -> "\treturn " ++ t
@@ -47,8 +46,35 @@ printTac (x:xs) = case x of
 
 -- association between left-expression and right-expression during assignment
 tacAssign :: [Id] -> [String] -> [TacLine]
-tacAssign [] [] = []
-tacAssign (x:xs) (y:ys) = (NulOp (idToStr x) y) : (tacAssign xs ys)
+tacAssign [] _ = []
+tacAssign (id:ids) (s:ss) = (NulOp (idToStr id) s) : (tacAssign ids ss)
+
+-- association between left-eidpression and right-eidpression during assignment
+-- with type casting when necessary
+tacAssignCast :: [Id] -> [String] -> Type -> [Type] -> [TacLine]
+tacAssignCast [] _ _ _ = []
+tacAssignCast (id:ids) (s:ss) t1 (t2:ts) = case t1 of
+                                                 TFloat -> if t2 == TInt || t2 == TBool
+                                                             then (NulOp (idToStr id) ("(float)"++s)) : (tacAssignCast ids ss t1 ts)
+                                                             else (NulOp (idToStr id) s) : (tacAssignCast ids ss t1 ts)
+                                                 TInt   -> if t2 == TBool
+                                                             then (NulOp (idToStr id) ("(int)"++s)) : (tacAssignCast ids ss t1 ts)
+                                                             else (NulOp (idToStr id) s) : (tacAssignCast ids ss t1 ts)
+                                                 _      -> (NulOp (idToStr id) s) : (tacAssignCast ids ss t1 ts)
+
+--(paramCast $1 $$.envFun $3.aTypeList $3.tacIdList)
+paramCast :: Id -> [ElemFun] -> [Type] -> [String] -> [String]
+paramCast id env ts ss = paramCast1 tl ts ss
+                      where tl = getTypeListFun $ extractFun id env
+                            paramCast1 [] _ _ = []
+                            paramCast1 (t1:tl) (t2:ts) (s:ss) = case t1 of
+                                                                     TFloat -> if t2 == TInt || t2 == TBool
+                                                                                 then ("(float)"++s) : (paramCast1 tl ts ss)
+                                                                                 else s : (paramCast1 tl ts ss)
+                                                                     TInt   -> if t2 == TBool
+                                                                                 then ("(int)"++s) : (paramCast1 tl ts ss)
+                                                                                 else s : (paramCast1 tl ts ss)
+                                                                     _      -> s : (paramCast1 tl ts ss)
 
 -- types bit dimensions (used for array allocation)
 size :: Type -> Integer

@@ -575,7 +575,7 @@ RExp : RExp '&&' RExp {
                          else "t"++(show $ fst $$.indexNew);
             $$.tac = if $$.aType==TVoid
                        then [FunCall 'p' "" (Id $1.tacId) []]
-                       else [FunCall 'f' $$.tacId(Id $1.tacId) []];
+                       else [FunCall 'f' $$.tacId (Id $1.tacId) []];
             $$.tacJ = $$.tac;
             where case checkCallProc $1 $$.envFun [] $2 of {
                        "" -> Ok ();
@@ -598,7 +598,7 @@ RExp : RExp '&&' RExp {
                          then ""
                          else "t"++(show $ fst $$.indexNew);
             $$.tac = if $$.aType==TVoid
-                       then $3.tac++[FunCall 'p' "" (Id $1.tacId) $3.tacIdList] 
+                       then $3.tac++[FunCall 'p' "" (Id $1.tacId) (paramCast $1 $$.envFun $3.aTypeList $3.tacIdList)]
                        else $3.tac++[FunCall 'f' $$.tacId (Id $1.tacId) $3.tacIdList];
             $$.tacJ = $$.tac;
             where case checkCallFun $3.err $1 $$.envFun $3.aTypeList $2 of {
@@ -834,7 +834,7 @@ Decl : 'var' ListId Type {
                         $$.idList = setPos $2 (pos $1);
                         $5.index = $$.index;
                         $$.indexNew = $5.indexNew;
-                        $$.tac = $5.tac++(tacAssign $$.idList $5.tacIdList);
+                        $$.tac = $5.tac++(tacAssignCast $$.idList $5.tacIdList $3 $5.aTypeList);
                         where case checkSameBlockList $2 $$.envVar of {
                                    Just a  -> Bad $ "Error at "++(pos $1)++": variable "++(idToStr a)++" already declared";
                                    Nothing -> if not $ length $2 == length $5.aTypeList
