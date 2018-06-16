@@ -53,7 +53,7 @@ func p() void{
   
   try g := b[1] catch dfgdfgdfg := x
   */
-  
+  /*
   func ff (i int, ref r float) int {
     r = i
     x := 0
@@ -69,5 +69,10 @@ func p() void{
   var y bool = true
   
   var sdf float = ff(true,y)
+  */
+  
+  var b1 = !(4.5 >= false)
+  var b2 = !('i' >= 'o')
+  
   
 }

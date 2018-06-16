@@ -32,7 +32,7 @@ printTac (x:xs) = case x of
                        UnOp op t1 t2      -> "\t" ++ t1 ++ " = " ++ op ++ " " ++ t2
                        BinOp op t1 t2 t3  -> "\t" ++ t1 ++ " = " ++ t2 ++ " " ++ op ++ " " ++ t3
                        UncondJ lbl        -> "\t" ++ "goto label" ++ (show lbl)
-                       CondJFalse t1 lbl  -> "\t" ++ "if !" ++ t1  ++ " goto label" ++ (show lbl)
+                       CondJFalse t1 lbl  -> "\t" ++ "if (not " ++ t1  ++ ") goto label" ++ (show lbl)
                        CondJTrue t1 lbl   -> "\t" ++ "if " ++ t1  ++ " goto label" ++ (show lbl)
                        FunDecl str id int -> str ++ " " ++ (idToStr id) ++  "/" ++ (show int)
                        FunCall c t id lt  -> case c of

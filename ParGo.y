@@ -235,7 +235,7 @@ RExp : RExp '&&' RExp {
             $2.index = $$.index;
             $$.indexNew = ( (fst $2.indexNew) + 1, snd $2.indexNew );
             $$.tacId = "t"++(show  $ fst $$.indexNew );
-            $$.tac = $2.tac++[UnOp "!" $$.tacId $2.tacId];
+            $$.tac = $2.tac++[UnOp "not " $$.tacId $2.tacId];
             $$.tacJ = $$.tac;
             where if $2.err == ""
                     then if not $ $2.aType == TBool
@@ -256,7 +256,16 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "==" $$.tacId $1.tacId $3.tacId];
+            $$.tac = $1.tac++$3.tac++
+                     case ($1.aType,$3.aType) of {
+                          (TFloat,TInt) -> [BinOp "eqTo_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TFloat,TBool) -> [BinOp "eqTo_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TInt,TFloat) -> [BinOp "eqTo_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TInt,TBool) -> [BinOp "eqTo_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                          (TBool,TFloat) -> [BinOp "eqTo_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TBool,TInt) -> [BinOp "eqTo_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                          (x,_) -> [BinOp ("eqTo_"++(showType x)) $$.tacId $1.tacId $3.tacId];
+                     };
             $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -276,7 +285,16 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "!=" $$.tacId $1.tacId $3.tacId];
+            $$.tac = $1.tac++$3.tac++
+                     case ($1.aType,$3.aType) of {
+                          (TFloat,TInt) -> [BinOp "notEqTo_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TFloat,TBool) -> [BinOp "notEqTo_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TInt,TFloat) -> [BinOp "notEqTo_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TInt,TBool) -> [BinOp "notEqTo_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                          (TBool,TFloat) -> [BinOp "notEqTo_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TBool,TInt) -> [BinOp "notEqTo_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                          (x,_) -> [BinOp ("notEqTo_"++(showType x)) $$.tacId $1.tacId $3.tacId];
+                     };
             $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -296,7 +314,16 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "<" $$.tacId $1.tacId $3.tacId];
+            $$.tac = $1.tac++$3.tac++
+                     case ($1.aType,$3.aType) of {
+                          (TFloat,TInt) -> [BinOp "lessThan_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TFloat,TBool) -> [BinOp "lessThan_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TInt,TFloat) -> [BinOp "lessThan_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TInt,TBool) -> [BinOp "lessThan_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                          (TBool,TFloat) -> [BinOp "lessThan_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TBool,TInt) -> [BinOp "lessThan_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                          (x,_) -> [BinOp ("lessThan_"++(showType x)) $$.tacId $1.tacId $3.tacId];
+                     };
             $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -316,7 +343,16 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp "<=" $$.tacId $1.tacId $3.tacId];
+            $$.tac = $1.tac++$3.tac++
+                     case ($1.aType,$3.aType) of {
+                          (TFloat,TInt) -> [BinOp "lessThanEq_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TFloat,TBool) -> [BinOp "lessThanEq_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TInt,TFloat) -> [BinOp "lessThanEq_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TInt,TBool) -> [BinOp "lessThanEq_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                          (TBool,TFloat) -> [BinOp "lessThanEq_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TBool,TInt) -> [BinOp "lessThanEq_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                          (x,_) -> [BinOp ("lessThanEq_"++(showType x)) $$.tacId $1.tacId $3.tacId];
+                     };
             $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -336,7 +372,16 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp ">" $$.tacId $1.tacId $3.tacId];
+            $$.tac = $1.tac++$3.tac++
+                     case ($1.aType,$3.aType) of {
+                          (TFloat,TInt) -> [BinOp "greaterThan_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TFloat,TBool) -> [BinOp "greaterThan_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TInt,TFloat) -> [BinOp "greaterThan_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TInt,TBool) -> [BinOp "greaterThan_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                          (TBool,TFloat) -> [BinOp "greaterThan_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TBool,TInt) -> [BinOp "greaterThan_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                          (x,_) -> [BinOp ("greaterThan_"++(showType x)) $$.tacId $1.tacId $3.tacId];
+                     };
             $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -356,7 +401,16 @@ RExp : RExp '&&' RExp {
             $3.index = $1.indexNew;
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $1.tac++$3.tac++[BinOp ">=" $$.tacId $1.tacId $3.tacId];
+            $$.tac = $1.tac++$3.tac++
+                     case ($1.aType,$3.aType) of {
+                          (TFloat,TInt) -> [BinOp "greaterThanEq_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TFloat,TBool) -> [BinOp "greaterThanEq_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                          (TInt,TFloat) -> [BinOp "greaterThanEq_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TInt,TBool) -> [BinOp "greaterThanEq_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                          (TBool,TFloat) -> [BinOp "greaterThanEq_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                          (TBool,TInt) -> [BinOp "greaterThanEq_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                          (x,_) -> [BinOp ("greaterThanEq_"++(showType x)) $$.tacId $1.tacId $3.tacId];
+                     };
             $$.tacJ = $$.tac;
             where case checkRelOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -381,16 +435,15 @@ RExp : RExp '&&' RExp {
             $$.tac = $1.tac++$3.tac++
                      (case $$.aType of {
                            TFloat -> if not ($1.aType == TFloat)
-                                       then [BinOp "+" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                                       then [BinOp "plus_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
                                        else if not ($3.aType == TFloat)
-                                              then [BinOp "+" $$.tacId $1.tacId ("(float)"++$3.tacId)];
-                                              else [BinOp "+" $$.tacId $1.tacId $3.tacId];
+                                              then [BinOp "plus_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                                              else [BinOp "plus_float" $$.tacId $1.tacId $3.tacId];
                            TInt   -> if not ($1.aType == TInt)
-                                       then [BinOp "+" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                                       then [BinOp "plus_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
                                        else if not ($3.aType == TInt)
-                                              then [BinOp "+" $$.tacId $1.tacId ("(int)"++$3.tacId)];
-                                              else [BinOp "+" $$.tacId $1.tacId $3.tacId];
-                           _      -> [BinOp "+" $$.tacId $1.tacId $3.tacId];
+                                              then [BinOp "plus_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                                              else [BinOp "plus_int" $$.tacId $1.tacId $3.tacId];
                      });
             $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
@@ -414,19 +467,18 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++
-                     (case $$.aType of {
+                     case $$.aType of {
                            TFloat -> if not ($1.aType == TFloat)
-                                       then [BinOp "-" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                                       then [BinOp "minus_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
                                        else if not ($3.aType == TFloat)
-                                              then [BinOp "-" $$.tacId $1.tacId ("(float)"++$3.tacId)];
-                                              else [BinOp "-" $$.tacId $1.tacId $3.tacId];
+                                              then [BinOp "minus_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                                              else [BinOp "minus_float" $$.tacId $1.tacId $3.tacId];
                            TInt   -> if not ($1.aType == TInt)
-                                       then [BinOp "-" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                                       then [BinOp "minus_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
                                        else if not ($3.aType == TInt)
-                                              then [BinOp "-" $$.tacId $1.tacId ("(int)"++$3.tacId)];
-                                              else [BinOp "-" $$.tacId $1.tacId $3.tacId];
-                           _      -> [BinOp "-" $$.tacId $1.tacId $3.tacId];
-                     });
+                                              then [BinOp "minus_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                                              else [BinOp "minus_int" $$.tacId $1.tacId $3.tacId];
+                     };
             $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -451,16 +503,15 @@ RExp : RExp '&&' RExp {
             $$.tac = $1.tac++$3.tac++
                      (case $$.aType of {
                            TFloat -> if not ($1.aType == TFloat)
-                                       then [BinOp "*" $$.tacId ("(float)"++$1.tacId) $3.tacId];
+                                       then [BinOp "times_float" $$.tacId ("(float)"++$1.tacId) $3.tacId];
                                        else if not ($3.aType == TFloat)
-                                              then [BinOp "*" $$.tacId $1.tacId ("(float)"++$3.tacId)];
-                                              else [BinOp "*" $$.tacId $1.tacId $3.tacId];
+                                              then [BinOp "times_float" $$.tacId $1.tacId ("(float)"++$3.tacId)];
+                                              else [BinOp "times_float" $$.tacId $1.tacId $3.tacId];
                            TInt   -> if not ($1.aType == TInt)
-                                       then [BinOp "*" $$.tacId ("(int)"++$1.tacId) $3.tacId];
+                                       then [BinOp "times_int" $$.tacId ("(int)"++$1.tacId) $3.tacId];
                                        else if not ($3.aType == TInt)
-                                              then [BinOp "*" $$.tacId $1.tacId ("(int)"++$3.tacId)];
-                                              else [BinOp "*" $$.tacId $1.tacId $3.tacId];
-                           _      -> [BinOp "*" $$.tacId $1.tacId $3.tacId];
+                                              then [BinOp "times_int" $$.tacId $1.tacId ("(int)"++$3.tacId)];
+                                              else [BinOp "times_int" $$.tacId $1.tacId $3.tacId];
                      });
             $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
@@ -482,19 +533,13 @@ RExp : RExp '&&' RExp {
             $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++
-                     (case $$.aType of {
-                           TFloat -> if not ($1.aType == TFloat)
-                                       then [BinOp "/" $$.tacId ("(float)"++$1.tacId) $3.tacId];
-                                       else if not ($3.aType == TFloat)
-                                              then [BinOp "/" $$.tacId $1.tacId ("(float)"++$3.tacId)];
-                                              else [BinOp "/" $$.tacId $1.tacId $3.tacId];
-                           TInt   -> if not ($1.aType == TInt)
-                                       then [BinOp "/" $$.tacId ("(int)"++$1.tacId) $3.tacId];
-                                       else if not ($3.aType == TInt)
-                                              then [BinOp "/" $$.tacId $1.tacId ("(int)"++$3.tacId)];
-                                              else [BinOp "/" $$.tacId $1.tacId $3.tacId];
-                           _      -> [BinOp "/" $$.tacId $1.tacId $3.tacId];
-                     });
+                     if not ($1.aType == TFloat) && not ($3.aType == TFloat)
+                       then [BinOp "div" $$.tacId ("(float)"++$1.tacId) ("(float)"++$3.tacId)]
+                       else if not ($1.aType == TFloat)
+                              then [BinOp "div" $$.tacId ("(float)"++$1.tacId) $3.tacId]
+                              else if not ($3.aType == TFloat)
+                                     then [BinOp "div" $$.tacId $1.tacId ("(float)"++$3.tacId)]
+                                     else [BinOp "div" $$.tacId $1.tacId $3.tacId];
             $$.tacJ = $$.tac;
             where case checkAritOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -516,12 +561,12 @@ RExp : RExp '&&' RExp {
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++
                      if $1.aType == TBool && $3.aType == TBool
-                       then [BinOp "%" $$.tacId ("(int)"++$1.tacId) ("(int)"++$3.tacId)]
-                       else if $1.aType == TInt
-                              then [BinOp "%" $$.tacId ("(int)"++$1.tacId) $3.tacId]
-                              else if $3.aType == TInt
-                                     then [BinOp "%" $$.tacId $1.tacId ("(int)"++$3.tacId)]
-                                     else [BinOp "%" $$.tacId $1.tacId $3.tacId];
+                       then [BinOp "mod" $$.tacId ("(int)"++$1.tacId) ("(int)"++$3.tacId)]
+                       else if $1.aType == TBool
+                              then [BinOp "mod" $$.tacId ("(int)"++$1.tacId) $3.tacId]
+                              else if $3.aType == TBool
+                                     then [BinOp "mod" $$.tacId $1.tacId ("(int)"++$3.tacId)]
+                                     else [BinOp "mod" $$.tacId $1.tacId $3.tacId];
             $$.tacJ = $$.tac;
             where case checkModOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
@@ -542,7 +587,7 @@ RExp : RExp '&&' RExp {
             $2.index = $$.index;
             $$.indexNew = ( (fst $2.indexNew) + 1, snd $2.indexNew );
             $$.tacId = "t"++(show $ fst $$.indexNew);
-            $$.tac = $2.tac++[UnOp "-" $$.tacId $2.tacId];
+            $$.tac = $2.tac++[UnOp "neg" $$.tacId $2.tacId];
             $$.tacJ = $$.tac;
             where if $2.err == ""
                     then Ok ()
@@ -1442,7 +1487,7 @@ checkAritOp :: Type -> Type -> [Char] -> [Char] -> Token -> [Char]
 checkAritOp t1 t2 e1 e2 op = if e1 == "" && e2 == ""
                                then if (t1 == TBool || t1 == TInt || t1 == TFloat) && (t2 == TBool || t2 == TInt || t2 == TFloat)
                                       then ""
-                                      else "Type error at "++(pos op)++": expected numeric type"
+                                      else "Type error at "++(pos op)++": expected numeric type (or boolean)"
                                else if e1/=""
                                       then e1
                                       else e2
