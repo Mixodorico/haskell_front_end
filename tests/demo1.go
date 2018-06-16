@@ -4,7 +4,7 @@ var i1 int
 var i2 int = 0
 var f1,f2 float = 6.5,1.5
 
-func few_declarations_function () string{
+func few_declarations_function () string {
      
     var s string = readString()
     var c char = readChar()
@@ -36,7 +36,7 @@ func few_operations_procedure () void {
 }
 
 
-func few_pointers (ref p *int) void {
+func few_pointers (p *int) void {
   
   var p1 **int
   var p2 int
@@ -48,12 +48,16 @@ func few_pointers (ref p *int) void {
     
   p2 = **p1
   p3 = &p2
- } 
+  
+  few_pointers(p3)
+  few_pointers(*p1)
+  few_pointers(&p2)
+ }
 
 func few_arrays () int{
      
   var arrB[10] bool
-  arrB[3] =true
+  arrB[3] = true
   arrB[7] = arrB[3]
   
   var matI[2][3] int

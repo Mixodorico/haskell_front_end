@@ -37,7 +37,3 @@ demo3: $(base)
 .PHONY : demo4
 demo4: $(base)
 	-./$(base) ./tests/demo4.go
-
-.PHONY : demo
-demo: $(base)
-	-./$(base) ./tests/demo1.go ./tests/demo2.go ./tests/demo3.go ./tests/demo4.go

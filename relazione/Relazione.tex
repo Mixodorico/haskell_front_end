@@ -10,7 +10,7 @@
 \maketitle
 \newpage
 
-\section{Assunzioni}
+\section*{Assunzioni}
 Nel seguente progetto abbiamo considerato le scelte di sintassi concreta definite dal linguaggio \textit{Go}.
 A seguire vengono riassunte una serie di assunzioni.
 
@@ -18,8 +18,8 @@ A seguire vengono riassunte una serie di assunzioni.
 \item Variabili e operazioni:
 	\begin{itemize}
 		\item non è consientito dichiarare delle variabili con lo stesso identificatore nello stesso blocco, mentre è possibile se avviene su blocchi (e sottoblocchi) diversi;
-		\item non è possibile utilizzare delle right-expression isolate;
-		\item è consentita la dichiarazione di variabili globali al di fuori delle funzioni, ma non tramite la sintassi ``:=";
+		\item non è possibile utilizzare delle right-expression senza assegnare il loro valore;
+		\item è consentita la dichiarazione di variabili globali al di fuori delle funzioni, ma non tramite la sintassi ``short": ``:=";
 		\item sono resi compatibili i seguenti tipi:
 		\begin{itemize}
 			\item \textit{float} $\leftarrow$ \textit{interi}
@@ -35,22 +35,23 @@ A seguire vengono riassunte una serie di assunzioni.
 	\end{itemize}
 \item Comandi di controllo sequenza:
 	\begin{itemize}
-		\item è stato usato l'operatore `!' nelle condizioni degli if per veicolare correttamente i salti condizionati;
-		\item sono stati implementati i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici}, \textit{iterazione determinata} (costrutto for) \textit{e indeterminata} (nelle sue due forme:  while-do e do-while)). Per riferirci ai costrutti di iterazione useremo sempre l'etichetta "\textit{for}";
+		\item è stato usato l'operatore `not' nelle condizioni degli if per veicolare correttamente i salti condizionati;
+		\item sono stati implementati i comandi per il controllo della sequenza richiesti nel testo del progetto (\textit{condizionali semplici}, \textit{iterazione determinata} (costrutto for) \textit{e indeterminata} (nelle sue due forme:  while e do-while)). Per quanto riguarda la sintassi utilizziamo sempre la stringa ``for", in quanto Go non prevede alcuna sintassi con il ``while".\\
+Per quanto riguarda i costrutti di iterazione abbiamo inoltre i comandi \texttt{break} e \texttt{continue};
 		\item le guardie booleane dei controlli di sequenza vengono gestite tramite short-cut mentre le altre espressioni booleane vengono gestite senza short-cut;
 		\item non è possibile definire controlli di sequenza al di fuori delle funzioni/procedure;
-		\item è stato implementato il costrutto \textit{try-catch} che nei suoi argomenti accetta una lista di statement.
+		\item è stato implementato il costrutto \textit{try-catch} avente sintassi\linebreak\textbf{try} \textit{Statement} \textbf{catch} \textit{Statement} come da specifica.
 	\end{itemize}
 \end{itemize}
 
-\section{Scelte implementative}
+\section*{Scelte implementative}
 \begin{itemize}
 \item Abbiamo generato \textit{lexer} e \textit{parser} tramite il tool BNFC, partendo dalla definizione di una gramatica iniziale;
 \item la gestione del \textit{Type Checker} e del \textit{Three Address Code} vengono fatte all'interno del parser;
-\item le funzioni \textit{write} sono trattate come statement che prendendono come argomento una right-expression, mentre le funzioni \textit{read} vengono viste come right-expressions e hanno una lista di parametri di input vuota.
+\item le funzioni \textit{write} (\textit{writeInt} eccetera) sono trattate come statement che prendono come argomento una right-expression, mentre le funzioni \textit{read} (\textit{readInt} e via dicendo) vengono viste come right-expressions e hanno una lista di parametri di input vuota.
 \end{itemize}
 
-\section{Grammatica}
+\section*{Grammatica}
 Di seguito viene riportata la grammatica di partenza.
 \begin{verbatim}
 comment "//";
@@ -157,28 +158,27 @@ StAsgn.          StmtSmpl ::= LExp "=" RExp;
 (:[]).          [StmtSmpl] ::= StmtSmpl;
 \end{verbatim}
 
-\section{Parser}
-Gran parte del progetto è stato sviluppato all'interno del parser. In particolare tutta la parte di \textit{type checking} e \textit{three address code} sono state implementate al suo interno.\\
-All'iterno del parser sono stati definiti tutta una serie di attributi relativi alla \textit{grammatica attributata}.
-Gli enviroment sono gestiti attraverso gli attributi \textit{EnvVar}/\textit{EnvVarNew} ed \textit{EnvFun}/\textit{EnvFunNew} e corrispondono a liste di tipi di dato \textit{ElemVar} ed \textit{ElemFun}. In particolare, gli attributi \textit{EnvVar} ed \textit{EnvFun} rappresentano, per ogni nodo, l'ambiente  derivante dal nodo padre, mentre \textit{EnvVarNew} ed \textit{EnvFunNew} definiscono l'ambiente ottenuto da tutti i nodi figli.
-Sono stati inoltre definiti ulteriori attributi per gestire la generazione del three address code (si rimanda al codice).\\
-Per quanto riguarda la dichiarazione delle precedenze e l'associatività degli operatori, sono tutte state gestite a livello di parser.
+\section*{Parser}
+Gran parte del progetto è stato sviluppato all'interno del parser.\\
+Abbiamo definito una serie di attributi relativi alla \textit{grammatica attributata}. Gli attributi sono stati scelti in base alle nostre esigenze, che erano fondamentalmente il type checking (e gli altri tipi di controlli) e la generazione del three-address code.\\
+Gli enviroment sono gestiti attraverso gli attributi \textbf{EnvVar}/\textbf{EnvVarNew} ed \textbf{EnvFun}/\textbf{EnvFunNew} e corrispondono a liste di tipi di dato \textbf{ElemVar} ed \textbf{ElemFun}. In particolare, gli attributi \textbf{EnvVar} ed \textbf{EnvFun} rappresentano, per ogni nodo, l'ambiente  derivante dal nodo padre, mentre \textbf{EnvVarNew} ed \textbf{EnvFunNew} definiscono l'ambiente ottenuto da tutti i nodi figli.\\
+La gestione/modifica degli Environment viene gestita dalle strutture e dalle funzioni presenti in \textit{Env.hs}.\\
+Per quanto riguarda la dichiarazione delle precedenze e l'associatività degli operatori, sono state gestite a livello di parser, nel file \textit{ParGo.y}.
 
-\subsection{Type Checker}
-Il Type Checker viene gestito interamente all'interno del parser. In particolare per ogni espressione valutata si effettua un controllo diretto attraverso le funzioni \textit{Ok} e \textit{Bad} che, in caso di errore, gestiscono l'errore tramite la stampa di un messaggio a video indicante la linea dell'errore e la causa.\\
+\pagebreak
+\section*{Type Checker}
+Il Type Checker viene gestito interamente all'interno del parser. In particolare, per ogni espressione valutata si effettua un controllo diretto attraverso \textbf{Ok} e \textbf{Bad} che, in caso di errore, gestiscono l'errore tramite la stampa di un messaggio in output indicante la linea dell'errore e la sua causa.\\
 Tutte le funzioni di controllo utilizzate dal Type Checker sono state definite internamente al parser per praticità.\\
-Tra le diverse assunzioni fatte in fase di type checking, abbiamo voluto tenere conto in modo automatico di una conversione dal tipo int al tipo float.
+Tra le diverse assunzioni fatte in fase di type checking, ricordiamo che i booleani sono compatibili con interi e float, mentre gli interi sono compatibili con i float.
 
-\subsection{Three Address Code}
-Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{TAC.hs}) contenente la struttura dati per gestirne la generazione e le funzioni addette alla stampa. Inoltre ci siamo appoggiati su un ulteriore modulo (\textit{Env.hs}) contenete tutte le funzioni per la gestione dell'environment (inserimento, cancellazione e ricerca di variabili/funzioni).
-In questo modulo sono stati dichiarati i tipi di dato \textit{ElemVar} e \textit{ElemFun} contenenti rispettivamente tutte le informazioni relative alle variabili ed alle funzioni/procedure dichiarate nell'ambiente.\\
-I casting vengono stampati a video in fase di asegnamento.
+\section*{Three Address Code}
+Il Three Address Code viene generato interamente nel parser, utilizzando un modulo esterno (\textit{TAC.hs}) contenente la struttura dati per gestirne la generazione e le funzioni addette alla stampa.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% andrebbe bool e non boolean?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Type System}
-A seguire il \textit{Type System} relativo al linguaggio implementato. Si è posta particolare attenzione è quello di definire un type system il più possibile vicino a quello del linguaggio \textit{Go}, integrando ulteriori specifiche presenti nella consegna del progetto.
+\section*{Type System}
+A seguire il \textit{Type System} relativo al linguaggio implementato.\\
 Definiamo $\Gamma$ essere l'ambiente e $\tau$ essere l'insieme dei tipi di base da noi considerati: \texttt{int, float, char, string} e \texttt{boolean}.
 
 \subsection*{Basic Judgments}
@@ -237,7 +237,17 @@ $\dfrac{\Gamma \vdash \tau}{\Gamma \vdash \text{*} \tau}$\\[0.1in]
 $\dfrac{\Gamma \vdash \texttt{\texttt{ident}}\ \ \ \Gamma \vdash RExp:\tau}{\Gamma \vdash \texttt{ident}\ [\ RExp\ ]}$\\[0.1in]
 \end{center}
 
-\subsection*{Operazioni Relazionali}
+\subsection*{Assegnamento}
+\begin{center}
+\begin{itemize}
+\item[-] Per $\tau \in$ \{ \texttt{int, float, char, string, boolean} \}
+\end{itemize}
+\noindent(\textbf{Asgn})
+$\dfrac{\Gamma \vdash LExp:\tau\ \ \ \Gamma \vdash RExp:\tau}{\Gamma \vdash LExp \ \texttt{=} \ RExp}$\\[0.1in]
+\end{center}
+Per l'assegnamento inoltre abbiamo le usuali compatibilità fra tipi,\linebreak$ \texttt{boolean} \rightarrow \texttt{int} \rightarrow\texttt{float}$
+
+\subsection*{Operatori Relazionali}
 \begin{center}
 \begin{itemize}
 \item[-] Per $\tau \in$ \{ \texttt{boolean} \}
@@ -275,7 +285,7 @@ $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RE
 \item[-] Per $\tau \in$ \{ \texttt{boolean} \}
 \end{itemize}
 \noindent(\textbf{Add 1})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\tau}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\texttt{int}}$\\[0.1in]
 
 \begin{itemize}
 \item[-] Per $\tau \in$ \{ \texttt{int} \}
@@ -292,18 +302,18 @@ $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RE
 \subsubsection*{Addizione con casting implicito}
 \begin{center}
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} e almeno uno delle due espressioni \texttt{int}
+\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} con una delle due espressioni \texttt{int} e l'altra \texttt{boolean}
 \end{itemize}
 \noindent(\textbf{Add 4})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\texttt{int}}$\\[0.1in]
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} e almeno uno delle due espressioni \texttt{float}
+\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} con una delle due espressioni \texttt{float} e l'altra \texttt{boolean}
 \end{itemize}
 
 \noindent(\textbf{Add 5})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\texttt{float}}$\\[0.1in]
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{int, float} \} e almeno uno delle due espressioni \texttt{float}
+\item[-] Per $\tau \in$ \{ \texttt{int, float} \} con una delle due espressioni \texttt{float} e l'altra \texttt{int}
 \end{itemize}
 \noindent(\textbf{Add 6})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{+}\ RExp2:\texttt{float}}$\\[0.1in]
@@ -317,7 +327,7 @@ $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RE
 \item[-] Per $\tau \in$ \{ \texttt{boolean} \}
 \end{itemize}
 \noindent(\textbf{Sub 1})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\tau}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\texttt{int}}$\\[0.1in]
 
 \begin{itemize}
 \item[-] Per $\tau \in$ \{ \texttt{int} \}
@@ -334,18 +344,18 @@ $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RE
 \subsubsection*{Sottrazione con casting implicito}
 \begin{center}
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} e almeno uno delle due espressioni \texttt{int}
+\item[-] Per $\tau \in$ \{ \texttt{boolean, int} \} con una delle due espressioni \texttt{int} e l'altra \texttt{boolean}
 \end{itemize}
 \noindent(\textbf{Sub 4})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\texttt{int}}$\\[0.1in]
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} e almeno uno delle due espressioni \texttt{float}
+\item[-] Per $\tau \in$ \{ \texttt{boolean, float} \} con una delle due espressioni \texttt{float} e l'altra \texttt{boolean}
 \end{itemize}
 
 \noindent(\textbf{Sub 5})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\texttt{float}}$\\[0.1in]
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{int, float} \} e almeno uno delle due espressioni \texttt{float}
+\item[-] Per $\tau \in$ \{ \texttt{int, float} \} con una delle due espressioni \texttt{float} e l'altra \texttt{int}
 \end{itemize}
 \noindent(\textbf{Sub 6})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{-}\ RExp2:\texttt{float}}$\\[0.1in]
@@ -359,7 +369,7 @@ $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RE
 \item[-] Per $\tau \in$ \{ \texttt{boolean} \}
 \end{itemize}
 \noindent(\textbf{Mul 1})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\tau}$\\[0.1in]
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\texttt{int}}$\\[0.1in]
 
 \begin{itemize}
 \item[-] Per $\tau \in$ \{ \texttt{int} \}
@@ -378,18 +388,18 @@ $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RE
 
 \begin{center}
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} e almeno uno delle due espressioni \texttt{int}
+\item[-] Per $\tau \in$ \{ \texttt{boolean, int} \} con una delle due espressioni \texttt{boolean} e l'altra \texttt{int}
 \end{itemize}
 \noindent(\textbf{Mul 4})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\texttt{int}}$\\[0.1in]
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} e almeno uno delle due espressioni \texttt{float}
+\item[-] Per $\tau \in$ \{ \texttt{boolean, float} \} con una delle due espressioni \texttt{boolean} e l'altra \texttt{float}
 \end{itemize}
 
 \noindent(\textbf{Mul 5})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\texttt{float}}$\\[0.1in]
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{int, float} \} e almeno uno delle due espressioni \texttt{float}
+\item[-] Per $\tau \in$ \{ \texttt{int, float} \} con una delle due espressioni \texttt{float} e l'altra \texttt{int}
 \end{itemize}
 \noindent(\textbf{Mul 6})
 $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{*}\ RExp2:\texttt{float}}$\\[0.1in]
@@ -399,53 +409,24 @@ $\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RE
 \begin{center}
 
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{boolean} \}
+\item[-] Per $\tau_1,\tau_2 \in$ \{ \texttt{boolean}, \texttt{int}, \texttt{float} \}
 \end{itemize}
-\noindent(\textbf{Div 1})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\tau}$\\[0.1in]
+\noindent(\textbf{Div})
+$\dfrac{\Gamma \vdash RExp1:\tau_1\ \ \ \Gamma \vdash RExp2:\tau_2}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\texttt{float}}$\\[0.1in]
 
-\begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{int} \}
-\end{itemize}
-\noindent(\textbf{Div 2})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\tau}$\\[0.1in]
-
-\begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{float} \}
-\end{itemize}
-\noindent(\textbf{Div 3})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\tau}$\\[0.1in]
 \end{center}
 
-\subsubsection*{Divisione con casting implicito}
-
-\begin{center}
-\begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{bool, int} \} e almeno uno delle due espressioni \texttt{int}
-\end{itemize}
-\noindent(\textbf{Div 4})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\texttt{int}}$\\[0.1in]
-\begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{bool, float} \} e almeno uno delle due espressioni \texttt{float}
-\end{itemize}
-
-\noindent(\textbf{Div 5})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\texttt{float}}$\\[0.1in]
-\begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{int, float} \} e almeno uno delle due espressioni \texttt{float}
-\end{itemize}
-\noindent(\textbf{Div 6})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{/}\ RExp2:\texttt{float}}$
-\end{center}
 \subsubsection*{Modulo}
 \begin{center}
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{int} \}
+\item[-] Per $\tau_1,\tau_2 \in$ \{ \texttt{boolean}, \texttt{int} \}
 \end{itemize}
-\noindent(\textbf{Mod})
-$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{\%}\ RExp2:\tau}$
+\noindent(\textbf{Mod 2})
+$\dfrac{\Gamma \vdash RExp1:\tau\ \ \ \Gamma \vdash RExp2:\tau}{\Gamma \vdash RExp1\ \texttt{\%}\ RExp2:\texttt{int}}$
 \end{center}
-\subsubsection*{Interi Negativi}
+
+
+\subsubsection*{Neg}
 
 \begin{center}
 \begin{itemize}
@@ -481,12 +462,12 @@ $\dfrac{\Gamma \vdash RExp:\tau\ \ \ \Gamma \vdash Block}{\Gamma \vdash \texttt{
 $\dfrac{\Gamma \vdash RExp:\tau\ \ \ \Gamma \vdash Block1\ \ \ \Gamma \vdash Block2}{\Gamma \vdash \texttt{if}\ RExp\ \{ Block1\}\ \texttt{else}\ \{ Block1\}}$\\[0.1in]
 \end{center}
 
-\subsubsection*{While-do}
+\subsubsection*{While}
 \begin{center}
 \begin{itemize}
 \item[-] Per $\tau \in$ \{ \texttt{boolean} \}
 \end{itemize}
-\noindent(\textbf{WhileDo})
+\noindent(\textbf{While})
 $\dfrac{\Gamma \vdash RExp:\tau\ \ \ \Gamma \vdash Block}{\Gamma \vdash \texttt{for}\ RExp\ \{ Block\}}$\\[0.1in]
 \end{center}
 
@@ -502,27 +483,31 @@ $\dfrac{\Gamma \vdash RExp:\tau\ \ \ \Gamma \vdash Block}{\Gamma \vdash \texttt{
 \subsubsection*{For}
 \begin{center}
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{int,float,char,string, boolean} \}
+\item[-] Per $\tau \in$ \{ \texttt{boolean} \}, con $\texttt{stmtSmpl}_1$ e $\texttt{stmtSmpl}_2$ statementSimple
 \end{itemize}
 \noindent(\textbf{For})
-$\dfrac{\Gamma \vdash StatementSimple \ \ \Gamma \vdash RExp:\texttt{boolean} \ \ \Gamma \vdash StatementSimple \ \ \ \Gamma \vdash Block}{\Gamma \vdash  \texttt{for} \ \ StatementSimple \ RExp \ StatementSimple \ \{ Block\}}$\\[0.1in]
+$\dfrac{\Gamma \vdash stmtSmpl_1 \ \ \Gamma \vdash RExp:\tau \ \ \Gamma \vdash stmtSmpl_2 \ \ \ \Gamma \vdash Block}{\Gamma \vdash  \texttt{for} \ \ stmtSmpl_1 \ RExp \ stmtSmpl_2 \ \{ Block\}}$\\[0.1in]
 \end{center}
 
-\subsubsection*{Assegnemento}
+\subsection*{Controlli di sequenza}
 \begin{center}
 \begin{itemize}
-\item[-] Per $\tau \in$ \{ \texttt{int, float, char, string, boolean} \}
+\item[-] Con $\texttt{stmt}_1$ e $\texttt{stmt}_2$ statement ($\texttt{Stmt}$)
 \end{itemize}
-\noindent(\textbf{Asgn})
-$\dfrac{\Gamma \vdash LExp:\tau\ \ \ \Gamma \vdash RExp:\tau}{\Gamma \vdash LExp \ \texttt{=} \ RExp}$\\[0.1in]
+\noindent(\textbf{Try-Catch})
+$\dfrac{\Gamma \vdash stmt_1\ \ \Gamma \vdash tmt_2}{\Gamma \vdash  \texttt{try} \ \ stmt_1 \ \texttt{catch} \ stmt_2}$\\[0.1in]
 \end{center}
+
 
 \subsection*{Funzioni e procedure}
 \begin{center}
+\begin{itemize}
+\item[-] Con $\tau$ qualunque tipo (semplice o composto) e \texttt{params} una variabile di tipo \texttt{TypeList} (lista di tipi)
+\end{itemize}
 \noindent(\textbf{DeclFun})
-$\dfrac{\Gamma \vdash \texttt{ident}\ \ \ \Gamma \vdash Params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ \texttt{ident}\ (TypeList)\ Type\ \{Block\}}$\\[0.1in]
+$\dfrac{\Gamma \vdash \texttt{ident}\ \ \ \Gamma \vdash params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ \texttt{ident}\ (TypeList)\ \tau\ \{Block\}}$\\[0.1in]
 \noindent(\textbf{DeclProc})
-$\dfrac{\Gamma \vdash \texttt{ident}\ \ \ \Gamma \vdash Params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ \texttt{ident}\ (TypeList)\ void\ \{Block\}}$\\[0.1in]
+$\dfrac{\Gamma \vdash \texttt{ident}\ \ \ \Gamma \vdash params:TypeList\ \ \ \Gamma \vdash Block}{\Gamma \vdash func\ \texttt{ident}\ (TypeList)\ void\ \{Block\}}$\\[0.1in]
 
 \noindent(\textbf{WriteInt})
 $\dfrac{\Gamma \vdash RExp:\texttt{int}}{\Gamma \vdash \texttt{writeInt}\ (\ RExp\ )}$\\[0.1in]
@@ -544,7 +529,7 @@ $\dfrac{\Gamma \vdash \diamond}{\Gamma \vdash \texttt{readString}\ (\ )\ :\ \tex
 
 
 \pagebreak
-\section{Test Case}
-Sono stati preparati dei test-case significativi che possono essere eseguiti in sequenza attraverso il comando \textit{make demo}, oppure singolarmente attraverso i comandi \textit{make demo1}, \textit{make demo2}, \textit{make demo3} e \textit{make demo4}.
+\section*{Test Case}
+Sono stati preparati dei test-case significativi che possono essere eseguiti utilizzando i comandi \textbf{make demo1}, \textbf{make demo2}, \textbf{make demo3} e \textbf{make demo4}. Altri comandi per la compilazione del codice sono presenti all'interno del makefile ma non sono necessari al fine di runnare i test.
 
 \end{document}

@@ -1,78 +1,46 @@
 package main
 
-
 func p() void{
-  /*
+  
   x,y,z := true,true,true
   
+  var cast float = 1
   xx := &x
   
-  asdasd1 := readChar()
+  c := readChar()
   
   var a[10] *bool
-  var b[10] int
+  var b[10] float
   var c[10][1] int
   
   var g1,g2 bool
   var r1,r2 int
   
-  func p1 (g int) *[10]*bool {
+  func f (g int) *[10]*bool {
     r1 = g
-    
-    if x || y || z && readInt() == 99 {
-      if x {
-        x = false
-      }
-    } else {
-      y = false
-    }
     
     return &a
   }
   
-  x = *a[readInt()+readInt()-b[1]]
-  
-  a[1] = xx
-  
-  c[1][2] = 3
-  
-  asdasd := readChar()
-  asdasd2 := readChar()
-  asdasd3 := readChar()
-  
-  var v = 3%2
-  
-  for iiiiii:=0 ; r1<10;  {
-    continue
-    writeInt(r1)
+  if x || y || z && readInt() == 99 {
+    if x {
+      x = false
+    }
+  } else {
+    y = false
   }
   
-  do {
-    z = false
-  } for x
+  x = *a[readInt()+readInt()-c[1][1]]
   
-  try g := b[1] catch dfgdfgdfg := x
-  */
-  /*
-  func ff (i int, ref r float) int {
-    r = i
-    x := 0
-    return 1
+  func p1 (i int) void {
+    b[3] = i
   }
   
-  var ggg float = true % true
+  p1(1)
   
-  var a[10] int
-  
-  ggg = true % true
-  
-  var y bool = true
-  
-  var sdf float = ff(true,y)
-  */
-  
-  var b1 = !(4.5 >= false)
-  var b2 = !('i' >= 'o')
-  
+  try
+    c[2][2] = 4
+  catch
+    writeString("error")
   
 }

@@ -4,11 +4,11 @@ var rexp int = 100
 
 func arithmetic_function () float {
     
-	i1 := 4
-	f1 := rexp + i1 + 6.0   
+  i1 := 4
+  f1 := rexp + i1 + 6.0   
     
-	rexp = rexp+i1*2
-    mod := 5 % i1
+  rexp = rexp+i1*2
+  mod := 5 % i1
 
   f1 = arithmetic_function () / mod
   
@@ -33,17 +33,14 @@ func arithmetic_procedure () void {
     b3 =  false
     
     // guard evaluated with short-cuts
-    if b1 || b2 || b3 {
+    if b1 && b2 || b3 {
       s1 := "if_block_OR"
     }else{
       s1 := "else_block_OR" 
+    }
   }
-}
       
   internal_procedure()
-  
-   // guard evaluated without short-cut
-   if arrI[1]==11 && i1 >= 5 {
-     s1 := "if_block_AND"    
-   }
+
 }
+

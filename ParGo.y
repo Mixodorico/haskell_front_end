@@ -194,7 +194,7 @@ RExp : RExp '&&' RExp {
             $$.tacJ = $1.tacJ++[CondJFalse $1.tacId ($1.true+1)]++$3.tacJ++[BinOp "&&" $$.tacId $1.tacId $3.tacId];
             where case checkBoolOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
-                       x  -> Bad x;               
+                       x  -> Bad x;
                   };
             }
 
@@ -208,14 +208,14 @@ RExp : RExp '&&' RExp {
             $$.err = checkBoolOp $1.aType $3.aType $1.err $3.err $2;
             $1.index = $$.index;
             $3.index = $1.indexNew;
-            $$.indexNew = ( (fst $3.indexNew) + 1, snd $3.indexNew );
+            $$.indexNew = $3.indexNew;
             $1.true = snd $1.indexNew;
             $1.false = $$.false;
             $3.true = $$.true;
             $3.false = $$.false;
             $$.tacId = "t"++(show $ fst $$.indexNew);
             $$.tac = $1.tac++$3.tac++[BinOp "||" $$.tacId $1.tacId $3.tacId];
-            $$.tacJ = $1.tacJ++[CondJTrue $1.tacId ($1.true+1)]++$3.tacJ++[BinOp "||" $$.tacId $1.tacId $3.tacId];
+            $$.tacJ = $1.tacJ++[CondJTrue $1.tacId ($1.true)]++$3.tacJ++[BinOp "||" $$.tacId $1.tacId $3.tacId];
             where case checkBoolOp $1.aType $3.aType $1.err $3.err $2 of {
                        "" -> Ok ();
                        x  -> Bad x;               
@@ -818,9 +818,9 @@ LExp : Id {
                               else ""
                        else $2.err ;
             $2.index = $$.index;
-            $$.indexNew = $2.indexNew;
-            $$.tacId = "*"++($2.tacId);
-            $$.tac = $2.tac;
+            $$.indexNew = ( (fst $2.indexNew) + 1, snd $2.indexNew);
+            $$.tacId = "t"++(show $ fst $$.indexNew);
+            $$.tac = $2.tac++[NulOp $$.tacId ("*"++$2.tacId)];
             where if $2.err ==""
                     then if not $ isTypePtr $2.aType
                            then Bad $ "Type error at "++(pos $1)++": expected pointer, "++showType ($2.aType)++" found"
@@ -1101,16 +1101,15 @@ Stmt : Decl {
                 $$.envFunNew = $$.envFun;
                 $2.aTypeFun = $$.aTypeFun;
                 $$.aReturn = False;
-                $2.forLabels = ( (snd $2.indexNew) + 1, (snd $2.indexNew) + 3 );
+                $2.forLabels = ( (snd $2.indexNew) + 1, (snd $2.indexNew) + 2 );
                 $4.index = $$.index;
                 $2.index = $4.indexNew;                   
-                $$.indexNew = ( fst $2.indexNew, (snd $2.indexNew) + 3 );
+                $$.indexNew = ( fst $2.indexNew, (snd $2.indexNew) + 2 );
                 $$.tac = [Lbl $ (snd $2.indexNew) + 1]
-                       ++shift $4.tacJ (snd $2.indexNew + 1)
-                       ++[Lbl $ (snd $2.indexNew) + 2]
                        ++$2.tac
-                       ++[CondJTrue $4.tacId ((snd $2.indexNew) + 2)]
-                       ++[Lbl $ (snd $2.indexNew) + 3];
+                       ++shift $4.tacJ (snd $2.indexNew + 1)
+                       ++[CondJTrue $4.tacId ((snd $2.indexNew) + 1)]
+                       ++[Lbl $ (snd $2.indexNew) + 2];
                 where if $4.err == ""
                         then when (not $ $4.aType == TBool) $ Bad $ "Type error at "++(pos $1)++": type "++(showType $4.aType) ++" used as condition (for)"
                         else Bad $4.err ;
@@ -1132,20 +1131,19 @@ Stmt : Decl {
 									$$.envFunNew = $$.envFun;
 									$7.aTypeFun = $$.aTypeFun;
 									$$.aReturn = False;
-									$7.forLabels = ( (snd $7.indexNew)+2, (snd $7.indexNew)+3 );
+									$7.forLabels = ( (snd $7.indexNew)+1, (snd $7.indexNew)+2 );
 									$2.index = $$.index;
 									$4.index = $2.indexNew;
 									$6.index = $4.indexNew;
 									$7.index = $6.indexNew;
-									$$.indexNew = ( fst $7.indexNew, (snd $7.indexNew)+3 );
+									$$.indexNew = ( fst $7.indexNew, (snd $7.indexNew)+2 );
 									$$.tac = $2.tac ++ [Lbl $ (snd $7.indexNew)+1] 
                         ++ $4.tac
-                        ++ [CondJFalse $4.tacId ((snd $7.indexNew)+3)] 
+                        ++ [CondJFalse $4.tacId ((snd $7.indexNew)+2)] 
                         ++ $7.tac
-                        ++ [Lbl $ (snd $7.indexNew)+2]
                         ++ $6.tac
                         ++ [UncondJ $ (snd $7.indexNew)+1] 
-                        ++ [Lbl $ (snd $7.indexNew)+3];
+                        ++ [Lbl $ (snd $7.indexNew)+2];
 									where if $4.err == ""
                           then if $4.aType == TBool
                                  then Ok ()
@@ -1208,11 +1206,12 @@ Stmt : Decl {
           $2.index = $$.index;
           $4.index = $2.indexNew;					
           $$.indexNew = ( (fst $4.indexNew) , ((snd $4.indexNew)+2) );
-          $$.tac = [ExcpJ ((snd $4.indexNew)+1)] ++ $2.tac 
-            ++ [UncondJ ((snd $4.indexNew)+2)] 
-            ++ [Lbl ((snd $4.indexNew)+1)]
-            ++ $4.tac 
-            ++ [Lbl ((snd $4.indexNew)+2)];
+          $$.tac = $2.tac
+                 ++[ExcpJ ((snd $4.indexNew)+1)]
+                 ++ [UncondJ ((snd $4.indexNew)+2)] 
+                 ++ [Lbl ((snd $4.indexNew)+1)]
+                 ++ $4.tac 
+                 ++ [Lbl ((snd $4.indexNew)+2)];
           }
 
      | 'writeInt' '(' RExp ')' {
@@ -1316,19 +1315,10 @@ StmtSmpl : ShortVarDecl {
                 $$.tacId = "t" ++ (show $ fst $$.indexNew);
                 $$.tac = $1.tac++$3.tac++
                          if $1.aType == TFloat && not ($3.aType == TFloat)
-                           then case $3 of {
-                                     ExpVal _ -> [NulOp $1.tacId ("(float)"++$3.tacId)];
-                                     _        -> [NulOp $$.tacId ("(float)"++$3.tacId)]++[NulOp $1.tacId $$.tacId];
-                                }
+                           then [NulOp $1.tacId ("(float)"++$3.tacId)]
                            else if $1.aType == TInt && $3.aType == TBool
-                                  then case $3 of {
-                                            ExpVal _ -> [NulOp $1.tacId ("(int)"++$3.tacId)];
-                                            _        -> [NulOp $1.tacId ("(int)"++$3.tacId)]++[NulOp $1.tacId $$.tacId];
-                                       }
-                                  else case $3 of {
-                                            ExpVal _ -> [NulOp $1.tacId $3.tacId];
-                                            _        -> [NulOp $$.tacId $3.tacId]++[NulOp $1.tacId $$.tacId];
-                                       };
+                                  then [NulOp $1.tacId ("(int)"++$3.tacId)]
+                                  else [NulOp $1.tacId $3.tacId];
                 where if $1.err == "" && $3.err == ""
                         then if $1.aType == TFloat && $3.aType == TInt
                                then Ok ()
