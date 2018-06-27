@@ -68,7 +68,7 @@ DeclProc.        Decl ::= "func" Id "(" [Param] ")" "void" Block;
 
 separator Param ",";
 
-Parameter.         Param ::=  [Id] Type;       -- di default è passaggio per valore
+Parameter.         Param ::=  [Id] Type;
 ParameterPass.     Param ::=  Pass [Id] Type;
 
 PassVal.        Pass  ::=  "val";
@@ -95,39 +95,8 @@ StWrite.          Stmt ::= WriteT "(" RExp ")";
 rules     WriteT ::= "writeInt" | "writeFloat" | "writeChar" | "writeString" ;
 
 StShortVarDecl.   StmtSmpl ::= ShortVarDecl;
-StExp.            StmtSmpl ::= RExp;          -- non possiamo toglierlo,
-                                              -- altrimenti il parser non funziona
+StExp.            StmtSmpl ::= RExp;
 StAsgn.           StmtSmpl ::= LExp "=" RExp;
 
 [].     [StmtSmpl] ::= ;
 (:[]).  [StmtSmpl] ::= StmtSmpl;
-
-
-
-
---PassValRes.   Pass  ::=  "valres";
-
-
-
---StIfStm.          Stmt ::= "if" StmtSmpl ";" RExp Block;
---StIfElseStm.      Stmt ::= "if" StmtSmpl ";" RExp Block "else" Block;
---StWrite.          Stmt ::= "write" "(" RExp ")";
---StRead.           Stmt ::= "read" "(" RExp ")";
-
-
-
-
-
-
---BoolTrue .    Boolean ::= "true" ;
---BoolFalse .   Boolean ::= "false" ;
-
-
---(:[]).  [Id] ::= Id;
---(:).  [Id] ::= Id "," [Id];
-
---(:[]).  [RExp] ::= RExp;
---(:).  [RExp] ::= RExp "," [RExp];
-
-
---
